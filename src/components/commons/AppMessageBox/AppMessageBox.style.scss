@@ -1,0 +1,24 @@
+.bubble {
+  --r: 1em; /* the radius */
+  --t: 1.5em; /* the size of the tail */
+
+  max-width: 300px;
+  padding: 1em;
+  border-inline: var(--t) solid #0000;
+  border-radius: calc(var(--r) + var(--t)) / var(--r);
+  mask:
+    radial-gradient(100% 100% at var(--_p) 0, #0000 99%, #000 102%) var(--_p) 100% / var(--t) var(--t) no-repeat,
+    linear-gradient(#000 0 0) padding-box;
+  background: linear-gradient(135deg, #fe6d00, #1384c5) border-box;
+  color: #fff;
+}
+.left {
+  --_p: 0;
+  border-bottom-left-radius: 0 0;
+  place-self: start;
+}
+.right {
+  --_p: 100%;
+  border-bottom-right-radius: 0 0;
+  place-self: end;
+}

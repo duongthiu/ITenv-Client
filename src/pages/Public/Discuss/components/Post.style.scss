@@ -1,0 +1,11 @@
+.post-wrapper::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -20px;
+  width: 0;
+  height: 0;
+  border-width: 10px 20px 10px 0;
+  border-style: solid;
+  border-color: transparent #f0f0f0 transparent transparent;
+}

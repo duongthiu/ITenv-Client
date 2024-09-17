@@ -1,0 +1,23 @@
+.preview-text-editor-wrapper {
+  .language-javascript {
+    // padding-left: 5px !important;
+    // padding-right: 5px !important;
+    // background-color: rgba(0, 0, 0, 0.05) !important;
+    // width: 100%;
+  }
+  pre {
+    margin-bottom: 10px;
+  }
+  .hljs-number {
+    color: #9cdcfe;
+  }
+  .hljs-keyword {
+    color: #07a;
+  }
+  .hljs-string {
+    color: #690;
+  }
+  .hljs-title {
+    color: #dd4a68;
+  }
+}

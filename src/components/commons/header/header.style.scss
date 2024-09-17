@@ -1,0 +1,24 @@
+@import '../../../scss/config';
+.anchor-wrapper {
+  .ant-anchor-link {
+    padding: 19px !important;
+  }
+  .ant-anchor-link-active {
+    .ant-anchor-link-title-active {
+      color: $text-color-primary !important;
+    }
+  }
+  .ant-anchor-ink-visible {
+    background-color: $text-color-primary !important;
+    height: 2.5px !important;
+  }
+}
+
+.popover-wrapper {
+  .ant-popover-inner {
+    padding: 0 !important;
+  }
+  .ant-list-header {
+    padding: 12px;
+  }
+}
