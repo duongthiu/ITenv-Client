@@ -4,3 +4,19 @@
 .view-lines {
   width: 100% !important;
 }
+.pre-wrapper {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow: auto;
+  max-width: 100%;
+}
+.preview-text-editor-wrapper {
+  max-width: 100%;
+  overflow-x: auto;
+  img {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+    overflow: hidden;
+  }
+}

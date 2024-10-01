@@ -5,6 +5,10 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import { paths } from '../../routes/paths';
 import { AuthenticationProps } from './Authentication.page';
 import Input from 'antd/es/input/Input';
+import { login } from '../../services/authentication.service';
+import { UserType } from '../../types/UserType';
+import { useAppDispatch } from '../../redux/app/hook';
+import { setLogin, setToken, setUser } from '../../redux/user/user.slice';
 
 const LOGIN_TEXT = 'Login';
 
@@ -19,18 +23,25 @@ const LoginForm = () => {
     onUserNameBlur
   } = useOutletContext<AuthenticationProps>();
 
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [loginButtonText, setLoginButtonText] = useState<string>(LOGIN_TEXT);
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
 
-  const onSubmit = (values: any) => {
+  const onSubmit = async (values: any) => {
     console.log(values);
     setLoginButtonText('Checking...');
-    setTimeout(() => {
-      setLoginButtonText(LOGIN_TEXT);
-      values.password === '123' ? onSuccessSubmit() : onFailSubmit();
-    }, 1500);
+    const resp = await login(values.username, values.password);
+    if (resp?.success) {
+      console.log(resp);
+      dispatch(setToken(resp.data.token));
+      dispatch(setLogin(true));
+      dispatch(setUser(resp.data.userData));
+      onSuccessSubmit();
+      navigate(paths.home);
+    } else onFailSubmit();
   };
+
   return (
     <div className="flex flex-col">
       <Typography.Title className="text-center font-mono font-semibold">Login</Typography.Title>

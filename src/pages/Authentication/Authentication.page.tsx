@@ -1,14 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { useGoogleLogin } from '@react-oauth/google';
 import { Typography } from 'antd';
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import FacebookLogin, { ReactFacebookLoginInfo } from 'react-facebook-login';
 import { FaFacebookF, FaGithub, FaGoogle } from 'react-icons/fa';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Alignment, Fit, Layout, RiveState, StateMachineInput, useRive, useStateMachineInput } from 'rive-react';
 import logo from '../../assets/logo/logo.png';
 import { paths } from '../../routes/paths';
+import { authenWithGithub, authenWithGoogle } from '../../services/authentication.service';
 import './Authentication.style.scss';
-import { AnimatePresence, motion } from 'framer-motion';
-import { registerWithGithub } from '../../services/authentication.service';
+import { useAppSelector } from '../../redux/app/hook';
 const STATE_MACHINE_NAME = 'Login Machine';
 export type AuthenticationProps = {
   onUsernameFocus: () => void;
@@ -23,7 +26,7 @@ export type AuthenticationProps = {
 const AuthenticationPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
+  const { isLogged } = useAppSelector((state) => state.user);
   const { rive: riveInstance, RiveComponent }: RiveState = useRive({
     src: 'src/assets/login-teddy.riv',
     stateMachines: STATE_MACHINE_NAME,
@@ -116,13 +119,31 @@ const AuthenticationPage = () => {
   const LoginWithGithub = () => {
     redirectToGithub();
   };
+  const LoginWithGoogle = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      console.log(tokenResponse);
+      try {
+        const res = await authenWithGoogle(tokenResponse.access_token);
+        // setGoogleProfile(res.data);
+        console.log('Google Profile:', res);
+      } catch (error) {
+        console.error('Error fetching Google profile:', error);
+        onFailSubmit();
+      }
+    },
+    onError: () => onFailSubmit()
+  });
+
+  const responseFacebook = (response: ReactFacebookLoginInfo) => {
+    console.log(response);
+  };
 
   useEffect(() => {
     const code = new URLSearchParams(window.location.search)?.get('code');
     if (code) {
       const fetchData = async () => {
         try {
-          const data: any = await registerWithGithub(code);
+          const data: any = await authenWithGithub(code);
           if (data?.success) {
             console.log('OAuth Success:');
             console.log(data?.user);
@@ -135,6 +156,9 @@ const AuthenticationPage = () => {
       fetchData();
     }
   }, [location.search, navigate]);
+  useEffect(() => {
+    if (isLogged) navigate(`${paths.home}`);
+  }, []);
   return (
     <div className="rive-story-container-login">
       <div
@@ -168,10 +192,33 @@ const AuthenticationPage = () => {
                 <div className="flex items-center justify-center">
                   <div className="flex items-center gap-8">
                     <div className="cursor-pointer rounded-full bg-black p-2 opacity-55 duration-200 hover:bg-[#ea4335] hover:opacity-100">
-                      <FaGoogle size={18} className="text-white" />
+                      <FaGoogle onClick={LoginWithGoogle} size={18} className="text-white" />
                     </div>
-                    <div className="flex cursor-pointer items-center justify-center rounded-full bg-black p-2 opacity-55 duration-200 hover:bg-[#0866ff] hover:opacity-100">
-                      <FaFacebookF size={18} className="text-white" />
+                    {/* <GoogleLogin
+                      onSuccess={(credentialResponse) => {
+                        console.log(credentialResponse);
+                      }}
+                      onError={() => {
+                        console.log('Login Failed');
+                      }}
+                    /> */}
+                    <div className="button-container flex cursor-pointer items-center justify-center rounded-full bg-black p-2 opacity-55 duration-200 hover:bg-[#0866ff] hover:opacity-100">
+                      {/* <FaFacebookF size={18} className="text-white" /> */}
+                      <FacebookLogin
+                        appId="1054271949826165" // Replace with your actual Facebook App ID
+                        autoLoad={true} // Optional, set to true if you want it to auto load
+                        fields="name,email,picture" // Requesting fields including email
+                        scope="public_profile,email" // Requesting the email and public profile permissions
+                        callback={responseFacebook} // Handle Facebook login callback
+                        buttonStyle={{
+                          all: 'initial'
+                        }}
+                        textButton=""
+                        icon={<FaFacebookF size={18} className="cursor-pointer text-white" />}
+                        // render={(renderProps: any) => (
+                        //   <FaFacebookF onClick={renderProps.onClick} size={18} className="cursor-pointer text-white" />
+                        // )}
+                      />
                     </div>
                     <FaGithub
                       onClick={LoginWithGithub}

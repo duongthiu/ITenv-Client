@@ -7,6 +7,7 @@
   }
   pre {
     margin-bottom: 10px;
+    width: 100%;
   }
   .hljs-number {
     color: #9cdcfe;
@@ -19,5 +20,17 @@
   }
   .hljs-title {
     color: #dd4a68;
+  }
+  code {
+    background-color: #000a2029;
+    border: 1px solid #0000000d;
+    border-radius: 5px;
+    color: #262626db;
+  }
+  ul {
+    padding-left: 25px;
+  }
+  li {
+    list-style-type: square;
   }
 }

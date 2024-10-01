@@ -22,9 +22,10 @@ const LazyAuthenPage = LazyLoadComponent(() => import('../pages/Authentication/A
 const LazyCreatePostPage = LazyLoadComponent(() => import('../pages/Private/CreatePostPage/CreatePostPage.page'))(true);
 const LazyMessagesPage = LazyLoadComponent(() => import('../pages/Private/MessagePage/MessagePage.page'))(true);
 const LazyProfilePage = LazyLoadComponent(() => import('../pages/Private/ProfilePage/ProfilePage.page'))(true);
+const LazyProblemListPage = LazyLoadComponent(() => import('../pages/Public/ProblemPage/ProblemListPage'))(true);
 export const PUBLIC_ROUTES: RouteType[] = [
   {
-    path: paths.editor,
+    path: paths.singleProblem,
     element: <LazyEditorPage />,
     layout: DefaultLayout,
     private: 'public',
@@ -75,6 +76,15 @@ export const PUBLIC_ROUTES: RouteType[] = [
     private: 'public',
     useHeader: true,
     useSidebar: false,
+    useFooter: false
+  },
+  {
+    path: paths.problems,
+    element: <LazyProblemListPage />,
+    layout: DefaultLayout,
+    private: 'public',
+    useHeader: true,
+    useSidebar: true,
     useFooter: false
   }
 ];

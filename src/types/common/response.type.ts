@@ -1,12 +1,14 @@
 export interface ResponseAxios<T> {
-  code: 'S' | 'E';
+  success: boolean;
   message: string;
   data: T;
 }
 
 export type ResponsePagination<T> = {
-  rows: T[];
-  count: number;
+  success: boolean;
+  data: T | null;
+  total?: number;
+  error?: string;
 };
 
 export type ResponseListData<T> = ResponseAxios<ResponsePagination<T>>;

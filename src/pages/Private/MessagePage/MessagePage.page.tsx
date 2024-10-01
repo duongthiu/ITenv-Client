@@ -149,7 +149,7 @@ const MessagePage = () => {
   return (
     <div className="flex h-full">
       <MessageSidebar />
-      <div className="card m-5 mb-0 flex flex-1 flex-col rounded-2xl shadow-xl duration-200">
+      <div className="card m-5 mb-0 flex flex-1 flex-col rounded-2xl pb-2 shadow-xl duration-200">
         <div className="flex items-center justify-between p-3">
           <div className="flex items-center gap-5">
             <Avatar size={42} icon={<UserOutlined />} />

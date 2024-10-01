@@ -3,8 +3,10 @@ import { useState } from 'react';
 import { GoEye, GoEyeClosed } from 'react-icons/go';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { paths } from '../../routes/paths';
-import { register } from '../../services/authentication.service';
+import { confirmSignup, confirmSignupType, register, RegisterType } from '../../services/authentication.service';
 import { AuthenticationProps } from './Authentication.page';
+import OTPModal from './components/OTPModal.component';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const LOGIN_TEXT = 'Sign Up';
 
@@ -23,7 +25,8 @@ const SignupForm = () => {
   const [loginButtonText, setLoginButtonText] = useState<string>(LOGIN_TEXT);
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState<boolean>(false);
-
+  const [isShowOtp, setIsShowOtp] = useState<boolean>(true);
+  const [signUpInfo, setSignUpInfo] = useState<RegisterType>();
   const onSubmit = async (values: any) => {
     console.log(values);
     if (values.password !== values.confirmPassword) {
@@ -40,8 +43,16 @@ const SignupForm = () => {
         password: values.password,
         authenWith: 0
       });
-      if (response.success) onSuccessSubmit();
-      else onFailSubmit();
+      if (response.success) {
+        setSignUpInfo({
+          email: values.email,
+          username: values.userName,
+          password: values.password,
+          authenWith: 0
+        });
+        onSuccessSubmit();
+        setIsShowOtp(true);
+      } else onFailSubmit();
 
       // navigate(paths.inforSignup);
     } catch (error) {
@@ -54,8 +65,59 @@ const SignupForm = () => {
   // const onChange = (value: any) => {
   //   console.log(value);
   // };
+  const handleConfirmOTP = async (otpCode: string) => {
+    if (signUpInfo) {
+      const confirmData: confirmSignupType = {
+        email: signUpInfo.email,
+        username: signUpInfo.username,
+        password: signUpInfo.password,
+        authenWith: signUpInfo.authenWith,
+        otp: otpCode
+      };
+
+      try {
+        const response = await confirmSignup(confirmData);
+        if (response.success) {
+          // Handle success (e.g., redirect or show success message)
+          console.log('Signup confirmed successfully');
+          navigate(paths.login);
+        } else {
+          onFailSubmit(); // Handle failure
+        }
+      } catch (error) {
+        console.error(error);
+        onFailSubmit(); // Handle error
+      }
+    }
+  };
+
+  const modalVariants = {
+    hidden: { opacity: 0, x: '-100vh' },
+    visible: { opacity: 1, x: '0' },
+    exit: { opacity: 0, x: '100vh' }
+  };
   return (
     <div>
+      <AnimatePresence mode="wait">
+        {isShowOtp && (
+          <motion.div
+            className="fixed bottom-0 left-0 right-0 top-0 z-20 flex items-center justify-center"
+            variants={modalVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            transition={{ duration: 0.5 }}
+            onClick={(e) => e.stopPropagation()} // Prevent modal click from closing it
+          >
+            <div className="fixed z-20">
+              <OTPModal setIsShowOtp={setIsShowOtp} onSubmit={handleConfirmOTP} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {/* {isShowOtp && (
+      
+      )} */}
       <Typography.Title className="text-center font-mono font-semibold">Sign Up</Typography.Title>
 
       <Form onFinish={onSubmit}>

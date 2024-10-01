@@ -4,30 +4,28 @@ import { Avatar, Divider, List } from 'antd';
 import { CiLogout } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
 import DarkMode from './DarkmodeToggle/DarkMode';
+import { useAppDispatch } from '../../../../../redux/app/hook';
+import { logout } from '../../../../../redux/user/user.slice';
 // const menuItems = [
 //   label: 'Profile',
 // ]
 type SettingMenuItemType = {
   icon: JSX.Element;
   label: string;
+  onClick?: () => void;
 };
 
-const menuItems: SettingMenuItemType[] = [
-  {
-    icon: <CiLogout />,
-    label: 'Logout'
-  },
-  {
-    icon: <CiLogout />,
-    label: 'Logout'
-  },
-  {
-    icon: <CiLogout />,
-    label: 'Log Out'
-  }
-];
-
 const SettingsComponent = () => {
+  const dispatch = useAppDispatch();
+  const menuItems: SettingMenuItemType[] = [
+    {
+      icon: <CiLogout />,
+      label: 'Logout',
+      onClick: () => {
+        dispatch(logout());
+      }
+    }
+  ];
   return (
     <div className="min-w-[300px]">
       <List
@@ -46,7 +44,10 @@ const SettingsComponent = () => {
             </Link>
             <Divider className="my-2" />
             {menuItems.map((item) => (
-              <div className="link-hover flex cursor-pointer items-center gap-5 rounded-lg px-2 py-3 text-[1.6rem] font-semibold duration-500">
+              <div
+                className="link-hover flex cursor-pointer items-center gap-5 rounded-lg px-2 py-3 text-[1.6rem] font-semibold duration-500"
+                onClick={item?.onClick}
+              >
                 {item.icon} {item.label}
               </div>
             ))}

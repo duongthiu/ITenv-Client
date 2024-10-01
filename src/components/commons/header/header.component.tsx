@@ -15,6 +15,7 @@ import MessageComponent from './components/Message/Message.component';
 import NotificationComponent from './components/Notification/Notification.component';
 import SettingsComponent from './components/Settings/Settings.component';
 import './header.style.scss';
+import { useSelector } from 'react-redux';
 
 interface ComponentPopoverProps {
   content: ReactNode;
@@ -44,7 +45,8 @@ const ComponentPopover: React.FC<ComponentPopoverProps> = ({ content, isOpen, se
 const HeaderComponent: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location);
+  const { user, isLogged } = useSelector((state: any) => state.user);
+  console.log(user, isLogged);
   const [friendsVisible, setFriendsVisible] = useState(false);
   const [messagesVisible, setMessagesVisible] = useState(false);
   const [notificationsVisible, setNotificationsVisible] = useState(false);
@@ -54,7 +56,7 @@ const HeaderComponent: React.FC = () => {
     {
       key: 'problems',
       title: 'Problems',
-      href: '/code-editor'
+      href: '/problems'
     },
     {
       key: 'contest',
@@ -145,22 +147,26 @@ const HeaderComponent: React.FC = () => {
             }
             placement="bottomRight"
           />
-          <Popover
-            placement="bottomRight"
-            content={<SettingsComponent />}
-            trigger="click"
-            arrow={false}
-            className="popover-notification cursor-pointer"
-            overlayClassName="max-w-[45rem] max-h-[40rem] p-0"
-            autoAdjustOverflow={false}
-            open={settingsVisible}
-            onOpenChange={(visible) => setSettingsVisible(visible)}
-          >
-            <Avatar size={32} icon={<UserOutlined />} />
-          </Popover>
-          <Button href="/login" type="primary">
-            Login
-          </Button>
+
+          {!isLogged ? (
+            <Button href="/login" type="primary">
+              Login
+            </Button>
+          ) : (
+            <Popover
+              placement="bottomRight"
+              content={<SettingsComponent />}
+              trigger="click"
+              arrow={false}
+              className="popover-notification cursor-pointer"
+              overlayClassName="max-w-[45rem] max-h-[40rem] p-0"
+              autoAdjustOverflow={false}
+              open={settingsVisible}
+              onOpenChange={(visible) => setSettingsVisible(visible)}
+            >
+              <img src={user?.avatar} alt="" className="h-[32px] w-[32px] rounded-full object-cover" />
+            </Popover>
+          )}
         </div>
       </div>
     </div>

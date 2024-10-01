@@ -108,3 +108,12 @@
   width: 100%;
   max-width: 500px;
 }
+.button-container {
+  span {
+    width: 18px;
+    height: 18px;
+  }
+  button {
+    all: initial;
+  }
+}

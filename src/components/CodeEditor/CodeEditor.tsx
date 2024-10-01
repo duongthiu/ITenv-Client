@@ -13,12 +13,13 @@ import './CodeEditor.style.scss';
 import LanguageSelector from './LanguageSelector';
 import Output from './Output';
 import Problem from './Problem';
+import { ProblemType } from '../../types/ProblemType';
 const DEFAULT_LANGUAGE = 'javascript';
 
 interface CodeEditorType extends Omit<FormItemProps<any>, 'children'> {
   name?: FormItemProps['name'];
   defaultValue?: string;
-  defaultLanguage?: string;
+  problem: ProblemType;
   containerClassName?: string;
   className?: string;
 }
@@ -26,13 +27,12 @@ interface CodeEditorType extends Omit<FormItemProps<any>, 'children'> {
 const CodeEditor: React.FC<CodeEditorType> = ({
   name,
   defaultValue,
-  defaultLanguage,
+  problem,
   containerClassName,
   className,
   ...passProps
 }) => {
   const theme = useAppSelector((state) => state.app.theme);
-
   const editorRef = useRef(null);
   const mHeight = useMotionValue(400);
   const mWidth = useMotionValue(600);
@@ -99,11 +99,10 @@ const CodeEditor: React.FC<CodeEditorType> = ({
       }
     });
   };
-  console.log(mWidth.get(), mHeight.get());
   return (
     <div style={{ height: 'calc(100vh-20px)' }} className="flex w-full justify-end">
       <motion.div className="b card h-[calc(100vh-60px)] flex-1 overflow-auto rounded-lg shadow-md">
-        <Problem />
+        <Problem problem={problem} />
       </motion.div>
       <Form.Item
         name={name}
@@ -122,14 +121,7 @@ const CodeEditor: React.FC<CodeEditorType> = ({
             )}
           >
             <div className="flex items-center justify-between">
-              <LanguageSelector language={language} onSelect={handleSetLanguage} />
-              {/* <div>
-                {theme === CodeEditorThemeEnum['vs-dark'] ? (
-                  <CiDark onClick={handleToggleTheme} color="#fff" size={25} />
-                ) : (
-                  <CiLight onClick={handleToggleTheme} color="#000" size={25} />
-                )}
-              </div> */}
+              {/* <LanguageSelector language={language} onSelect={handleSetLanguage} /> */}
             </div>
             <motion.div className={cn('py-3')} style={{ height: mHeight, width: mWidth }}>
               {mWidth.get() > 30 ? (
