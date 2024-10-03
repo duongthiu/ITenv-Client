@@ -4,7 +4,7 @@ import { Avatar, Divider, List } from 'antd';
 import { CiLogout } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
 import DarkMode from './DarkmodeToggle/DarkMode';
-import { useAppDispatch } from '../../../../../redux/app/hook';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/app/hook';
 import { logout } from '../../../../../redux/user/user.slice';
 // const menuItems = [
 //   label: 'Profile',
@@ -16,6 +16,7 @@ type SettingMenuItemType = {
 };
 
 const SettingsComponent = () => {
+  const { user } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const menuItems: SettingMenuItemType[] = [
     {
@@ -38,8 +39,8 @@ const SettingsComponent = () => {
             >
               <Avatar size={36} icon={<UserOutlined />} />
               <div className="flex flex-col justify-center">
-                <span className="text-[1.65rem] font-semibold">Tran Duong Thieu</span>
-                <span className="w-full truncate text-[1.4rem] font-light">tranduongthieuhcmute@gmail.com</span>
+                <span className="text-[1.65rem] font-semibold">{user?.username}</span>
+                <span className="w-full truncate text-[1.4rem] font-light">{user?.email}</span>
               </div>
             </Link>
             <Divider className="my-2" />

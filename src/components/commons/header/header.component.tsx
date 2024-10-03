@@ -46,7 +46,6 @@ const HeaderComponent: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, isLogged } = useSelector((state: any) => state.user);
-  console.log(user, isLogged);
   const [friendsVisible, setFriendsVisible] = useState(false);
   const [messagesVisible, setMessagesVisible] = useState(false);
   const [notificationsVisible, setNotificationsVisible] = useState(false);

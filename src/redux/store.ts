@@ -4,7 +4,6 @@ import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { userSlice } from './user/user.slice';
 
-// Persist configuration for the app slice (only store 'theme')
 const appPersistConfig = {
   key: 'app',
   storage,
@@ -14,7 +13,7 @@ const appPersistConfig = {
 const userPersistConfig = {
   key: 'user',
   storage,
-  whitelist: ['isLogged', 'token'] // Only persist the isLogged and token fields in the user slice
+  whitelist: ['isLogged', 'token']
 };
 
 // Combine reducers with persisted slices
@@ -28,12 +27,9 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        // Ignore these action types
         ignoredActions: [],
-        // Ignore these field paths in all actions
-        ignoredActionPaths: ['register', 'rehydrate', 'payload'],
-        // Ignore these paths in the state
-        ignoredPaths: ['common.socket']
+        ignoredActionPaths: ['register', 'rehydrate', 'payload', 'payload.socketConnection'],
+        ignoredPaths: ['user.socketConnection']
       }
     })
 });

@@ -8,9 +8,10 @@ export const paths = {
   authentication: '/authentication',
   personal: '/personal',
   problems: '/problems',
-  singleProblem : '/problems/:slug',
+  singleProblem: '/problems/:slug',
   discuss: '/discuss',
   createPost: '/create-post',
   messages: '/messages',
-  profile: '/profile/:slug'
+  profile: '/profile/:slug',
+  search: '/search'
 };

@@ -12,6 +12,8 @@ import { paths } from '../../routes/paths';
 import { authenWithGithub, authenWithGoogle } from '../../services/authentication.service';
 import './Authentication.style.scss';
 import { useAppSelector } from '../../redux/app/hook';
+import { useAuth } from '../../utils/hooks/useAuth.hook';
+import { notifyError } from '../../utils/helpers/notify';
 const STATE_MACHINE_NAME = 'Login Machine';
 export type AuthenticationProps = {
   onUsernameFocus: () => void;
@@ -25,6 +27,8 @@ export type AuthenticationProps = {
 };
 const AuthenticationPage = () => {
   const navigate = useNavigate();
+  const { onLogin } = useAuth();
+
   const location = useLocation();
   const { isLogged } = useAppSelector((state) => state.user);
   const { rive: riveInstance, RiveComponent }: RiveState = useRive({
@@ -87,10 +91,10 @@ const AuthenticationPage = () => {
     isCheckingInput!.value = false;
   };
   const onSuccessSubmit = () => {
-    trigSuccessInput!.fire();
+    if (trigSuccessInput) trigSuccessInput!.fire();
   };
   const onFailSubmit = () => {
-    trigFailInput!.fire();
+    if (trigFailInput) trigFailInput!.fire();
   };
   const setIsHandUp = (value: boolean) => {
     isHandsUpInput!.value = value;
@@ -121,13 +125,23 @@ const AuthenticationPage = () => {
   };
   const LoginWithGoogle = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
-      console.log(tokenResponse);
       try {
-        const res = await authenWithGoogle(tokenResponse.access_token);
-        // setGoogleProfile(res.data);
-        console.log('Google Profile:', res);
+        await onLogin(
+          () => authenWithGoogle({ accessToken: tokenResponse.access_token }),
+          {
+            accessToken: tokenResponse.access_token
+          },
+          () => {
+            onSuccessSubmit();
+            navigate(paths.home);
+          },
+          (message: string) => {
+            onFailSubmit();
+            notifyError(message || 'Login failed, please try again');
+          }
+        );
       } catch (error) {
-        console.error('Error fetching Google profile:', error);
+        notifyError((error as Error).message || 'Login failed, please try again');
         onFailSubmit();
       }
     },
@@ -143,13 +157,22 @@ const AuthenticationPage = () => {
     if (code) {
       const fetchData = async () => {
         try {
-          const data: any = await authenWithGithub(code);
-          if (data?.success) {
-            console.log('OAuth Success:');
-            console.log(data?.user);
-          } else onFailSubmit();
+          await onLogin(
+            authenWithGithub,
+            {
+              code: code
+            },
+            () => {
+              onSuccessSubmit();
+              navigate(paths.home);
+            },
+            (message: string) => {
+              onFailSubmit();
+              notifyError(message || 'Login failed, please try again');
+            }
+          );
         } catch (error) {
-          console.error('Error during GitHub OAuth:', error);
+          notifyError('Error during GitHub OAuth: ' + (error as Error).message);
         }
       };
 

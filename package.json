@@ -47,6 +47,7 @@
     "react-router-dom": "^6.24.0",
     "redux-persist": "^6.0.0",
     "rive-react": "^4.13.3",
+    "socket.io-client": "^4.8.0",
     "swr": "^2.2.5",
     "tailwind-merge": "^2.3.0"
   },

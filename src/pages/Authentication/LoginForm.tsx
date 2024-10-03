@@ -9,6 +9,8 @@ import { login } from '../../services/authentication.service';
 import { UserType } from '../../types/UserType';
 import { useAppDispatch } from '../../redux/app/hook';
 import { setLogin, setToken, setUser } from '../../redux/user/user.slice';
+import { useAuth } from '../../utils/hooks/useAuth.hook';
+import { notifyError } from '../../utils/helpers/notify';
 
 const LOGIN_TEXT = 'Login';
 
@@ -23,35 +25,51 @@ const LoginForm = () => {
     onUserNameBlur
   } = useOutletContext<AuthenticationProps>();
 
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [loginButtonText, setLoginButtonText] = useState<string>(LOGIN_TEXT);
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
-
-  const onSubmit = async (values: any) => {
+  const { onLogin } = useAuth();
+  type ParamsLogin = {
+    email: string;
+    password: string;
+  };
+  const onSubmit = async (values: ParamsLogin) => {
     console.log(values);
     setLoginButtonText('Checking...');
-    const resp = await login(values.username, values.password);
-    if (resp?.success) {
-      console.log(resp);
-      dispatch(setToken(resp.data.token));
-      dispatch(setLogin(true));
-      dispatch(setUser(resp.data.userData));
-      onSuccessSubmit();
-      navigate(paths.home);
-    } else onFailSubmit();
+
+    await onLogin(
+      () =>
+        login({
+          email: values.email,
+          password: values.password
+        }),
+      {
+        email: values.email,
+        password: values.password
+      },
+      () => {
+        setLoginButtonText(LOGIN_TEXT);
+        onSuccessSubmit();
+        navigate(paths.home);
+      },
+      (message: string) => {
+        onFailSubmit();
+        notifyError(message || 'Login failed, please try again');
+        setLoginButtonText(LOGIN_TEXT);
+      }
+    );
   };
 
   return (
     <div className="flex flex-col">
       <Typography.Title className="text-center font-mono font-semibold">Login</Typography.Title>
       <Form onFinish={onSubmit}>
-        <Form.Item name="username" rules={[{ required: true, message: 'Please input your username!' }]}>
+        <Form.Item name="email" rules={[{ required: true, message: 'Please input your email!' }]}>
           <Input
             type="text"
-            className="form-username input-mode"
-            name="username"
-            placeholder="Username"
+            className="form-email input-mode"
+            name="email"
+            placeholder="Email"
             value={usernameValue || ''}
             onChange={onUsernameChange}
             onFocus={onUsernameFocus}

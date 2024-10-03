@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { UserType } from '../../types/UserType';
 import { getCurrentUser } from '../../services/user/user.service';
+import { Socket } from 'socket.io-client';
 
 type InitialState = {
   user: UserType | null;
@@ -8,6 +9,7 @@ type InitialState = {
   isLogged: boolean;
   loading: boolean;
   error: string;
+  socketConnection?: Socket;
 };
 
 const initialState: InitialState = {
@@ -15,7 +17,8 @@ const initialState: InitialState = {
   token: '',
   isLogged: false,
   loading: false,
-  error: ''
+  error: '',
+  socketConnection: undefined
 };
 
 export const getUser = createAsyncThunk<UserType, string | undefined, { rejectValue: string }>(
@@ -49,6 +52,9 @@ export const userSlice = createSlice({
       state.user = null;
       state.isLogged = false;
       state.token = '';
+    },
+    setSocketConnection: (state, action: PayloadAction<any>) => {
+      state.socketConnection = action.payload;
     }
   },
   extraReducers: (builder) => {
@@ -69,5 +75,5 @@ export const userSlice = createSlice({
   }
 });
 
-export const { setLogin, setToken, setUser, logout } = userSlice.actions;
+export const { setLogin, setToken, setUser, logout, setSocketConnection } = userSlice.actions;
 export default userSlice.reducer;

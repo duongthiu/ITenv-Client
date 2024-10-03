@@ -34,39 +34,41 @@ export const confirmSignup = async (queryOption: confirmSignupType) => {
     throw error;
   }
 };
-type LoginInforResponseType = {
+export type LoginInforResponseType = {
   userData: UserType;
   token: string;
 };
-export const login = async (email: string, password: string) => {
+interface ParamsLogin {
+  email: string;
+  password: string;
+}
+export const login = async (params: ParamsLogin) => {
+  const resp = await post<any, any>(import.meta.env.VITE_APP_API + 'account/login', {
+    ...params,
+    authenWith: 0
+  });
+
+  return resp as unknown as ResponseAxios<LoginInforResponseType>;
+};
+export const authenWithGithub = async (params: {
+  code: string;
+}): Promise<ResponseAxios<LoginInforResponseType> | null> => {
   try {
-    const resp = await post<any, any>(import.meta.env.VITE_APP_API + 'account/login', {
-      email,
-      password,
-      authenWith: 0
-    });
+    const resp = await post<any, any>(import.meta.env.VITE_APP_API + 'account/github-oauth', params);
     return resp as unknown as ResponseAxios<LoginInforResponseType>;
   } catch (error) {
-    console.log(error);
+    return null;
   }
 };
-export const authenWithGithub = async (code: string) => {
-  try {
-    const resp = await post<any, any>(import.meta.env.VITE_APP_API + 'account/github-oauth', { code });
-    return resp as unknown as ResponseAxios<LoginInforResponseType>;
-  } catch (error) {
-    console.log(error);
-  }
-};
-export const authenWithGoogle = async (accessToken: string) => {
+export const authenWithGoogle = async (params: { accessToken: string }) => {
   try {
     const resp = await post<any, any>(
       import.meta.env.VITE_APP_API + 'account/google-oauth', // Your backend API URL
-      { accessToken }
+      params
     );
     return resp as unknown as ResponseAxios<LoginInforResponseType>;
   } catch (error) {
-    console.log(error);
+    return null;
   }
 };
 

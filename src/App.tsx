@@ -4,24 +4,32 @@ import { Helmet } from 'react-helmet';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { Fragment } from 'react/jsx-runtime';
 import DefaultLayout from './layouts/DefaultLayout/DefaultLayout';
-import NotFoundPage from './pages/ExceptionPage/NotFoundPage';
-import { AUTHEN_ROUTES, PUBLIC_ROUTES, RouteType } from './routes/routes';
 import AuthenticationPage from './pages/Authentication/Authentication.page';
-import { useAppSelector } from './redux/app/hook';
+import NotFoundPage from './pages/ExceptionPage/NotFoundPage';
 import { THEME } from './redux/app/app.slice';
-
+import { useAppDispatch, useAppSelector } from './redux/app/hook';
+import { getUser } from './redux/user/user.slice';
+import { AUTHEN_ROUTES, PUBLIC_ROUTES, RouteType } from './routes/routes';
 // import { Helmet } from 'react-helmet';
 
 // const pathname = location.path
 
 function App() {
   const location = window.location;
+  const dispatch = useAppDispatch();
   const [pathname, setPathname] = useState(location?.pathname?.split('/')[1]);
   const theme = useAppSelector((state) => state.app.theme);
+
+  const { isLogged, token } = useAppSelector((state) => state.user);
+  useEffect(() => {
+    if (isLogged && token) {
+      dispatch(getUser());
+    }
+  }, [isLogged, token, dispatch]);
+
   useEffect(() => {
     setPathname(location?.pathname?.split('/')[1]);
   }, [location.pathname]);
-  console.log(theme);
   useEffect(() => {
     const bodyClass = theme === THEME.DARK ? 'dark-mode' : 'light-mode';
     document.body.classList.remove('dark-mode', 'light-mode');
