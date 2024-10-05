@@ -10,6 +10,7 @@ import { Tab } from './Tabs';
 import { Button, Input, Switch, Tooltip, Typography } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { FiSend } from 'react-icons/fi';
+import { createPost } from '../../../services/post/post.service';
 export interface Ingredient {
   label: string;
 }
@@ -17,24 +18,37 @@ const initialTabs: Ingredient[] = [{ label: 'Text Editor' }, { label: 'Preview T
 
 const CreatePostPage = () => {
   const [content, setContent] = useState('Write something');
+  const [isAnonymous, setIsAnonymous] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleEditorChange = useCallback((content: any, editor: any) => {
     setContent(content);
   }, []);
   const contentDebounce = useDebounce(content, 300);
-
+  const [title, setTitle] = useState('');
   const [tabs, setTabs] = useState(initialTabs);
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
   const [isSplit, setIsSplit] = useState(false);
-  console.log(tabs);
+  const handleCreatePost = async () => {
+    // post to the server
+    console.log('Posting to server', { title, content, isAnonymous });
+    const result = await createPost({ title, content, isAnonymous });
+    console.log(result);
+  };
   return (
     <div className="flex h-full w-full flex-col gap-5 p-[20px]">
       <div className="card rounded-lg p-5 shadow-lg">
         <Typography.Title level={3} className="font-mono">
           Create Post
         </Typography.Title>
+
         <div className="flex items-center justify-between">
-          <Input size="middle" className="max-w-[500px]" placeholder="Enter post title..." />
+          <Input
+            size="middle"
+            className="max-w-[500px]"
+            placeholder="Enter post title..."
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
           <div className="flex items-center gap-10">
             <div className="flex items-center gap-5">
               <div className="flex items-center gap-2">
@@ -45,9 +59,15 @@ const CreatePostPage = () => {
                   </div>
                 </Tooltip>
               </div>
-              <Switch defaultValue={false} checkedChildren={<CheckOutlined />} unCheckedChildren={<CloseOutlined />} />
+              <Switch
+                defaultValue={false}
+                checkedChildren={<CheckOutlined />}
+                unCheckedChildren={<CloseOutlined />}
+                value={isAnonymous}
+                onChange={(checked) => setIsAnonymous(checked)}
+              />
             </div>
-            <Button iconPosition="end" type="primary" icon={<FiSend size={20} />}>
+            <Button iconPosition="end" type="primary" icon={<FiSend size={20} />} onClick={handleCreatePost}>
               Post
             </Button>
           </div>

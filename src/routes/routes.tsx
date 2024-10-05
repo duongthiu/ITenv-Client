@@ -47,7 +47,7 @@ export const PUBLIC_ROUTES: RouteType[] = [
     path: paths.discuss,
     element: <LazyDiscussPage />,
     layout: DefaultLayout,
-    private: 'public',
+    private: 'auth',
     useHeader: true,
     useSidebar: true,
     useFooter: true
@@ -56,7 +56,7 @@ export const PUBLIC_ROUTES: RouteType[] = [
     path: paths.createPost,
     element: <LazyCreatePostPage />,
     layout: DefaultLayout,
-    private: 'public',
+    private: 'auth',
     useHeader: true,
     useSidebar: true,
     useFooter: true
@@ -65,7 +65,7 @@ export const PUBLIC_ROUTES: RouteType[] = [
     path: paths.messages,
     element: <LazyMessagesPage />,
     layout: DefaultLayout,
-    private: 'public',
+    private: 'auth',
     useHeader: true,
     useSidebar: false,
     useFooter: false
@@ -74,7 +74,7 @@ export const PUBLIC_ROUTES: RouteType[] = [
     path: paths.profile,
     element: <LazyProfilePage />,
     layout: DefaultLayout,
-    private: 'public',
+    private: 'auth',
     useHeader: true,
     useSidebar: false,
     useFooter: false

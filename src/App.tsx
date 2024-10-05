@@ -10,6 +10,7 @@ import { THEME } from './redux/app/app.slice';
 import { useAppDispatch, useAppSelector } from './redux/app/hook';
 import { getUser } from './redux/user/user.slice';
 import { AUTHEN_ROUTES, PUBLIC_ROUTES, RouteType } from './routes/routes';
+import NotAuthPage from './pages/ExceptionPage/NotAuthPage';
 // import { Helmet } from 'react-helmet';
 
 // const pathname = location.path
@@ -57,30 +58,39 @@ function App() {
       <main className="">
         <Router>
           <Routes>
-            {/* {PUBLIC_ROUTES.map((route: InfoPage, index: number) => {
-              let Layout: any = DefaultLayout;
-              if (route.layout) {
-                Layout = route.layout;
-              } else if (route.layout === null) {
-                Layout = Fragment;
-              }
-             ) }} */}
             {PUBLIC_ROUTES.map((route: RouteType, index: number) => {
               let Layout: any = DefaultLayout;
               if (route?.layout) Layout = route.layout;
               else if (route.layout === null) Layout = Fragment;
-              return (
-                <Route
-                  key={index}
-                  path={route.path}
-                  element={
-                    <Layout useHeader={route.useHeader} useSidebar={route.useSidebar} useFooter={route.useFooter}>
-                      {route.element}
-                    </Layout>
-                  }
-                ></Route>
-              );
+              if (route.private === 'public')
+                return (
+                  <Route
+                    key={index}
+                    path={route.path}
+                    element={
+                      <Layout useHeader={route.useHeader} useSidebar={route.useSidebar} useFooter={route.useFooter}>
+                        {route.element}
+                      </Layout>
+                    }
+                  ></Route>
+                );
+              else {
+                if (isLogged && token) {
+                  return (
+                    <Route
+                      key={index}
+                      path={route.path}
+                      element={
+                        <Layout useHeader={route.useHeader} useSidebar={route.useSidebar} useFooter={route.useFooter}>
+                          {route.element}
+                        </Layout>
+                      }
+                    ></Route>
+                  );
+                } else return <Route path="*" element={<NotAuthPage />} />;
+              }
             })}
+
             {AUTHEN_ROUTES.map((route: RouteType, index: number) => {
               return (
                 <Route key={index} path={route.path} element={<AuthenticationPage />}>

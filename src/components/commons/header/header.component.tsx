@@ -70,7 +70,8 @@ const HeaderComponent: React.FC = () => {
   ];
 
   const handleSearch = (values: any) => {
-    console.log(values);
+    const searchQuery = values?.search ? `?q=${values.search}` : '';
+    navigate(`/search${searchQuery}`);
   };
 
   const handleNavigate = (

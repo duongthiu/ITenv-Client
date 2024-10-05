@@ -4,17 +4,20 @@ import { ResponsePagination } from '../../../types/common';
 import { UserType } from '../../../types/UserType';
 import { getAllUser } from '../../../services/user/user.service';
 import { Pagination, PaginationProps } from 'antd';
+import { useLocation, useParams } from 'react-router-dom';
 
 const SearchPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const search = useLocation().search;
+  const q = new URLSearchParams(search).get('q');
 
   const {
     data: userList,
     error,
     isLoading
-  } = useSWR<ResponsePagination<UserType[]>>(`/api/users?page=${currentPage}&limit=${pageSize}`, () =>
-    getAllUser(`page=${currentPage}&limit=${pageSize}`)
+  } = useSWR<ResponsePagination<UserType[]>>(`/api/users?page=${currentPage}&limit=${pageSize}&q=${q}`, () =>
+    getAllUser(`page=${currentPage}&limit=${pageSize}${q ? `&q=${q}` : ''}`)
   );
 
   if (isLoading) return <p>Loading...</p>;
