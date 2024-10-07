@@ -95,6 +95,7 @@ body.light-mode {
   }
   .sub-title {
     color: rgb(104, 104, 104) !important;
+    font-weight: 500;
   }
   code {
     background-color: #000a2029;
@@ -111,7 +112,7 @@ body.dark-mode {
   color: white;
   .sub-title {
     color: rgb(202, 202, 202) !important;
-    font-weight: 300;
+    font-weight: 500;
   }
   .ant-layout-content {
     color: white !important;

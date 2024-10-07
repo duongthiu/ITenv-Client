@@ -39,7 +39,7 @@ const SearchPage = () => {
 
       <ul className="space-y-4">
         {userList?.data?.map((user) => (
-          <li key={user.username} className="user-item flex items-center rounded-lg bg-white p-4 shadow-lg">
+          <li key={user.username} className="user-item card flex items-center rounded-lg p-4 shadow-lg">
             <div className="flex items-center space-x-4">
               <img
                 src={user.avatar || '/default-avatar.png'}
@@ -47,10 +47,10 @@ const SearchPage = () => {
                 className="h-12 w-12 rounded-full object-cover"
               />
               <div>
-                <p className="text-lg font-semibold">
+                <p className="text-[1.4rem] font-semibold">
                   {user.username} - {user.email}
                 </p>
-                <p className="text-sm">
+                <p className="text-[1rem]">
                   Status:{' '}
                   {user.status === 1 ? (
                     <span className="font-semibold text-green-600">Online</span>

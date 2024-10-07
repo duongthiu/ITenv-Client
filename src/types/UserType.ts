@@ -3,7 +3,8 @@ import { PostType } from './PostType';
 import { SubmissionType } from './SubmissionType';
 
 export type UserType = {
-  username?: string;
+  _id: string;
+  username: string;
   dob?: Date;
   phoneNumber?: string;
   avatar: string;

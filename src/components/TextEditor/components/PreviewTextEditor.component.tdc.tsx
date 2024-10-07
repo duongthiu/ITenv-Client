@@ -2,7 +2,6 @@ import hljs from 'highlight.js';
 import 'highlight.js/styles/default.css'; // You can choose different themes available
 import React, { useEffect } from 'react';
 import './PreviewTextEditor.style.scss';
-import { Typography } from 'antd';
 type PreviewTextEditorProps = {
   content: any;
 };

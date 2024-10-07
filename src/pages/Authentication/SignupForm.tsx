@@ -25,7 +25,7 @@ const SignupForm = () => {
   const [loginButtonText, setLoginButtonText] = useState<string>(LOGIN_TEXT);
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState<boolean>(false);
-  const [isShowOtp, setIsShowOtp] = useState<boolean>(true);
+  const [isShowOtp, setIsShowOtp] = useState<boolean>(false);
   const [signUpInfo, setSignUpInfo] = useState<RegisterType>();
   const onSubmit = async (values: any) => {
     console.log(values);

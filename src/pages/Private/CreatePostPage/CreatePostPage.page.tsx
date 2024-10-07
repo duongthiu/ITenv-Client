@@ -10,10 +10,12 @@ import { Tab } from './Tabs';
 import { Button, Input, Switch, Tooltip, Typography } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { FiSend } from 'react-icons/fi';
-import { createPost } from '../../../services/post/post.service';
+import { createPost, deleteImages } from '../../../services/post/post.service';
+import { ImageType } from '../../../types/common';
 export interface Ingredient {
   label: string;
 }
+
 const initialTabs: Ingredient[] = [{ label: 'Text Editor' }, { label: 'Preview Text Editor' }];
 
 const CreatePostPage = () => {
@@ -28,11 +30,26 @@ const CreatePostPage = () => {
   const [tabs, setTabs] = useState(initialTabs);
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
   const [isSplit, setIsSplit] = useState(false);
+  const [postImages, setPostImages] = useState<ImageType[]>([]);
   const handleCreatePost = async () => {
     // post to the server
-    console.log('Posting to server', { title, content, isAnonymous });
-    const result = await createPost({ title, content, isAnonymous });
-    console.log(result);
+    try {
+      console.log('Posting to server', { title, content, isAnonymous });
+
+      const deleteImage: { images: string[] } = { images: [] };
+      for (const image of postImages) {
+        if (content.indexOf(image.url) === -1) {
+          deleteImage.images.push(image.filename);
+        }
+      }
+      if (deleteImage.images.length > 0) {
+        const deleteImageResponse = await deleteImages(deleteImage);
+      }
+      const result = await createPost({ title, content, isAnonymous });
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
     <div className="flex h-full w-full flex-col gap-5 p-[20px]">
@@ -123,7 +140,12 @@ const CreatePostPage = () => {
                         : 'hidden w-0'
                   )}
                 >
-                  <TextEditorComponent content={content} setContent={handleEditorChange} />
+                  <TextEditorComponent
+                    content={content}
+                    setContent={handleEditorChange}
+                    postImages={postImages}
+                    setPostImages={setPostImages}
+                  />
                 </div>
                 <div
                   className={cn(

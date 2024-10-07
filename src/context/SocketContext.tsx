@@ -10,7 +10,7 @@ type SocketContextProviderProps = {
 };
 export const SocketProvider: React.FC<SocketContextProviderProps> = ({ children }) => {
   const socket = useRef<Socket<DefaultEventsMap, DefaultEventsMap> | null>(null);
-  const { user, token, isLogged } = useAppSelector((state) => state.user);
+  const { token, isLogged } = useAppSelector((state) => state.user);
 
   useEffect(() => {
     if (isLogged && token) {

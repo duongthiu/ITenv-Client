@@ -1,24 +1,24 @@
+import { UserType } from './UserType';
+
 export type PostType = {
-  id: number;
+  _id: string;
+  postBy: Pick<UserType, '_id' | 'username' | 'avatar'>;
   title: string;
   content: string;
-  created_at: string;
-  updated_at: string;
-  user_id?: string;
-  image_url?: string;
-  vote: number;
-  comments?: CommentType[];
-  user: {
-    name: string;
-  };
+  view: string[];
+  vote: string[];
+  createdAt: string;
+  updatedAt: string;
+  comments: CommentType[];
 };
+
 export type CommentType = {
-  id: string;
+  _id: string;
+  commentBy: Pick<UserType, '_id' | 'username' | 'avatar'>;
+  parentComment?: string;
+  isAccepted: boolean;
   content: string;
-  created_at: string;
-  updated_at: string;
-  vote: number;
-  user: {
-    name: string;
-  };
+  createdAt: string;
+  updatedAt?: string;
+  vote: string[];
 };
