@@ -1,15 +1,14 @@
+import { Skeleton } from 'antd';
+import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import CodeEditor from '../../../components/CodeEditor/CodeEditor';
-import { ProblemType } from '../../../types/ProblemType';
+import { getSingleProblem } from '../../../services/problem/problem.service';
 import { cn } from '../../../utils/helpers/cn';
 import HeaderComponent from './components/Header.component';
-import { getSingleProblem } from '../../../services/problem/problem.service';
-import { useParams } from 'react-router-dom';
-import { Skeleton } from 'antd';
 const EditorPage = () => {
   const { slug } = useParams();
-  const { data: singleProblem, isLoading, error } = useSWR('/api/problem/', () => getSingleProblem(slug || ''));
-  
+  const { data: singleProblem, isLoading } = useSWR('/api/problem/', () => getSingleProblem(slug || ''));
+
   return (
     <div className={cn('')}>
       <HeaderComponent />

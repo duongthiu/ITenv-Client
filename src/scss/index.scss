@@ -98,7 +98,7 @@ body.light-mode {
     font-weight: 500;
   }
   code {
-    background-color: #000a2029;
+    background-color: #f7f9fa;
     border: 1px solid #0000000d;
     border-radius: 5px;
     color: #262626db;
@@ -187,6 +187,24 @@ body.dark-mode {
       background-color: rgb(40, 40, 40) !important;
     }
   }
+  .tox .tox-dialog {
+    background-color: rgb(40, 40, 40) !important;
+    .tox-dialog__header {
+      background-color: rgb(45, 45, 45) !important;
+    }
+    .tox-listbox {
+      background-color: rgb(45, 45, 45) !important;
+    }
+    .tox-textarea {
+      background-color: rgb(45, 45, 45) !important;
+    }
+  }
+  .tox-dialog__footer {
+    background-color: rgb(40, 40, 40) !important;
+  }
+  .tox-textfield {
+    background-color: rgb(45, 45, 45) !important;
+  }
   .tox-editor-header {
     background-color: rgb(40, 40, 40) !important;
     .tox-menubar {
@@ -211,8 +229,11 @@ body.dark-mode {
       background-color: rgb(87, 87, 87) !important;
     }
     .tox-toolbar-overlord {
-      background-color: rgb(36, 36, 36) !important;
+      background-color: rgb(19, 19, 19) !important;
     }
+  }
+  .tox-tinymce {
+    border: 2px solid rgb(0, 0, 0) !important;
   }
   .selected-tab {
     background-color: rgba(139, 137, 137, 0.8) !important;
@@ -225,10 +246,10 @@ body.dark-mode {
     color: white !important;
   }
   code {
-    background-color: #e0e1e2e0;
+    background-color: #474747;
     border: 1px solid #0000000d;
     border-radius: 5px;
-    color: #262626db;
+    color: #f1f1f1db;
   }
 }
 .preview-text-editor-wrapper {

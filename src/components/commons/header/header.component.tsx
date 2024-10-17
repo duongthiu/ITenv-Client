@@ -1,11 +1,11 @@
-import { UserOutlined } from '@ant-design/icons';
-import { Anchor, Avatar, Badge, Button, Form, Input, Popover } from 'antd';
+import { Anchor, Badge, Button, Form, Input, Popover } from 'antd';
 import { AnchorLinkItemProps } from 'antd/es/anchor/Anchor';
 import { TooltipPlacement } from 'antd/es/tooltip';
 import React, { ReactNode, SetStateAction, useState } from 'react';
 import { HiOutlineUsers } from 'react-icons/hi2';
 import { IoSearchOutline } from 'react-icons/io5';
 import { PiBell, PiMessengerLogo } from 'react-icons/pi';
+import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import logo from '../../../assets/logo/logo.png';
 import { paths } from '../../../routes/paths';
@@ -15,7 +15,6 @@ import MessageComponent from './components/Message/Message.component';
 import NotificationComponent from './components/Notification/Notification.component';
 import SettingsComponent from './components/Settings/Settings.component';
 import './header.style.scss';
-import { useSelector } from 'react-redux';
 
 interface ComponentPopoverProps {
   content: ReactNode;
@@ -70,8 +69,10 @@ const HeaderComponent: React.FC = () => {
   ];
 
   const handleSearch = (values: any) => {
-    const searchQuery = values?.search ? `?q=${values.search}` : '';
-    navigate(`/search${searchQuery}`);
+    if (values.search.trim()) {
+      const searchQuery = values?.search ? `?q=${values.search.trim()}` : '';
+      navigate(`/search${searchQuery}`);
+    }
   };
 
   const handleNavigate = (
@@ -104,7 +105,7 @@ const HeaderComponent: React.FC = () => {
         </div>
         <Form onFinish={handleSearch}>
           <Form.Item style={{ margin: 0 }} name={'search'}>
-            <Input prefix={<IoSearchOutline />} placeholder="Search users and blogs..." size="middle" />
+            <Input prefix={<IoSearchOutline />} placeholder="Search ITenv..." size="middle" />
           </Form.Item>
         </Form>
         <div className="flex items-center gap-8">

@@ -1,45 +1,74 @@
+import { Avatar } from 'antd';
+import { motion } from 'framer-motion';
 import React from 'react';
-import { FaCode, FaImage, FaThumbsDown, FaThumbsUp } from 'react-icons/fa';
+import { FaCaretUp, FaComment, FaEye } from 'react-icons/fa';
 import { PostType } from '../../../../types/PostType';
 import './Post.style.scss';
-import { Avatar } from 'antd';
-import { TiArrowUpOutline } from 'react-icons/ti';
-import { FaRegEye } from 'react-icons/fa';
-import { FaRegComment } from 'react-icons/fa';
-import { motion } from 'framer-motion';
+import { AnonymousIcon } from '../../../../utils/icons/Anonymous.icon';
+import { useNavigate } from 'react-router-dom';
 type PostComponentProps = {
   post: PostType;
 };
 
 const PostComponent: React.FC<PostComponentProps> = ({ post }) => {
+  // const [hasVoted, setHasVoted] = useState(null);
+  //   const handleVote = (type) => {
+  //     if (hasVoted === type) {
+  //       setVoteCount(type === 'up' ? voteCount - 1 : voteCount + 1);
+  //       setHasVoted(null);
+  //     } else {
+  //       setVoteCount(type === 'up' ? voteCount + 1 : voteCount - 1);
+  //       setHasVoted(type);
+  //     }
+  //   };
+  const navigate = useNavigate();
+  console.log(post);
   return (
-    <motion.div whileHover={{ scale: 1.02 }} key={post._id} className="card mb-6 cursor-pointer">
-      <div className="mb-4 flex items-center justify-between space-x-8">
-        <div className="flex flex-1 justify-between">
+    <motion.div
+      key={post._id}
+      className="card group mb-6 cursor-pointer"
+      onClick={() => navigate(`/discuss/${post?._id}`)}
+    >
+      <div className="flex items-center justify-between space-x-8">
+        <div className="flex flex-col gap-5">
           <div className="flex items-center space-x-4">
-            {/* <img src={post.postBy.avatar} alt={post.postBy.username} className="h-10 w-10 rounded-full object-cover" /> */}
-            <Avatar src={post.postBy.avatar} size={40} />
+            {post?.postedBy?.avatar ? (
+              <Avatar src={post?.postedBy?.avatar} size={40} />
+            ) : (
+              <Avatar icon={<AnonymousIcon />} />
+            )}
+
             <div>
-              <h2 className="text-[1.6rem] font-medium">{post.title}</h2>
-              <p className="sub-title text-[1.2rem]">
-                Posted by {post.postBy.username} on {new Date(post.createdAt).toLocaleString()}
+              <div className="flex items-center gap-5">
+                <h2 className="text-[1.6rem] font-medium duration-200 group-hover:text-primary-color">{post.title}</h2>{' '}
+                <div className="flex flex-wrap">
+                  {post?.tags?.map((tag) => (
+                    <span key={tag._id} className="tag mb-2 mr-2 rounded px-2.5 py-0.5 text-[1rem] font-medium">
+                      {tag.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <p className="sub-title text-[1.2rem] group-hover:text-primary-color">
+                Posted by {post?.postedBy?.username || 'Anonymous'} on {new Date(post.createdAt).toLocaleString()}
               </p>
             </div>
           </div>
-        </div>
-
-        <div className="flex items-center gap-5">
-          <div className="flex items-center space-x-1">
-            <TiArrowUpOutline size={22} />
-            <span className="font-mono text-[2rem] font-semibold">{post.vote.length || 0}</span>
-          </div>
-          <div className="flex items-center space-x-1">
-            <FaRegEye size={22} />
-            <span className="font-mono text-[2rem] font-semibold">{post.view.length || 0}</span>
-          </div>
-          <div className="flex items-center space-x-1">
-            <FaRegComment size={22} />
-            <span className="font-mono text-[2rem] font-semibold">{post.vote.length || 0}</span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-8 text-[1rem]">
+              <div className="flex items-center space-x-2">
+                <FaCaretUp className="text-gray-500" size={18} />
+                <span>{post?.vote?.length} votes</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <FaEye className="text-gray-500" size={18} />
+                <span>{post?.view?.length} views</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <FaComment className="text-gray-500" size={18} />
+                <span>{post?.commentBy?.length} comments</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

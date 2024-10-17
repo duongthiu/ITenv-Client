@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { FaBookmark, FaCheck, FaStar, FaThumbsUp } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { paths } from '../../../../routes/paths';
+import { Tags } from '../../../../types/ProblemType';
 type ContentCardProps = {
   title: string;
   slug: string;
   content?: string;
-  tags: string[];
+  tags: Tags[];
   votes: number;
   saved?: boolean;
   difficulty: string;
@@ -14,7 +15,6 @@ type ContentCardProps = {
 };
 const ContentCard: React.FC<ContentCardProps> = ({
   title,
-  content,
   slug,
   tags,
   votes,
@@ -61,9 +61,9 @@ const ContentCard: React.FC<ContentCardProps> = ({
       </h2>
       {/* <p className="sub-title mb-4 text-[1.2rem]">{content}</p> */}
       <div className="mb-4 flex flex-wrap">
-        {tags.map((tag, index) => (
+        {tags?.map((tag, index) => (
           <span key={index} className="tag mb-2 mr-2 rounded px-2.5 py-0.5 text-[1rem] font-medium">
-            {tag}
+            {tag.name}
           </span>
         ))}
       </div>

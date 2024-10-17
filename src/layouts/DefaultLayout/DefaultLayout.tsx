@@ -38,8 +38,21 @@ const DefaultLayout: React.FC<PropsWithChildren<DefaultLayoutProps>> = ({
           'h-screen w-full desktop:max-w-[1464px]'
         )}
       >
-        {useSidebar && <SidebarComponent collapsed={collapsed} toggleCollapsed={toggleCollapsed} />}
-        <Content style={{ minHeight: 'calc(100vh - 120px)' }}>
+        {useSidebar && (
+          <div
+            className="fixed left-4 top-[70px]"
+            style={{
+              zIndex: 1000,
+              height: useHeader ? (useFooter ? 'calc(100vh - 140px)' : 'calc(100vh - 90px)') : 'calc(100vh - 60px)'
+            }}
+          >
+            <SidebarComponent collapsed={collapsed} toggleCollapsed={toggleCollapsed} />
+          </div>
+        )}
+        <Content
+          style={{ minHeight: 'calc(100vh - 120px)', marginLeft: useSidebar ? (collapsed ? 90 : 230) : 0 }}
+          className="overflow-y-auto overflow-x-hidden duration-200"
+        >
           <AnimatePresence mode="wait">
             <motion.div
               className="h-full"
@@ -54,6 +67,7 @@ const DefaultLayout: React.FC<PropsWithChildren<DefaultLayoutProps>> = ({
           </AnimatePresence>
         </Content>
       </div>
+
       {useFooter && <FooterComponent />}
     </div>
   );

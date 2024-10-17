@@ -1,24 +1,34 @@
+import { CheckOutlined, CloseOutlined, TagOutlined } from '@ant-design/icons';
+import { Badge, Button, Input, Popover, Switch, Tooltip, Typography } from 'antd';
 import { AnimatePresence, motion, Reorder } from 'framer-motion';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { FiSend } from 'react-icons/fi';
 import { LuSplitSquareHorizontal } from 'react-icons/lu';
+import useSWR from 'swr';
 import PreviewTextEditorComponent from '../../../components/TextEditor/components/PreviewTextEditor.component.tdc';
 import TextEditorComponent from '../../../components/TextEditor/TextEditor.component';
+import { openErrorModal, openSuccessModal } from '../../../redux/app/app.slice';
+import { useAppDispatch } from '../../../redux/app/hook';
+import { createPost, deleteImages } from '../../../services/post/post.service';
+import { getTags } from '../../../services/tags/tag.service';
+import { ImageType } from '../../../types/common';
+import { TagType } from '../../../types/TagType';
 import { cn } from '../../../utils/helpers/cn';
 import { useDebounce } from '../../../utils/hooks/useDebounce.hook';
+import LoadingPage from '../../commons/LoadingPage';
 import './CreatePostPage.style.scss';
 import { Tab } from './Tabs';
-import { Button, Input, Switch, Tooltip, Typography } from 'antd';
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { FiSend } from 'react-icons/fi';
-import { createPost, deleteImages } from '../../../services/post/post.service';
-import { ImageType } from '../../../types/common';
 export interface Ingredient {
   label: string;
 }
 
 const initialTabs: Ingredient[] = [{ label: 'Text Editor' }, { label: 'Preview Text Editor' }];
-
 const CreatePostPage = () => {
+  const dispatch = useAppDispatch();
+  const { data: tags, isLoading } = useSWR('/api/tag', () => getTags());
+  const [loading, setLoading] = useState(isLoading);
+  const [searchTags, setSearchTags] = useState('');
+  const debounceSearchVariable = useDebounce(searchTags, 500);
   const [content, setContent] = useState('Write something');
   const [isAnonymous, setIsAnonymous] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -31,10 +41,52 @@ const CreatePostPage = () => {
   const [selectedTab, setSelectedTab] = useState(tabs[0]);
   const [isSplit, setIsSplit] = useState(false);
   const [postImages, setPostImages] = useState<ImageType[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const handleTagToggle = (tag: string) => {
+    setSelectedTags((prevTags: any) => {
+      if (prevTags.includes(tag)) {
+        return prevTags.filter((t: any) => t !== tag);
+      }
+      return [...prevTags, tag];
+    });
+  };
+  useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading]);
+
+  const TagMenu = () => (
+    <div className="mb-4 flex max-w-[450px] flex-col">
+      <Input
+        placeholder="Search tags... "
+        className="mb-4"
+        value={searchTags}
+        onChange={(e) => setSearchTags(e.target.value)}
+      />
+      <div className="flex max-h-[300px] flex-wrap gap-2 overflow-y-auto">
+        {tags?.data
+          ?.filter((tag) => tag.name.toLowerCase().includes(debounceSearchVariable.toLowerCase()))
+          .map((tag: TagType) => (
+            <button
+              key={tag._id}
+              onClick={() => handleTagToggle(tag._id)}
+              className={`rounded-full px-3 py-1 font-medium ${
+                selectedTags.includes(tag._id)
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+              } transition-colors duration-200`}
+              aria-pressed={selectedTags.includes(tag._id)}
+            >
+              {tag.name}
+            </button>
+          ))}
+      </div>
+    </div>
+  );
+
   const handleCreatePost = async () => {
     // post to the server
     try {
-      console.log('Posting to server', { title, content, isAnonymous });
+      setLoading(true);
 
       const deleteImage: { images: string[] } = { images: [] };
       for (const image of postImages) {
@@ -44,11 +96,30 @@ const CreatePostPage = () => {
       }
       if (deleteImage.images.length > 0) {
         const deleteImageResponse = await deleteImages(deleteImage);
+        if (!deleteImageResponse.success) {
+          dispatch(openErrorModal({ description: 'Failed to create post, please try again!!!' }));
+        }
       }
-      const result = await createPost({ title, content, isAnonymous });
-      console.log(result);
+      const result = await createPost({
+        title,
+        content,
+        isAnonymous,
+        tags: selectedTags,
+        categoryId: '670b6a1062937ef087fd23ba'
+      });
+      if (result.success) {
+        setLoading(false);
+        dispatch(openSuccessModal({ description: 'Post created successfully!!!' }));
+        // clear the form
+        setContent('');
+        setIsAnonymous(false);
+        setSelectedTags([]);
+        setPostImages([]);
+        setTitle('');
+      } else dispatch(openErrorModal({ description: 'Failed to create post, please try again!!!' }));
     } catch (error) {
-      console.error(error);
+      dispatch(openErrorModal({ description: 'Failed to create post, please try again!!!' }));
+      setLoading(false);
     }
   };
   return (
@@ -57,15 +128,24 @@ const CreatePostPage = () => {
         <Typography.Title level={3} className="font-mono">
           Create Post
         </Typography.Title>
-
+        {loading && <LoadingPage />}
         <div className="flex items-center justify-between">
-          <Input
-            size="middle"
-            className="max-w-[500px]"
-            placeholder="Enter post title..."
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+          <div className="flex min-w-[500px] gap-5">
+            <Input
+              size="middle"
+              className="max-w-[500px]"
+              placeholder="Enter post title..."
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+            <Popover trigger={'click'} content={TagMenu} placement="bottom">
+              <Badge count={selectedTags.length}>
+                <Button type="dashed" icon={<TagOutlined />}>
+                  Tags
+                </Button>
+              </Badge>
+            </Popover>
+          </div>
           <div className="flex items-center gap-10">
             <div className="flex items-center gap-5">
               <div className="flex items-center gap-2">

@@ -1,7 +1,6 @@
-export interface ResponseAxios<T> {
+export interface ResponseAxios {
   success: boolean;
   message: string;
-  data: T;
 }
 
 export type ResponsePagination<T> = {
@@ -10,5 +9,3 @@ export type ResponsePagination<T> = {
   total?: number;
   error?: string;
 };
-
-export type ResponseListData<T> = ResponseAxios<ResponsePagination<T>>;

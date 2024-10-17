@@ -6,6 +6,7 @@ import { getProblems } from '../../../services/problem/problem.service';
 import { ProblemType } from '../../../types/ProblemType';
 import { ResponsePagination } from '../../../types/common/response.type';
 import ContentCard from './components/ProblemCard';
+import { TagType } from '../../../types/TagType';
 
 const ProblemListPage = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -19,7 +20,7 @@ const ProblemListPage = () => {
   } = useSWR<ResponsePagination<ProblemType[]>>(`/api/problem?page=${currentPage}&limit=${pageSize}`, () =>
     getProblems(`page=${currentPage}&limit=${pageSize}`)
   );
-
+  console.log(problemList);
   if (error) {
     return (
       <div className="relative mb-4 rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700" role="alert">
@@ -29,7 +30,13 @@ const ProblemListPage = () => {
     );
   }
 
-  const allTags = Array.from(new Set(problemList?.data?.flatMap((item: any) => item.tags) || []));
+  const allTags: TagType[] = Array.from(
+    new Map(
+      problemList?.data
+        ?.flatMap((item: { tags: TagType[] }) => item.tags) // Flatten all tags arrays
+        .map((tag) => [tag._id, tag]) // Create a Map to deduplicate based on _id
+    ).values()
+  );
 
   const handleTagToggle = (tag: string) => {
     setSelectedTags((prevTags: any) => {
@@ -53,13 +60,13 @@ const ProblemListPage = () => {
     setCurrentPage(page); // Update current page
     setPageSize(pageSize); // Optionally update page size if needed
   };
-  const filteredContent = (problemList?.data || []).filter((item) => {
-    const matchesTags = selectedTags.length === 0 || selectedTags.every((tag) => item.tags.includes(tag));
-    const matchesSearch =
-      item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.content.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesTags && matchesSearch;
-  });
+  // const filteredContent = (problemList?.data || []).filter((item) => {
+  //   const matchesTags = selectedTags.length === 0 || selectedTags.every((tag) => item.tags.includes(tag));
+  //   const matchesSearch =
+  //     item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     item.content.toLowerCase().includes(searchTerm.toLowerCase());
+  //   return matchesTags && matchesSearch;
+  // });
 
   const clearFilters = () => {
     setSelectedTags([]);
@@ -67,7 +74,7 @@ const ProblemListPage = () => {
   };
   return (
     <div className="flex h-full gap-5">
-      <div className="mx-auto flex h-full flex-1 flex-col px-4 py-5 pb-0">
+      <div className="flex h-full flex-1 flex-col px-4 py-5 pb-0">
         <div className="card mb-8">
           <Typography.Title level={3} className="font-mono">
             Problem List
@@ -78,18 +85,18 @@ const ProblemListPage = () => {
               <Skeleton className="mb-4" active />
             ) : (
               <div className="mb-4 flex flex-wrap gap-2">
-                {allTags.map((tag: string) => (
+                {allTags?.map((tag: TagType) => (
                   <button
-                    key={tag}
-                    onClick={() => handleTagToggle(tag)}
+                    key={tag._id}
+                    onClick={() => handleTagToggle(tag._id)}
                     className={`rounded-full px-3 py-1 font-medium ${
-                      selectedTags.includes(tag)
+                      selectedTags.includes(tag._id)
                         ? 'bg-blue-500 text-white'
                         : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                     } transition-colors duration-200`}
-                    aria-pressed={selectedTags.includes(tag)}
+                    aria-pressed={selectedTags.includes(tag._id)}
                   >
-                    {tag}
+                    {tag.name}
                   </button>
                 ))}
               </div>
@@ -118,7 +125,7 @@ const ProblemListPage = () => {
         {isLoading ? (
           <Skeleton active />
         ) : (
-          <div className="overflow-y-auto">
+          <div>
             <div className="flex flex-col gap-4">
               {problemList?.data?.length === 0 ? (
                 <p className="sub-title text-[1.4rem]">
@@ -142,7 +149,7 @@ const ProblemListPage = () => {
             </div>
           </div>
         )}
-        <div className="card mt-5 flex h-[50px] w-full items-center justify-center">
+        <div className="card my-5 flex h-[50px] w-full items-center justify-center">
           <Pagination
             current={currentPage}
             total={problemList?.total || 0}

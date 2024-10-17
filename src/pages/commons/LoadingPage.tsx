@@ -9,6 +9,7 @@ const LoadingPage = () => {
         display: 'grid',
         placeItems: 'center',
         position: 'fixed',
+        zIndex: 10000,
         top: 0,
         left: 0
       }}

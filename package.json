@@ -24,7 +24,7 @@
     "@types/react-helmet": "^6.1.11",
     "@types/react-highlight": "^0.12.8",
     "@types/react-redux": "^7.1.33",
-    "antd": "^5.18.3",
+    "antd": "5.21.0",
     "autoprefixer": "^10.4.19",
     "axios": "^1.7.2",
     "dotenv": "^16.4.5",

@@ -18,6 +18,9 @@ const LazyLoginPage = LazyLoadComponent(() => import('../pages/Authentication/Lo
 const LazySignupPage = LazyLoadComponent(() => import('../pages/Authentication/SignupForm'))(true);
 const LazyForgetPasswordPage = LazyLoadComponent(() => import('../pages/Authentication/ForgetPasswordForm'))(true);
 const LazyDiscussPage = LazyLoadComponent(() => import('../pages/Public/Discuss/DiscussPage'))(true);
+const LazyDetailDiscussPage = LazyLoadComponent(
+  () => import('../pages/Public/Discuss/DetailDiscussPage/DetailDiscussPage')
+)(true);
 const LazyAuthenPage = LazyLoadComponent(() => import('../pages/Authentication/Authentication.page'))(true);
 const LazyCreatePostPage = LazyLoadComponent(() => import('../pages/Private/CreatePostPage/CreatePostPage.page'))(true);
 const LazyMessagesPage = LazyLoadComponent(() => import('../pages/Private/MessagePage/MessagePage.page'))(true);
@@ -47,7 +50,16 @@ export const PUBLIC_ROUTES: RouteType[] = [
     path: paths.discuss,
     element: <LazyDiscussPage />,
     layout: DefaultLayout,
-    private: 'auth',
+    private: 'public',
+    useHeader: true,
+    useSidebar: true,
+    useFooter: true
+  },
+  {
+    path: paths.detailDiscuss,
+    element: <LazyDetailDiscussPage />,
+    layout: DefaultLayout,
+    private: 'public',
     useHeader: true,
     useSidebar: true,
     useFooter: true

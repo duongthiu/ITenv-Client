@@ -13,7 +13,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ collapsed, toggleCollapsed }
   return (
     <div
       className={cn(
-        'sidebar-wrapper m-5 mb-0 mr-0 flex flex-none flex-col rounded-2xl shadow-xl duration-200',
+        'sidebar-wrapper flex h-full flex-none flex-col rounded-2xl shadow-xl duration-200',
         !collapsed ? 'w-[220px]' : 'w-[80px]'
       )}
     >

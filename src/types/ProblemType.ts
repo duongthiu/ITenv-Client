@@ -1,3 +1,4 @@
+import { TagType } from './TagType';
 import { UserType } from './UserType';
 
 export type ProblemType = {
@@ -5,7 +6,7 @@ export type ProblemType = {
   slug: string;
   content: string;
   level: string;
-  tags: string[];
+  tags: TagType[];
   acceptance?: UserType[];
   submitBy?: UserType[];
   hint: string[];
@@ -16,4 +17,8 @@ export type ProblemType = {
   postAt: Date;
   editAt?: Date;
   status?: boolean;
+};
+export type Tags = {
+  _id: string;
+  name: string;
 };

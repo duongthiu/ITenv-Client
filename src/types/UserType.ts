@@ -12,7 +12,7 @@ export type UserType = {
   notifications?: NotificationType[];
   submissions: SubmissionType[];
   gender?: number;
-  status: number;
+  status: boolean;
   lastOnline: Date;
   email: string;
   role: string;

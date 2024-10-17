@@ -36,7 +36,7 @@ const TextEditorComponent: React.FC<TextEditorProps> = ({ content, setContent, p
     });
   };
   return (
-    <div className="text-editor-wrapper card h-full flex-1 rounded-sm p-0 shadow-lg">
+    <div className="text-editor-wrapper h-full flex-1 rounded-sm p-0 shadow-lg">
       {isLoading && (
         <div className="skeleton-wrapper w-full p-10">
           <Skeleton active />
@@ -50,6 +50,9 @@ const TextEditorComponent: React.FC<TextEditorProps> = ({ content, setContent, p
         onEditorChange={setContent}
         apiKey={import.meta.env.VITE_APP_TINYMCE_API_KEY}
         init={{
+          // min_height: 200,
+          height: 300,
+          // max_width: 400,
           skin: theme === THEME.DARK ? 'oxide-dark' : 'oxide',
           content_css: theme === THEME.DARK ? 'dark' : 'default',
           content_style:
@@ -82,6 +85,7 @@ const TextEditorComponent: React.FC<TextEditorProps> = ({ content, setContent, p
               : '',
           plugins:
             'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker',
+          menubar: false,
           toolbar:
             'undo redo  | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap codesample | removeformat',
           codesample_languages: [

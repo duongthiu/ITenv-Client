@@ -6,14 +6,13 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { IoCodeSlashOutline } from 'react-icons/io5';
 import { THEME } from '../../redux/app/app.slice';
 import { useAppSelector } from '../../redux/app/hook';
+import { ProblemType } from '../../types/ProblemType';
 import { LANG_VERSIONS, LangVersionType } from '../../utils/constants/codeLanguage';
 import { CODE_TEMPLATES } from '../../utils/constants/codeTemplate';
 import { cn } from '../../utils/helpers/cn';
 import './CodeEditor.style.scss';
-import LanguageSelector from './LanguageSelector';
 import Output from './Output';
 import Problem from './Problem';
-import { ProblemType } from '../../types/ProblemType';
 const DEFAULT_LANGUAGE = 'javascript';
 
 interface CodeEditorType extends Omit<FormItemProps<any>, 'children'> {
@@ -65,15 +64,15 @@ const CodeEditor: React.FC<CodeEditorType> = ({
 
   const handleDragHeight = (event: any, info: any) => {
     const newHeight = mHeight.get() + info.delta.y;
-    if (newHeight > 0 && newHeight < window.innerHeight - 150) {
+    if (newHeight > 30 && newHeight < window.innerHeight - 100) {
       mHeight.set(newHeight);
-      outputHeight.set(window.innerHeight - newHeight - 180);
+      outputHeight.set(window.innerHeight - newHeight - 100);
     }
   };
 
   const handleDragWidth = (event: any, info: any) => {
     const newWidth = mWidth.get() - info.delta.x;
-    if (newWidth > 20 && newWidth < window.innerWidth - 50) {
+    if (newWidth > 20 && newWidth < 1200) {
       mWidth.set(newWidth);
     }
   };
@@ -99,6 +98,7 @@ const CodeEditor: React.FC<CodeEditorType> = ({
       }
     });
   };
+  console.log(mHeight.get());
   return (
     <div style={{ height: 'calc(100vh-20px)' }} className="flex w-full justify-end">
       <motion.div className="b card h-[calc(100vh-60px)] flex-1 overflow-auto rounded-lg shadow-md">

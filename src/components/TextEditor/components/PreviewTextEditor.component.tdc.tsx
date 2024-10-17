@@ -4,8 +4,9 @@ import React, { useEffect } from 'react';
 import './PreviewTextEditor.style.scss';
 type PreviewTextEditorProps = {
   content: any;
+  fontSize?: number;
 };
-const PreviewTextEditorComponent: React.FC<PreviewTextEditorProps> = ({ content }) => {
+const PreviewTextEditorComponent: React.FC<PreviewTextEditorProps> = ({ content, fontSize = 1.6 }) => {
   useEffect(() => {
     document.querySelectorAll('pre code').forEach((block) => {
       hljs.highlightBlock(block as HTMLElement);
@@ -19,7 +20,10 @@ const PreviewTextEditorComponent: React.FC<PreviewTextEditorProps> = ({ content 
           Preview
         </Typography.Text>
       )} */}
-      <div className="preview-text-editor-wrapper w-full text-[1.6rem]" dangerouslySetInnerHTML={{ __html: content }} />
+      <div
+        className={`preview-text-editor-wrapper w-full overflow-y-auto text-[${fontSize}rem]`}
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
     </div>
   );
 };

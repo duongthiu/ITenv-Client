@@ -1,22 +1,24 @@
+import { TagType } from './TagType';
 import { UserType } from './UserType';
 
 export type PostType = {
   _id: string;
-  postBy: Pick<UserType, '_id' | 'username' | 'avatar'>;
+  postedBy?: Pick<UserType, '_id' | 'username' | 'avatar' | 'email'>;
   title: string;
+  tags: TagType[];
   content: string;
   view: string[];
   vote: string[];
   createdAt: string;
   updatedAt: string;
-  comments: CommentType[];
+  commentBy: CommentType[];
 };
 
 export type CommentType = {
-  _id: string;
+  _id?: string;
   commentBy: Pick<UserType, '_id' | 'username' | 'avatar'>;
   parentComment?: string;
-  isAccepted: boolean;
+  isAccepted?: boolean;
   content: string;
   createdAt: string;
   updatedAt?: string;
