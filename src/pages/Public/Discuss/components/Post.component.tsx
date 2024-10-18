@@ -1,27 +1,37 @@
 import { Avatar } from 'antd';
 import { motion } from 'framer-motion';
-import React from 'react';
-import { FaCaretUp, FaComment, FaEye } from 'react-icons/fa';
+import React, { useMemo } from 'react';
+import { FaCaretDown, FaCaretUp, FaComment, FaEye } from 'react-icons/fa';
 import { PostType } from '../../../../types/PostType';
 import './Post.style.scss';
 import { AnonymousIcon } from '../../../../utils/icons/Anonymous.icon';
 import { useNavigate } from 'react-router-dom';
+import { useAppSelector } from '../../../../redux/app/hook';
 type PostComponentProps = {
   post: PostType;
 };
 
 const PostComponent: React.FC<PostComponentProps> = ({ post }) => {
-  // const [hasVoted, setHasVoted] = useState(null);
-  //   const handleVote = (type) => {
-  //     if (hasVoted === type) {
-  //       setVoteCount(type === 'up' ? voteCount - 1 : voteCount + 1);
-  //       setHasVoted(null);
-  //     } else {
-  //       setVoteCount(type === 'up' ? voteCount + 1 : voteCount - 1);
-  //       setHasVoted(type);
-  //     }
-  //   };
   const navigate = useNavigate();
+  const { user } = useAppSelector((state) => state.user);
+
+  const isVoted = useMemo(() => {
+    if (user?._id) {
+      if (post?.vote?.includes(user?._id)) return true;
+    }
+    return false;
+  }, [post?.vote, user?._id]);
+  const isDownvoted = useMemo(() => {
+    if (user?._id) {
+      if (post?.downVote?.includes(user?._id)) return true;
+    }
+    return false;
+  }, [post?.downVote, user?._id]);
+  const totalVote = useMemo(() => {
+    return (post?.vote?.length || 0) - (post?.downVote?.length || 0) > 0
+      ? (post?.vote?.length || 0) - (post?.downVote?.length || 0)
+      : 0;
+  }, [post?.vote?.length, post?.downVote?.length]);
   console.log(post);
   return (
     <motion.div
@@ -57,16 +67,24 @@ const PostComponent: React.FC<PostComponentProps> = ({ post }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-8 text-[1rem]">
               <div className="flex items-center space-x-2">
-                <FaCaretUp className="text-gray-500" size={18} />
-                <span>{post?.vote?.length} votes</span>
+                {isDownvoted ? (
+                  <FaCaretDown className={` ${isDownvoted ? 'text-red-500' : 'text-gray-500'}`} size={18} />
+                ) : (
+                  <FaCaretUp className={` ${isVoted ? 'text-green-500' : 'text-gray-500'}`} size={18} />
+                )}
+                <span>
+                  {totalVote} {totalVote > 1 ? 'votes' : 'vote'}
+                </span>
               </div>
               <div className="flex items-center space-x-2">
-                <FaEye className="text-gray-500" size={18} />
+                <FaEye className={`'text-gray-500'}`} size={18} />
                 <span>{post?.view?.length} views</span>
               </div>
               <div className="flex items-center space-x-2">
                 <FaComment className="text-gray-500" size={18} />
-                <span>{post?.commentBy?.length} comments</span>
+                <span>
+                  {post?.commentBy?.length} {post?.commentBy?.length > 1 ? 'comments' : 'comment'}
+                </span>
               </div>
             </div>
           </div>

@@ -52,6 +52,7 @@ export const userSlice = createSlice({
       state.user = null;
       state.isLogged = false;
       state.token = '';
+      localStorage.setItem('accessToken', '');
     },
     setSocketConnection: (state, action: PayloadAction<any>) => {
       state.socketConnection = action.payload;

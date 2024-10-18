@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { Modal, Button } from 'antd';
 import { CheckCircleOutlined, CloseCircleOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { Button, Modal } from 'antd';
 import { motion } from 'framer-motion';
-import { useAppDispatch, useAppSelector } from '../../../redux/app/hook';
+import React from 'react';
 import { setCloseModal } from '../../../redux/app/app.slice';
+import { useAppDispatch, useAppSelector } from '../../../redux/app/hook';
 
 interface CustomModalProps {
   status: 'success' | 'error' | 'warning';
@@ -72,7 +72,7 @@ const CustomModal: React.FC<CustomModalProps> = ({ status, title, description })
       >
         <div className={`mb-4 ${getStatusColor()}`}>{getStatusIcon()}</div>
         <h2 className="text-[2rem] font-semibold">{title}</h2>
-        <p className="mt-2 text-gray-600">{description}</p>
+        <p className="subtitle mt-2">{description}</p>
       </motion.div>
     </Modal>
   );

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { CommentType } from '../../../../../types/PostType';
 import TextEditorComponent from '../../../../../components/TextEditor/TextEditor.component';
 import { ImageType } from '../../../../../types/common';
@@ -12,7 +12,7 @@ import PreviewTextEditorComponent from '../../../../../components/TextEditor/com
 type ListCommentProps = {
   postId: string;
 };
-const ListCommentComponent: React.FC<ListCommentProps> = ({ postId }) => {
+const ListCommentComponent: React.FC<ListCommentProps> = memo(({ postId }) => {
   const user = useAppSelector((state) => state.user.user);
   const dispatch = useAppDispatch();
   const [newComment, setNewComment] = useState('');
@@ -33,11 +33,15 @@ const ListCommentComponent: React.FC<ListCommentProps> = ({ postId }) => {
         content: newComment,
         parentComment: undefined
       };
-      await postComment(postId, comment);
-      dispatch(openSuccessModal({ description: 'Comment posted successfully' }));
-      setNewComment('');
-      setPostImages([]);
-      mutate(); // Refresh the comments list
+      const res = await postComment(postId, comment);
+      if (res.success) {
+        dispatch(openSuccessModal({ description: 'Comment posted successfully' }));
+        setNewComment('');
+        setPostImages([]);
+        mutate(); // Refresh the comments list
+      } else {
+        dispatch(openErrorModal({ description: res.message }));
+      }
     } catch (error) {
       dispatch(openErrorModal({ description: 'Failed to post comment' }));
     }
@@ -66,7 +70,7 @@ const ListCommentComponent: React.FC<ListCommentProps> = ({ postId }) => {
         <div key={comment._id} className="mb-4 rounded-md p-4">
           <div className="flex gap-5">
             <Avatar className="flex-none" src={comment?.commentBy?.avatar} size={40} />
-            <div className="card flex flex-col gap-5">
+            <div className="comment-card card flex flex-col gap-5">
               <div className="flex items-center gap-3">
                 <p className="sub-title text-[1.2rem] group-hover:text-primary-color">{comment?.commentBy?.username}</p>
                 <p>{new Date(comment?.createdAt).toLocaleString()}</p>
@@ -78,6 +82,6 @@ const ListCommentComponent: React.FC<ListCommentProps> = ({ postId }) => {
       ))}
     </div>
   );
-};
+});
 
 export default ListCommentComponent;

@@ -1,5 +1,6 @@
 import { get, post } from '../../apis';
 import { ResponseAxios, ResponsePagination } from '../../types/common';
+import { TypeVoteEnum } from '../../types/enum/typeVote.enum';
 import { PostType } from '../../types/PostType';
 
 export type PostTypeRequest = {
@@ -22,12 +23,14 @@ export const getPostsWithCategoryId = async (
   categoryId: string,
   query: string
 ): Promise<ResponsePagination<PostType[]>> => {
-  const data: ResponsePagination<PostType[]> = await get(
-    import.meta.env.VITE_APP_API + 'post/all-posts/' + categoryId + '/?' + query
-  );
-  return data;
+  const data = await get(import.meta.env.VITE_APP_API + 'post/all-posts/' + categoryId + '/?' + query);
+  return data as unknown as ResponsePagination<PostType[]>;
 };
 export const getPostById = async (id: string): Promise<ResponsePagination<PostType>> => {
-  const data: ResponsePagination<PostType> = await get(import.meta.env.VITE_APP_API + 'post/' + id);
+  const data = await get(import.meta.env.VITE_APP_API + 'post/' + id);
+  return data as unknown as ResponsePagination<PostType>;
+};
+export const votePostById = async (id: string, typeVote: TypeVoteEnum): Promise<ResponseAxios> => {
+  const data = await post(import.meta.env.VITE_APP_API + 'post/vote/' + id, { typeVote: typeVote });
   return data;
 };

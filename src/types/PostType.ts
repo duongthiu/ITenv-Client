@@ -9,6 +9,7 @@ export type PostType = {
   content: string;
   view: string[];
   vote: string[];
+  downVote: string[];
   createdAt: string;
   updatedAt: string;
   commentBy: CommentType[];
