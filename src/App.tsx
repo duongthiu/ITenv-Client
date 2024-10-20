@@ -5,13 +5,12 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { Fragment } from 'react/jsx-runtime';
 import DefaultLayout from './layouts/DefaultLayout/DefaultLayout';
 import AuthenticationPage from './pages/Authentication/Authentication.page';
+import NotAuthPage from './pages/ExceptionPage/NotAuthPage';
 import NotFoundPage from './pages/ExceptionPage/NotFoundPage';
 import { THEME } from './redux/app/app.slice';
 import { useAppDispatch, useAppSelector } from './redux/app/hook';
 import { getUser } from './redux/user/user.slice';
 import { AUTHEN_ROUTES, PUBLIC_ROUTES, RouteType } from './routes/routes';
-import NotAuthPage from './pages/ExceptionPage/NotAuthPage';
-import CustomModal from './components/commons/CustomModal/CustomModal.component';
 // import { Helmet } from 'react-helmet';
 
 // const pathname = location.path
@@ -21,7 +20,6 @@ function App() {
   const dispatch = useAppDispatch();
   const [pathname, setPathname] = useState(location?.pathname?.split('/')[1]);
   const theme = useAppSelector((state) => state.app.theme);
-  const { modal } = useAppSelector((state) => state.app);
   const { isLogged, token } = useAppSelector((state) => state.user);
   useEffect(() => {
     if (isLogged && token) {
@@ -57,7 +55,6 @@ function App() {
       </Helmet>
 
       <main className="">
-        {modal.isOpen && <CustomModal status={modal.status} title={modal.title} description={modal.description} />}
         <Router>
           <Routes>
             {PUBLIC_ROUTES.map((route: RouteType, index: number) => {

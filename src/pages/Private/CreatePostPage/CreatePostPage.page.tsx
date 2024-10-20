@@ -7,13 +7,13 @@ import { LuSplitSquareHorizontal } from 'react-icons/lu';
 import useSWR from 'swr';
 import PreviewTextEditorComponent from '../../../components/TextEditor/components/PreviewTextEditor.component.tdc';
 import TextEditorComponent from '../../../components/TextEditor/TextEditor.component';
-import { openErrorModal, openSuccessModal } from '../../../redux/app/app.slice';
 import { useAppDispatch } from '../../../redux/app/hook';
 import { createPost, deleteImages } from '../../../services/post/post.service';
 import { getTags } from '../../../services/tags/tag.service';
 import { ImageType } from '../../../types/common';
 import { TagType } from '../../../types/TagType';
 import { cn } from '../../../utils/helpers/cn';
+import { notifyError, notifySuccess } from '../../../utils/helpers/notify';
 import { useDebounce } from '../../../utils/hooks/useDebounce.hook';
 import LoadingPage from '../../commons/LoadingPage';
 import './CreatePostPage.style.scss';
@@ -24,7 +24,6 @@ export interface Ingredient {
 
 const initialTabs: Ingredient[] = [{ label: 'Text Editor' }, { label: 'Preview Text Editor' }];
 const CreatePostPage = () => {
-  const dispatch = useAppDispatch();
   const { data: tags, isLoading } = useSWR('/api/tag', () => getTags());
   const [loading, setLoading] = useState(isLoading);
   const [searchTags, setSearchTags] = useState('');
@@ -97,7 +96,7 @@ const CreatePostPage = () => {
       if (deleteImage.images.length > 0) {
         const deleteImageResponse = await deleteImages(deleteImage);
         if (!deleteImageResponse.success) {
-          dispatch(openErrorModal({ description: 'Failed to create post, please try again!!!' }));
+          notifyError('Failed to create post, please try again!!!');
         }
       }
       const result = await createPost({
@@ -109,16 +108,16 @@ const CreatePostPage = () => {
       });
       if (result.success) {
         setLoading(false);
-        dispatch(openSuccessModal({ description: 'Post created successfully!!!' }));
+        notifySuccess('Post created successfully!!!');
         // clear the form
         setContent('');
         setIsAnonymous(false);
         setSelectedTags([]);
         setPostImages([]);
         setTitle('');
-      } else dispatch(openErrorModal({ description: 'Failed to create post, please try again!!!' }));
+      } else notifyError('Failed to create post, please try again!!!');
     } catch (error) {
-      dispatch(openErrorModal({ description: 'Failed to create post, please try again!!!' }));
+      notifyError('Failed to create post, please try again!!!');
       setLoading(false);
     }
   };

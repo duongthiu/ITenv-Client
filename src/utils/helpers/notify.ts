@@ -15,18 +15,18 @@ const openNotificationWithIcon = (
     message: title,
     description: Parser(description),
     placement,
-    duration: 10,
+    duration: 5,
     btn: onClick && 'Đồng ý',
     onClick
   });
   return type;
 };
 export const notifyWarning = (description: string, placement?: NotificationPlacement) =>
-  openNotificationWithIcon('warning', 'Cảnh báo', description, placement);
+  openNotificationWithIcon('warning', 'Warning Notification', description, placement);
 export const notifySuccess = (description: string, placement?: NotificationPlacement) =>
-  openNotificationWithIcon('success', 'Thông báo thành công', description, placement);
+  openNotificationWithIcon('success', 'Successful Notification', description, placement);
 export const notifyError = (description: string, placement?: NotificationPlacement) =>
-  openNotificationWithIcon('error', 'Thông báo thất bại', description, placement);
+  openNotificationWithIcon('error', 'Failure Notification', description, placement);
 export const notifyInfo = (description: string) => openNotificationWithIcon('info', 'Thông báo', description);
 
 export const alertMessage = (type: 'error' | 'success' | 'warning', messageContent: string) => {

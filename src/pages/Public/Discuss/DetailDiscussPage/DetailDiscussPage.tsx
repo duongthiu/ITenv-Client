@@ -2,24 +2,27 @@ import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
 import { Avatar, Divider, Skeleton, Tooltip } from 'antd';
 import { motion } from 'framer-motion';
 import hljs from 'highlight.js';
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { CiBookmark, CiWarning } from 'react-icons/ci';
 import { VscShare } from 'react-icons/vsc';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import PreviewTextEditorComponent from '../../../../components/TextEditor/components/PreviewTextEditor.component.tdc';
-import { openErrorModal } from '../../../../redux/app/app.slice';
-import { useAppDispatch, useAppSelector } from '../../../../redux/app/hook';
+import { useAppSelector } from '../../../../redux/app/hook';
 import { getPostById, votePostById } from '../../../../services/post/post.service';
-import ListCommentComponent from '../components/ListComment/ListComment.component';
 import { TypeVoteEnum } from '../../../../types/enum/typeVote.enum';
+import { notifyError } from '../../../../utils/helpers/notify';
+import useVoteStatus from '../../../../utils/hooks/useVoteStatus.hook';
+import ListCommentComponent from '../components/ListComment/ListComment.component';
 const DetailDiscussPage = () => {
   const { id } = useParams<{ id: string }>();
 
-  const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { data: postData, isLoading, isError, mutate } = useSWR(`detailpost/${id}`, () => getPostById(id!));
-
+  const { isVoted, isDownvoted } = useVoteStatus({
+    vote: postData?.data?.vote || [],
+    downVote: postData?.data?.downVote || []
+  });
   useEffect(() => {
     document.querySelectorAll('pre code').forEach((block) => {
       hljs.highlightElement(block as HTMLElement);
@@ -27,34 +30,22 @@ const DetailDiscussPage = () => {
   }, [postData?.data?.content]);
 
   const handleVote = async (type: TypeVoteEnum) => {
-    // if (!user) {
-    //   dispatch(openErrorModal({ description: 'Please login to vote' }));
-    //   return;
-    // }
+    if (!user) {
+      notifyError(`You don't have permission to vote. Please login to vote...`);
+      return;
+    }
     try {
       const response = await votePostById(id!, type);
       if (response.success) {
         mutate();
       } else {
-        dispatch(openErrorModal({ description: response.message }));
+        notifyError(response.message);
       }
     } catch (error) {
-      console.error('Error voting:', error);
+      notifyError(`Something went wrong. Please try again...`);
     }
   };
 
-  const isVoted = useMemo(() => {
-    if (user?._id) {
-      if (postData?.data?.vote.includes(user?._id)) return true;
-    }
-    return false;
-  }, [postData?.data?.vote, user?._id]);
-  const isDownvoted = useMemo(() => {
-    if (user?._id) {
-      if (postData?.data?.downVote.includes(user?._id)) return true;
-    }
-    return false;
-  }, [postData?.data?.downVote, user?._id]);
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error loading the postData?.data.</p>;
   return (

@@ -1,5 +1,6 @@
 import { get, post } from '../../apis';
 import { ResponseAxios, ResponsePagination } from '../../types/common';
+import { TypeVoteEnum } from '../../types/enum/typeVote.enum';
 import { CommentType } from '../../types/PostType';
 
 export const getCommentsByPostId = async (postId: string): Promise<ResponsePagination<CommentType[]>> => {
@@ -13,4 +14,9 @@ export const postComment = async (
 ): Promise<ResponseAxios> => {
   const data = await post(import.meta.env.VITE_APP_API + 'comment/' + postId, requestOption);
   return data as unknown as ResponseAxios;
+};
+
+export const voteCommentById = async (id: string, typeVote: TypeVoteEnum): Promise<ResponseAxios> => {
+  const data = await post(import.meta.env.VITE_APP_API + 'comment/vote/' + id, { typeVote: typeVote });
+  return data;
 };

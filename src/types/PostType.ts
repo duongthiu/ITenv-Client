@@ -24,4 +24,5 @@ export type CommentType = {
   createdAt: string;
   updatedAt?: string;
   vote: string[];
+  downVote: string[];
 };
