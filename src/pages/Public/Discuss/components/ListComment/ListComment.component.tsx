@@ -37,7 +37,7 @@ const ListCommentComponent: React.FC<ListCommentProps> = memo(({ postId }) => {
         notifySuccess('Comment posted successfully');
         setNewComment('');
         setPostImages([]);
-        mutate(); // Refresh the comments list
+        mutate();
       } else {
         notifyError(res.message);
       }
@@ -65,9 +65,7 @@ const ListCommentComponent: React.FC<ListCommentProps> = memo(({ postId }) => {
           <Skeleton active />
         </div>
       )}
-      {comments?.data?.map((comment: CommentType) => (
-        <CommentCardComponent key={comment._id} comment={comment} mutate={mutate} />
-      ))}
+      {comments?.data?.map((comment: CommentType) => <CommentCardComponent key={comment._id} comment={comment} />)}
     </div>
   );
 });

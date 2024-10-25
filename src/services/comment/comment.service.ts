@@ -16,7 +16,7 @@ export const postComment = async (
   return data as unknown as ResponseAxios;
 };
 
-export const voteCommentById = async (id: string, typeVote: TypeVoteEnum): Promise<ResponseAxios> => {
+export const voteCommentById = async (id: string, typeVote: TypeVoteEnum): Promise<ResponsePagination<CommentType>> => {
   const data = await post(import.meta.env.VITE_APP_API + 'comment/vote/' + id, { typeVote: typeVote });
   return data;
 };
