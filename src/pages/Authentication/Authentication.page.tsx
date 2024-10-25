@@ -225,9 +225,8 @@ const AuthenticationPage = () => {
                         console.log('Login Failed');
                       }}
                     /> */}
-                    <div className="button-container flex cursor-pointer items-center justify-center rounded-full bg-black p-2 opacity-55 duration-200 hover:bg-[#0866ff] hover:opacity-100">
-                      {/* <FaFacebookF size={18} className="text-white" /> */}
-                      <FacebookLogin
+                    {/* <div className="button-container flex cursor-pointer items-center justify-center rounded-full bg-black p-2 opacity-55 duration-200 hover:bg-[#0866ff] hover:opacity-100">
+                       <FacebookLogin
                         appId="1054271949826165" // Replace with your actual Facebook App ID
                         autoLoad={true} // Optional, set to true if you want it to auto load
                         fields="name,email,picture" // Requesting fields including email
@@ -238,11 +237,8 @@ const AuthenticationPage = () => {
                         }}
                         textButton=""
                         icon={<FaFacebookF size={18} className="cursor-pointer text-white" />}
-                        // render={(renderProps: any) => (
-                        //   <FaFacebookF onClick={renderProps.onClick} size={18} className="cursor-pointer text-white" />
-                        // )}
-                      />
-                    </div>
+                      /> 
+                    </div> */}
                     <FaGithub
                       onClick={LoginWithGithub}
                       size={27}
