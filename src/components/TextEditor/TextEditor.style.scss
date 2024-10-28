@@ -13,3 +13,40 @@
     }
   }
 }
+.tox {
+  border: none !important;
+  border-radius: 20px;
+}
+.button-title {
+  .tox-toolbar__primary {
+    display: flex;
+
+    .tox-toolbar__group:last-child {
+      cursor: pointer;
+      transition-duration: 200ms;
+      margin-left: auto;
+      border-radius: 10px !important;
+      .tox-tbtn {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        cursor: pointer;
+        background-color: #21a1d3 !important;
+      }
+      .tox-tbtn--select {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        cursor: pointer;
+        transition-duration: 200ms;
+
+        background-color: #21a1d3 !important;
+        &:hover {
+          background-color: #48bae0 !important;
+        }
+      }
+      .tox-tbtn__select-label {
+        cursor: pointer;
+        color: white !important;
+      }
+    }
+  }
+}

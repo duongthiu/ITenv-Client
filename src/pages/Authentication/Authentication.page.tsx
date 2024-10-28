@@ -13,7 +13,8 @@ import { authenWithGithub, authenWithGoogle } from '../../services/authenticatio
 import './Authentication.style.scss';
 import { useAppSelector } from '../../redux/app/hook';
 import { useAuth } from '../../utils/hooks/useAuth.hook';
-import { notifyError } from '../../utils/helpers/notify';
+import { notifyError, notifySuccess } from '../../utils/helpers/notify';
+import LoadingPage from '../commons/LoadingPage';
 const STATE_MACHINE_NAME = 'Login Machine';
 export type AuthenticationProps = {
   onUsernameFocus: () => void;
@@ -28,7 +29,7 @@ export type AuthenticationProps = {
 const AuthenticationPage = () => {
   const navigate = useNavigate();
   const { onLogin } = useAuth();
-
+  const [isLoading, setIsLoading] = useState(false);
   const location = useLocation();
   const { isLogged } = useAppSelector((state) => state.user);
   const { rive: riveInstance, RiveComponent }: RiveState = useRive({
@@ -126,6 +127,8 @@ const AuthenticationPage = () => {
   const LoginWithGoogle = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
+        setIsLoading(true);
+
         await onLogin(
           () => authenWithGoogle({ accessToken: tokenResponse.access_token }),
           {
@@ -133,6 +136,7 @@ const AuthenticationPage = () => {
           },
           () => {
             onSuccessSubmit();
+            notifySuccess('Login successful');
             navigate(paths.home);
           },
           (message: string) => {
@@ -140,7 +144,9 @@ const AuthenticationPage = () => {
             notifyError(message || 'Login failed, please try again');
           }
         );
+        setIsLoading(false);
       } catch (error) {
+        setIsLoading(false);
         notifyError((error as Error).message || 'Login failed, please try again');
         onFailSubmit();
       }
@@ -155,6 +161,7 @@ const AuthenticationPage = () => {
   useEffect(() => {
     const code = new URLSearchParams(window.location.search)?.get('code');
     if (code) {
+      setIsLoading(true);
       const fetchData = async () => {
         try {
           await onLogin(
@@ -164,6 +171,7 @@ const AuthenticationPage = () => {
             },
             () => {
               onSuccessSubmit();
+              notifySuccess('Login successful');
               navigate(paths.home);
             },
             (message: string) => {
@@ -171,7 +179,10 @@ const AuthenticationPage = () => {
               notifyError(message || 'Login failed, please try again');
             }
           );
+          setIsLoading(true);
         } catch (error) {
+          setIsLoading(true);
+
           notifyError('Error during GitHub OAuth: ' + (error as Error).message);
         }
       };
@@ -184,6 +195,7 @@ const AuthenticationPage = () => {
   }, []);
   return (
     <div className="rive-story-container-login">
+      {isLoading && <LoadingPage />}
       <div
         onClick={() => navigate(paths.home)}
         className="absolute left-10 top-10 flex cursor-pointer items-center gap-2"

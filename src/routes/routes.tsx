@@ -149,3 +149,4 @@ export const AUTHEN_ROUTES: RouteType[] = [
     useFooter: false
   }
 ];
+

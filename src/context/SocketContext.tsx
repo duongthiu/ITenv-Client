@@ -29,5 +29,6 @@ export const SocketProvider: React.FC<SocketContextProviderProps> = ({ children 
       }
     };
   }, [token, isLogged]);
+  
   return <SocketContext.Provider value={socket.current}>{children}</SocketContext.Provider>;
 };

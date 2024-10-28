@@ -14,6 +14,7 @@ import { TypeVoteEnum } from '../../../../types/enum/typeVote.enum';
 import { notifyError } from '../../../../utils/helpers/notify';
 import useVoteStatus from '../../../../utils/hooks/useVoteStatus.hook';
 import ListCommentComponent from '../components/ListComment/ListComment.component';
+import { FaArrowLeft } from 'react-icons/fa';
 const DetailDiscussPage = () => {
   const { id } = useParams<{ id: string }>();
 
@@ -49,7 +50,7 @@ const DetailDiscussPage = () => {
   if (isLoading) return <p>Loading...</p>;
   if (isError) return <p>Error loading the postData?.data.</p>;
   return (
-    <div className="m-[10px] overflow-y-hidden rounded-lg shadow-lg">
+    <div className="m-[10px] overflow-y-hidden rounded-lg shadow-md">
       {isLoading && (
         <div className="skeleton-wrapper w-full p-10">
           <Skeleton active />
@@ -57,7 +58,15 @@ const DetailDiscussPage = () => {
       )}
       <div className="card overflow-y-auto">
         <div className="flex justify-between">
-          <h1 className="text-[1.8rem] font-medium">{postData?.data?.title}</h1>
+          <div className="flex items-center gap-5">
+            <div className="flex cursor-pointer items-center justify-center opacity-30 duration-200 hover:opacity-100">
+              <Tooltip title="Back">
+                <FaArrowLeft size={16} />
+              </Tooltip>
+            </div>
+            <Divider type="vertical" className="ml-0 h-full" />
+            <h1 className="text-[2.2rem] font-bold">{postData?.data?.title}</h1>
+          </div>
           <div className="flex items-center gap-10 text-[1.4rem]">
             <Tooltip title="Report">
               <button className="flex items-center hover:text-red-500">
@@ -129,7 +138,7 @@ const DetailDiscussPage = () => {
         </div>
         <div className="border-t pt-6">
           <h2 className="mb-4 text-2xl font-bold">Comments</h2>
-          <ListCommentComponent postId={postData?.data?._id || ''} />
+          <ListCommentComponent postById={postData?.data?.postedBy?._id || ''} postId={postData?.data?._id || ''} />
         </div>
       </div>
     </div>

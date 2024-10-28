@@ -7,6 +7,8 @@ import { confirmSignup, confirmSignupType, register, RegisterType } from '../../
 import { AuthenticationProps } from './Authentication.page';
 import OTPModal from './components/OTPModal.component';
 import { AnimatePresence, motion } from 'framer-motion';
+import { notifyError, notifySuccess } from '../../utils/helpers/notify';
+import LoadingPage from '../commons/LoadingPage';
 
 const LOGIN_TEXT = 'Sign Up';
 
@@ -27,9 +29,11 @@ const SignupForm = () => {
   const [isShowConfirmPassword, setIsShowConfirmPassword] = useState<boolean>(false);
   const [isShowOtp, setIsShowOtp] = useState<boolean>(false);
   const [signUpInfo, setSignUpInfo] = useState<RegisterType>();
+  const [isLoading, setIsLoading] = useState(false);
   const onSubmit = async (values: any) => {
     console.log(values);
     if (values.password !== values.confirmPassword) {
+      notifyError('Password does not match');
       onFailSubmit(); // Show an error for password mismatch
       return;
     }
@@ -37,6 +41,8 @@ const SignupForm = () => {
     setLoginButtonText('Checking...');
 
     try {
+      setIsLoading(true);
+
       const response = await register({
         email: values.email,
         username: values.userName,
@@ -52,6 +58,7 @@ const SignupForm = () => {
         });
         onSuccessSubmit();
         setIsShowOtp(true);
+        setIsLoading(false);
       } else onFailSubmit();
 
       // navigate(paths.inforSignup);
@@ -59,6 +66,7 @@ const SignupForm = () => {
       console.log(error);
       onFailSubmit();
     } finally {
+      setIsLoading(false);
       setLoginButtonText(LOGIN_TEXT);
     }
   };
@@ -76,28 +84,34 @@ const SignupForm = () => {
       };
 
       try {
+        setIsLoading(true);
         const response = await confirmSignup(confirmData);
         if (response.success) {
           // Handle success (e.g., redirect or show success message)
           console.log('Signup confirmed successfully');
+          notifySuccess('Signup confirmed successfully');
           navigate(paths.login);
         } else {
+          notifyError('Failed to confirm signup');
           onFailSubmit(); // Handle failure
         }
+        setIsLoading(false);
       } catch (error) {
-        console.error(error);
+        notifyError('Failed to confirm signup');
         onFailSubmit(); // Handle error
+        setIsLoading(false);
       }
     }
   };
 
   const modalVariants = {
-    hidden: { opacity: 0, x: '-100vh' },
-    visible: { opacity: 1, x: '0' },
-    exit: { opacity: 0, x: '100vh' }
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+    exit: { opacity: 0 }
   };
   return (
     <div>
+      {isLoading && <LoadingPage />}
       <AnimatePresence mode="wait">
         {isShowOtp && (
           <motion.div

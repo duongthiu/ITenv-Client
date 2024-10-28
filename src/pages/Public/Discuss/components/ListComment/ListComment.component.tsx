@@ -9,10 +9,13 @@ import { notifyError, notifySuccess } from '../../../../../utils/helpers/notify'
 
 import CommentCardComponent from './components/CommentCard.component';
 import './ListComment.style.scss';
+import { useSocket } from '../../../../../context/SocketContext';
 type ListCommentProps = {
+  postById: string;
   postId: string;
 };
-const ListCommentComponent: React.FC<ListCommentProps> = memo(({ postId }) => {
+const ListCommentComponent: React.FC<ListCommentProps> = memo(({ postById, postId }) => {
+  const socket = useSocket();
   const [newComment, setNewComment] = useState('');
   const [postImages, setPostImages] = useState<ImageType[]>([]);
   const { data: comments, isLoading, mutate } = useSWR(`/api/comment/${postId}`, () => getCommentsByPostId(postId));
@@ -38,6 +41,9 @@ const ListCommentComponent: React.FC<ListCommentProps> = memo(({ postId }) => {
         setNewComment('');
         setPostImages([]);
         mutate();
+        if (socket) {
+          socket.emit('notify', { message: 'comment ne' });
+        }
       } else {
         notifyError(res.message);
       }
@@ -48,12 +54,15 @@ const ListCommentComponent: React.FC<ListCommentProps> = memo(({ postId }) => {
   return (
     <div>
       <Form className="mt-6" onFinish={handleSubmit}>
-        <TextEditorComponent
-          content={newComment}
-          setContent={handleEditorChange}
-          postImages={postImages}
-          setPostImages={setPostImages}
-        />
+        <div className="list-comment-editor-wrapper rounded-md border border-t-[#CFCFCF] shadow-md">
+          <TextEditorComponent
+            key="comment"
+            content={newComment}
+            setContent={handleEditorChange}
+            postImages={postImages}
+            setPostImages={setPostImages}
+          />
+        </div>
         <Form.Item>
           <Button type="primary" htmlType="submit" className="mt-2 rounded-md bg-blue-500 text-white">
             Post Comment
@@ -65,7 +74,9 @@ const ListCommentComponent: React.FC<ListCommentProps> = memo(({ postId }) => {
           <Skeleton active />
         </div>
       )}
-      {comments?.data?.map((comment: CommentType) => <CommentCardComponent key={comment._id} comment={comment} />)}
+      {comments?.data?.map((comment: CommentType) => (
+        <CommentCardComponent key={comment._id} comment={comment} postId={postId} />
+      ))}
     </div>
   );
 });

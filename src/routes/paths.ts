@@ -10,6 +10,7 @@ export const paths = {
   problems: '/problems',
   singleProblem: '/problems/:slug',
   discuss: '/discuss',
+  discussWithCate:'/discuss',
   detailDiscuss: '/discuss/:id',
   createPost: '/create-post',
   messages: '/messages',

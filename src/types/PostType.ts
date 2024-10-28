@@ -18,11 +18,12 @@ export type PostType = {
 export type CommentType = {
   _id?: string;
   commentBy: Pick<UserType, '_id' | 'username' | 'avatar'>;
+  children?: CommentType[];
   parentComment?: string;
   isAccepted?: boolean;
   content: string;
-  createdAt: string;
+  createdAt?: string;
   updatedAt?: string;
-  vote: string[];
-  downVote: string[];
+  vote?: string[];
+  downVote?: string[];
 };

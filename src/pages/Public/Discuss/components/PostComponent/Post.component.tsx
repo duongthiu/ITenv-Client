@@ -2,11 +2,11 @@ import { Avatar } from 'antd';
 import { motion } from 'framer-motion';
 import React, { useMemo } from 'react';
 import { FaCaretDown, FaCaretUp, FaComment, FaEye } from 'react-icons/fa';
-import { PostType } from '../../../../types/PostType';
+import { PostType } from '../../../../../types/PostType';
 import './Post.style.scss';
-import { AnonymousIcon } from '../../../../utils/icons/Anonymous.icon';
+import { AnonymousIcon } from '../../../../../utils/icons/Anonymous.icon';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../../../../redux/app/hook';
+import { useAppSelector } from '../../../../../redux/app/hook';
 type PostComponentProps = {
   post: PostType;
 };
@@ -32,11 +32,10 @@ const PostComponent: React.FC<PostComponentProps> = ({ post }) => {
       ? (post?.vote?.length || 0) - (post?.downVote?.length || 0)
       : 0;
   }, [post?.vote?.length, post?.downVote?.length]);
-  console.log(post);
   return (
     <motion.div
       key={post._id}
-      className="card group mb-6 cursor-pointer"
+      className="group mb-6 cursor-pointer border-b-[1px] p-3"
       onClick={() => navigate(`/discuss/${post?._id}`)}
     >
       <div className="flex items-center justify-between space-x-8">

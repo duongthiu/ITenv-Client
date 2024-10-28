@@ -1,33 +1,28 @@
 import { CheckOutlined, CloseOutlined, TagOutlined } from '@ant-design/icons';
 import { Badge, Button, Input, Popover, Switch, Tooltip, Typography } from 'antd';
 import { AnimatePresence, motion, Reorder } from 'framer-motion';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { FiSend } from 'react-icons/fi';
 import { LuSplitSquareHorizontal } from 'react-icons/lu';
-import useSWR from 'swr';
+import TagMenu from '../../../components/post/TagMenu/TagMenu.component';
 import PreviewTextEditorComponent from '../../../components/TextEditor/components/PreviewTextEditor.component.tdc';
 import TextEditorComponent from '../../../components/TextEditor/TextEditor.component';
-import { useAppDispatch } from '../../../redux/app/hook';
 import { createPost, deleteImages } from '../../../services/post/post.service';
-import { getTags } from '../../../services/tags/tag.service';
 import { ImageType } from '../../../types/common';
-import { TagType } from '../../../types/TagType';
 import { cn } from '../../../utils/helpers/cn';
 import { notifyError, notifySuccess } from '../../../utils/helpers/notify';
 import { useDebounce } from '../../../utils/hooks/useDebounce.hook';
 import LoadingPage from '../../commons/LoadingPage';
 import './CreatePostPage.style.scss';
 import { Tab } from './Tabs';
+import { useBeforeUnload } from 'react-router-dom';
 export interface Ingredient {
   label: string;
 }
 
 const initialTabs: Ingredient[] = [{ label: 'Text Editor' }, { label: 'Preview Text Editor' }];
 const CreatePostPage = () => {
-  const { data: tags, isLoading } = useSWR('/api/tag', () => getTags());
-  const [loading, setLoading] = useState(isLoading);
-  const [searchTags, setSearchTags] = useState('');
-  const debounceSearchVariable = useDebounce(searchTags, 500);
+  const [loading, setLoading] = useState(false);
   const [content, setContent] = useState('Write something');
   const [isAnonymous, setIsAnonymous] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -41,46 +36,10 @@ const CreatePostPage = () => {
   const [isSplit, setIsSplit] = useState(false);
   const [postImages, setPostImages] = useState<ImageType[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const handleTagToggle = (tag: string) => {
-    setSelectedTags((prevTags: any) => {
-      if (prevTags.includes(tag)) {
-        return prevTags.filter((t: any) => t !== tag);
-      }
-      return [...prevTags, tag];
-    });
-  };
-  useEffect(() => {
-    setLoading(isLoading);
-  }, [isLoading]);
 
-  const TagMenu = () => (
-    <div className="mb-4 flex max-w-[450px] flex-col">
-      <Input
-        placeholder="Search tags... "
-        className="mb-4"
-        value={searchTags}
-        onChange={(e) => setSearchTags(e.target.value)}
-      />
-      <div className="flex max-h-[300px] flex-wrap gap-2 overflow-y-auto">
-        {tags?.data
-          ?.filter((tag) => tag.name.toLowerCase().includes(debounceSearchVariable.toLowerCase()))
-          .map((tag: TagType) => (
-            <button
-              key={tag._id}
-              onClick={() => handleTagToggle(tag._id)}
-              className={`rounded-full px-3 py-1 font-medium ${
-                selectedTags.includes(tag._id)
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              } transition-colors duration-200`}
-              aria-pressed={selectedTags.includes(tag._id)}
-            >
-              {tag.name}
-            </button>
-          ))}
-      </div>
-    </div>
-  );
+  // useEffect(() => {
+  //   setLoading(isLoading);
+  // }, [isLoading]);
 
   const handleCreatePost = async () => {
     // post to the server
@@ -121,9 +80,13 @@ const CreatePostPage = () => {
       setLoading(false);
     }
   };
+  useBeforeUnload(() => {
+    console.log('User is leaving the page');
+  });
+
   return (
     <div className="flex h-full w-full flex-col gap-5 p-[20px]">
-      <div className="card rounded-lg p-5 shadow-lg">
+      <div className="card rounded-md p-5">
         <Typography.Title level={3} className="font-mono">
           Create Post
         </Typography.Title>
@@ -137,7 +100,11 @@ const CreatePostPage = () => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
-            <Popover trigger={'click'} content={TagMenu} placement="bottom">
+            <Popover
+              trigger={'click'}
+              content={<TagMenu selectedTags={selectedTags} setSelectedTags={setSelectedTags} />}
+              placement="bottom"
+            >
               <Badge count={selectedTags.length}>
                 <Button type="dashed" icon={<TagOutlined />}>
                   Tags
@@ -169,7 +136,7 @@ const CreatePostPage = () => {
           </div>
         </div>
       </div>
-      <div className="window card border p-0 shadow-lg">
+      <div className="window card border p-0 shadow-md">
         <nav>
           <Reorder.Group as="ul" axis="x" onReorder={setTabs} className="tabs" values={tabs}>
             <AnimatePresence initial={false}>
@@ -209,7 +176,7 @@ const CreatePostPage = () => {
               <div className={cn('flex h-full', isSplit && 'gap-2')}>
                 <div
                   className={cn(
-                    'text-editor-wraper h-full rounded-sm shadow-lg',
+                    'text-editor-wraper h-full rounded-sm shadow-md',
                     isSplit
                       ? tabs[0].label === 'Text Editor'
                         ? 'order-1 flex-1'
@@ -220,6 +187,7 @@ const CreatePostPage = () => {
                   )}
                 >
                   <TextEditorComponent
+                    key='createpost'
                     content={content}
                     setContent={handleEditorChange}
                     postImages={postImages}
@@ -228,7 +196,7 @@ const CreatePostPage = () => {
                 </div>
                 <div
                   className={cn(
-                    'card min-h-full w-0 rounded-lg border p-4 shadow-lg',
+                    'card min-h-full w-0 rounded-lg border p-4 shadow-md',
                     isSplit
                       ? tabs[0].label !== 'Text Editor'
                         ? 'order-1 flex-1'

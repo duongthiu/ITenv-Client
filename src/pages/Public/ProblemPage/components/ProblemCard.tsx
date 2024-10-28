@@ -13,15 +13,7 @@ type ContentCardProps = {
   difficulty: string;
   acceptance: number;
 };
-const ContentCard: React.FC<ContentCardProps> = ({
-  title,
-  slug,
-  tags,
-  votes,
-  saved,
-  difficulty,
-  acceptance
-}) => {
+const ContentCard: React.FC<ContentCardProps> = ({ title, slug, tags, votes, saved, difficulty, acceptance }) => {
   const [isVoted, setIsVoted] = useState(false);
   const [isSaved, setIsSaved] = useState(saved);
   const [voteCount, setVoteCount] = useState(votes);

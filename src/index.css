@@ -7,11 +7,14 @@
     background-color: theme('colors.white');
     border-radius: theme('borderRadius.lg');
     padding: theme('spacing.6');
-    box-shadow:
+    /* box-shadow:
       rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
-      rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+      rgba(0, 0, 0, 0.08) 0px 0px 0px 1px; */
+    box-shadow:
+      0 4px 6px -1px rgb(0 0 0 / 0.1),
+      0 2px 4px -2px rgb(0 0 0 / 0.1);
     border-radius: 0.5rem;
-    border-width: 1px;
+    /* border-width: 1px; */
   }
   /* ... */
 

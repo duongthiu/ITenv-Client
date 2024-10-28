@@ -44,7 +44,7 @@ const SearchPage = () => {
         <div>
           <ul className="space-y-4">
             {userList?.data?.map((user) => (
-              <li key={user._id} className="user-item card flex items-center rounded-lg p-4 shadow-lg">
+              <li key={user._id} className="user-item card flex items-center rounded-lg p-4 shadow-md">
                 <div className="flex items-center space-x-4">
                   <img
                     src={user.avatar || '/default-avatar.png'}
