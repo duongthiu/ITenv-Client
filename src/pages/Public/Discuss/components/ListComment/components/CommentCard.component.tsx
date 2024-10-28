@@ -69,11 +69,14 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
         // if (socket) {
         //   socket.emit('notify', { message: 'comment ne' });
         // }
+        onClose();
       } else {
         notifyError(res.message);
+        onClose();
       }
     } catch (error) {
       notifyError((error as Error).message);
+      onClose();
     }
   };
   const showDrawer = () => {
@@ -85,7 +88,7 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
   };
 
   return (
-    <div className="mb-4 rounded-md p-4">
+    <div className="mb-4 rounded-md">
       <div className="flex flex-col gap-5">
         <div className="flex gap-5">
           <div className="ml-8 flex flex-none flex-col items-center">
@@ -145,7 +148,7 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
       <Drawer
         title={`Reply to ${comment.commentBy?.username}`}
         placement="bottom"
-        closable={false}
+        closable={true}
         onClose={onClose}
         open={openDrawer}
         key={comment._id}

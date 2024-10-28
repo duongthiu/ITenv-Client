@@ -187,7 +187,7 @@ const CreatePostPage = () => {
                   )}
                 >
                   <TextEditorComponent
-                    key='createpost'
+                    key="createpost"
                     content={content}
                     setContent={handleEditorChange}
                     postImages={postImages}

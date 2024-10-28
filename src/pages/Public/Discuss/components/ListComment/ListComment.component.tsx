@@ -10,6 +10,7 @@ import { notifyError, notifySuccess } from '../../../../../utils/helpers/notify'
 import CommentCardComponent from './components/CommentCard.component';
 import './ListComment.style.scss';
 import { useSocket } from '../../../../../context/SocketContext';
+import CommentTree from './components/CommentTree/CommentTree';
 type ListCommentProps = {
   postById: string;
   postId: string;
@@ -74,9 +75,10 @@ const ListCommentComponent: React.FC<ListCommentProps> = memo(({ postById, postI
           <Skeleton active />
         </div>
       )}
-      {comments?.data?.map((comment: CommentType) => (
+      {/* {comments?.data?.map((comment: CommentType) => (
         <CommentCardComponent key={comment._id} comment={comment} postId={postId} />
-      ))}
+      ))} */}
+      <CommentTree postId={postId} comments={comments?.data || []} />
     </div>
   );
 });

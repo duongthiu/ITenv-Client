@@ -1,6 +1,7 @@
 .text-editor-wraper {
   // background-color: white !important;
   .tox-tinymce {
+    flex-grow: 1;
     height: 100% !important;
   }
   .tox-statusbar {

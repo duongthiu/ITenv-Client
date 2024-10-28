@@ -57,7 +57,7 @@ const TextEditorComponent: React.FC<TextEditorProps> = ({
           <Skeleton active />
         </div>
       )}
-      <div className={buttonTitle && 'button-title'}>
+      <div className={`text-editor-wraper h-full ${buttonTitle && 'button-title'}`}>
         <Editor
           key={key + theme}
           onInit={() => {
