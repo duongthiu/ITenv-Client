@@ -100,10 +100,10 @@ const TextEditorComponent: React.FC<TextEditorProps> = ({
           value={content}
         />
         {buttonTitle && (
-          <div className="flex w-full items-center justify-end border-t-[1px] pt-3">
+          <div className="flex w-full items-center justify-end border-t-[1px] p-3">
             <button
               onClick={() => buttonFunction && buttonFunction(content)}
-              className="mb-2 mr-2 rounded-lg bg-primary-color px-6 py-2 text-[1.4rem] font-medium text-white duration-200 hover:bg-primary-color-hover focus:ring-4 focus:ring-blue-300"
+              className="mr-2 rounded-lg bg-primary-color px-6 py-2 text-[1.4rem] font-medium text-white duration-200 hover:bg-primary-color-hover focus:ring-4 focus:ring-blue-300"
             >
               {buttonTitle}
             </button>

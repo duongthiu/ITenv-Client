@@ -13,7 +13,8 @@ import { TypeVoteEnum } from '../../../../../../types/enum/typeVote.enum';
 import { CommentType } from '../../../../../../types/PostType';
 import { notifyError, notifySuccess } from '../../../../../../utils/helpers/notify';
 import useVoteStatus from '../../../../../../utils/hooks/useVoteStatus.hook';
-
+import { MdModeEdit } from 'react-icons/md';
+import { MdDelete } from 'react-icons/md';
 type CommentCartProps = {
   postId: string;
   comment: CommentType;
@@ -26,6 +27,7 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
   const [newComment, setNewComment] = useState(initContent);
   const [postImages, setPostImages] = useState<ImageType[]>([]);
   const [commentState, setCommentState] = useState(comment);
+  const { user } = useAppSelector((state) => state.user);
   const { isVoted, isDownvoted } = useVoteStatus({
     vote: commentState?.vote || [],
     downVote: commentState?.downVote || []
@@ -34,7 +36,6 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
     setNewComment(content);
   }, []);
 
-  const { user } = useAppSelector((state) => state.user);
   const handleVote = async (type: TypeVoteEnum) => {
     if (!user) {
       notifyError(`You don't have permission to vote. Please login to vote...`);
@@ -100,12 +101,12 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
                   </p>
                   <p className="sub-title text-[1.2rem]">{new Date(commentState?.createdAt || 0).toLocaleString()}</p>
                 </div>
-                <PreviewTextEditorComponent content={commentState?.content} fontSize={1.2} />
-                <div className="flex items-center gap-8 text-[1.2rem] duration-200">
+                <PreviewTextEditorComponent content={commentState?.content} fontSize={1.4} />
+                <div className="flex items-center gap-8 text-[1.4rem] duration-200">
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleVote(TypeVoteEnum.upvote)}
-                      className={`flex h-fit items-center rounded-md text-[1.6rem] text-gray-500 hover:text-green-500 focus:outline-none focus:ring-green-500 ${isVoted && 'text-green-500'}`}
+                      className={`flex h-fit items-center rounded-md text-[1.8rem] text-gray-500 hover:text-green-500 focus:outline-none focus:ring-green-500 ${isVoted && 'text-green-500'}`}
                       // whileHover={{ scale: 1.1 }}
                       //   whileTap={{ scale: 0.9 }}
                       aria-label="Upvote"
@@ -119,7 +120,7 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
                     </p>
                     <button
                       onClick={() => handleVote(TypeVoteEnum.downvote)}
-                      className={`flex items-center rounded-md text-[1.6rem] text-gray-500 hover:text-red-500 focus:outline-none focus:ring-red-500 ${isDownvoted && 'text-red-500'}`}
+                      className={`flex items-center rounded-md text-[1.8rem] text-gray-500 hover:text-red-500 focus:outline-none focus:ring-red-500 ${isDownvoted && 'text-red-500'}`}
                       // whileHover={{ scale: 1.1 }}
                       // whileTap={{ scale: 0.9 }}
                       aria-label="Downvote"
@@ -134,6 +135,19 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
                     <FaReply />
                     Reply
                   </button>
+
+                  {user?._id === commentState?.commentBy._id && (
+                    <div className="flex items-center gap-8">
+                      <button className="flex items-center gap-2 duration-200 hover:text-blue-500" onClick={showDrawer}>
+                        <MdModeEdit />
+                        Edit
+                      </button>
+                      <button className="flex items-center gap-2 duration-200 hover:text-error-color">
+                        <MdDelete />
+                        Delete
+                      </button>
+                    </div>
+                  )}
                   <button className="flex items-center gap-2 duration-200 hover:text-warning-color">
                     <PiWarningFill />
                     Report
@@ -155,8 +169,14 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
         <div className="flex flex-col gap-7">
           {isFullComment ? (
             <div className="flex flex-col gap-5">
-              <div className="h-[50px]">
-                <PreviewTextEditorComponent content={commentState?.content} fontSize={1.2} />
+              <div className="flex-1">
+                <div className="mb-4">
+                  At {new Date(commentState?.createdAt || 0).toLocaleString()}{' '}
+                  <strong>{` @<${comment.commentBy?.username}>`}</strong> wrote :
+                </div>
+                <div className="sub-title ml-3 border-l-[1px] pl-2 font-semibold">
+                  <PreviewTextEditorComponent content={commentState?.content} fontSize={1.4} />
+                </div>
               </div>{' '}
               <Tooltip title="Hide">
                 <button
@@ -181,7 +201,7 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
           <div className="list-comment-editor-wrapper border shadow-md">
             <TextEditorComponent
               buttonTitle="Post"
-              key="reply-comment"
+              key={`reply-comment ${comment?._id}`}
               content={newComment}
               setContent={handleEditorChange}
               postImages={postImages}
