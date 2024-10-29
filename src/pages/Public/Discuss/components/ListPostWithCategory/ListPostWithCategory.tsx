@@ -59,8 +59,8 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
 
       <div className="flex gap-4">
         {isLoading && <Skeleton active className="h-full" />}
-        <main className="flex h-fit flex-1 flex-col">
-          <div className="flex items-center justify-between text-[1.4rem]">
+        <main className={`flex h-fit flex-1 flex-col ${posts?.data?.length !== 0 && 'card'}`}>
+          <div className="flex items-center justify-between p-5 text-[1.4rem]">
             <div className="flex gap-5 text-[1.4rem]">
               <div>Hot</div>
             </div>
@@ -84,7 +84,7 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
               <Empty className="" />
             </div>
           ) : (
-            <div className="card">
+            <div className="">
               <div className="flex-1">{posts?.data?.map((post) => <PostComponent key={post._id} post={post} />)} </div>
 
               <div className="flex w-full items-center justify-center">
@@ -105,6 +105,7 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
         </div>
       </div>
       <Drawer
+        height={500}
         placement="bottom"
         size="default"
         rootClassName="listpost-drawer-wrapper"
