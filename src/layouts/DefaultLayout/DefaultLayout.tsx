@@ -1,5 +1,4 @@
 import { Layout } from 'antd';
-import { AnimatePresence, motion } from 'framer-motion';
 import React, { PropsWithChildren, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import FooterComponent from '../../components/commons/footer.component';
@@ -22,6 +21,7 @@ const DefaultLayout: React.FC<PropsWithChildren<DefaultLayoutProps>> = ({
   useFooter = true
 }) => {
   const { pathname } = useLocation();
+  console.log(pathname);
   const [collapsed, setCollapsed] = useState<boolean>(true);
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
@@ -35,40 +35,26 @@ const DefaultLayout: React.FC<PropsWithChildren<DefaultLayoutProps>> = ({
           useHeader && 'pt-[60px]',
           'desktop:h-screen, flex',
           useFooter ? 'pb-[80px]' : 'pb-[20px]',
-          'h-screen w-full desktop:max-w-[1464px]'
+          'flex h-screen w-full justify-center'
         )}
       >
-        {useSidebar && (
-          <div
-            className="fixed left-4 top-[70px]"
-            style={{
-              zIndex: 1000,
-              height: useHeader ? (useFooter ? 'calc(100vh - 140px)' : 'calc(100vh - 90px)') : 'calc(100vh - 60px)'
-            }}
-          >
-            <SidebarComponent collapsed={collapsed} toggleCollapsed={toggleCollapsed} />
-          </div>
-        )}
-        <Content
-          style={{ minHeight: 'calc(100vh - 120px)', marginLeft: useSidebar ? (collapsed ? 90 : 230) : 0 }}
-          className="overflow-y-auto overflow-x-hidden duration-200"
-        >
-          <AnimatePresence mode="wait">
-            <motion.div
-              className="h-full"
-              key={pathname}
-              initial={{ opacity: 0, x: -100 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 100 }}
-              transition={{ type: 'spring', duration: 0.5 }}
+        <Content style={{ minHeight: 'calc(100vh - 120px)' }} className={cn('duration-200', 'flex max-w-[1440px]')}>
+          {/* {useSidebar && (
+            <div
+              className="p-4"
+              style={{
+                // zIndex: 1000,
+                height: useHeader ? (useFooter ? 'calc(100vh - 140px)' : 'calc(100vh - 90px)') : 'calc(100vh - 60px)'
+              }}
             >
-              {children}
-            </motion.div>
-          </AnimatePresence>
+              <SidebarComponent collapsed={collapsed} toggleCollapsed={toggleCollapsed} />
+            </div>
+          )} */}
+          <div className="h-full w-full"> {children}</div>
         </Content>
       </div>
 
-      {useFooter && <FooterComponent />}
+      {/* {useFooter && <FooterComponent />} */}
     </div>
   );
 };

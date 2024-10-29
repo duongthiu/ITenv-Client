@@ -9,10 +9,13 @@ export const paths = {
   personal: '/personal',
   problems: '/problems',
   singleProblem: '/problems/:slug',
+
   discuss: '/discuss',
-  discussWithCate:'/discuss',
-  detailDiscuss: '/discuss/:id',
-  createPost: '/create-post',
+  parentCateDisCuss: '/discuss/:parentCateId',
+  childCateDisCuss: '/discuss/:parentCateId/:childCateId',
+  detailDiscuss: '/discuss/:parentCateId/:id',
+
+  createPost: '/discuss/:parentCateId/create-post',
   messages: '/messages',
   profile: '/profile/:slug',
   search: '/search'

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import CommentCardComponent from '../CommentCard.component';
+import CommentCardComponent from '../../../CommentCard.component';
 import { CommentType } from '../../../../../../../types/PostType';
 import './CommentTree.style.scss';
 import { KeyedMutator } from 'swr';

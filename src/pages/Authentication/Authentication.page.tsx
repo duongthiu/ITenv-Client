@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useGoogleLogin } from '@react-oauth/google';
 import { Typography } from 'antd';
-import { AnimatePresence, motion } from 'framer-motion';
 import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import FacebookLogin, { ReactFacebookLoginInfo } from 'react-facebook-login';
 import { FaFacebookF, FaGithub, FaGoogle } from 'react-icons/fa';
@@ -210,26 +209,18 @@ const AuthenticationPage = () => {
           <div className="rive-wrapper">
             <RiveComponent className="rive-container" />
           </div>
-          <AnimatePresence mode="wait">
-            <div className="form-container card shadow-xl">
-              <motion.div
-                key={location.pathname}
-                initial={{ opacity: 0, x: -100 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 100 }}
-                transition={{ duration: 0.25 }}
-              >
-                <Outlet context={authContext} />
-              </motion.div>
 
-              <div className="flex flex-col gap-5">
-                <Typography.Text className="text-center opacity-55">or you can sign in with</Typography.Text>
-                <div className="flex items-center justify-center">
-                  <div className="flex items-center gap-8">
-                    <div className="cursor-pointer rounded-full bg-black p-2 opacity-55 duration-200 hover:bg-[#ea4335] hover:opacity-100">
-                      <FaGoogle onClick={LoginWithGoogle} size={18} className="text-white" />
-                    </div>
-                    {/* <GoogleLogin
+          <div className="form-container card shadow-xl">
+            <Outlet context={authContext} />
+
+            <div className="flex flex-col gap-5">
+              <Typography.Text className="text-center opacity-55">or you can sign in with</Typography.Text>
+              <div className="flex items-center justify-center">
+                <div className="flex items-center gap-8">
+                  <div className="cursor-pointer rounded-full bg-black p-2 opacity-55 duration-200 hover:bg-[#ea4335] hover:opacity-100">
+                    <FaGoogle onClick={LoginWithGoogle} size={18} className="text-white" />
+                  </div>
+                  {/* <GoogleLogin
                       onSuccess={(credentialResponse) => {
                         console.log(credentialResponse);
                       }}
@@ -237,7 +228,7 @@ const AuthenticationPage = () => {
                         console.log('Login Failed');
                       }}
                     /> */}
-                    {/* <div className="button-container flex cursor-pointer items-center justify-center rounded-full bg-black p-2 opacity-55 duration-200 hover:bg-[#0866ff] hover:opacity-100">
+                  {/* <div className="button-container flex cursor-pointer items-center justify-center rounded-full bg-black p-2 opacity-55 duration-200 hover:bg-[#0866ff] hover:opacity-100">
                        <FacebookLogin
                         appId="1054271949826165" // Replace with your actual Facebook App ID
                         autoLoad={true} // Optional, set to true if you want it to auto load
@@ -251,16 +242,15 @@ const AuthenticationPage = () => {
                         icon={<FaFacebookF size={18} className="cursor-pointer text-white" />}
                       /> 
                     </div> */}
-                    <FaGithub
-                      onClick={LoginWithGithub}
-                      size={27}
-                      className="cursor-pointer opacity-55 duration-200 hover:opacity-100"
-                    />
-                  </div>
+                  <FaGithub
+                    onClick={LoginWithGithub}
+                    size={27}
+                    className="cursor-pointer opacity-55 duration-200 hover:opacity-100"
+                  />
                 </div>
               </div>
             </div>
-          </AnimatePresence>
+          </div>
         </div>
       </div>
     </div>

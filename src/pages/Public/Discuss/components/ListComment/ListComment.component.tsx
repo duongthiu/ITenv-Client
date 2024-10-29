@@ -7,7 +7,7 @@ import { ImageType } from '../../../../../types/common';
 import { CommentType } from '../../../../../types/PostType';
 import { notifyError, notifySuccess } from '../../../../../utils/helpers/notify';
 
-import CommentCardComponent from './components/CommentCard.component';
+import CommentCardComponent from '../CommentCard.component';
 import './ListComment.style.scss';
 import { useSocket } from '../../../../../context/SocketContext';
 import CommentTree from './components/CommentTree/CommentTree';
@@ -54,7 +54,7 @@ const ListCommentComponent: React.FC<ListCommentProps> = memo(({ postById, postI
   };
   return (
     <div>
-      <Form className="mt-6" onFinish={handleSubmit}>
+      <Form className="mt-6">
         <div className="list-comment-editor-wrapper mb-10 rounded-md border border-t-[#CFCFCF] shadow-md">
           <TextEditorComponent
             buttonTitle="Post Comment"

@@ -4,6 +4,7 @@ export type CategoryType = {
   parentCategory: string;
   description: string;
   type: EnumTag;
+  children?: CategoryType[];
 };
 export enum EnumTag {
   TYPE_PROBLEM = 'Problem',

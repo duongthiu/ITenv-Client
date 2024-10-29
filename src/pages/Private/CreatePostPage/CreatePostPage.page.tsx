@@ -15,13 +15,15 @@ import { useDebounce } from '../../../utils/hooks/useDebounce.hook';
 import LoadingPage from '../../commons/LoadingPage';
 import './CreatePostPage.style.scss';
 import { Tab } from './Tabs';
-import { useBeforeUnload } from 'react-router-dom';
+import { useBeforeUnload, useParams } from 'react-router-dom';
 export interface Ingredient {
   label: string;
 }
 
 const initialTabs: Ingredient[] = [{ label: 'Text Editor' }, { label: 'Preview Text Editor' }];
 const CreatePostPage = () => {
+  const { parentCateId } = useParams();
+
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState('Write something');
   const [isAnonymous, setIsAnonymous] = useState(false);
@@ -63,7 +65,7 @@ const CreatePostPage = () => {
         content,
         isAnonymous,
         tags: selectedTags,
-        categoryId: '670b6a1062937ef087fd23ba'
+        categoryId: parentCateId!
       });
       if (result.success) {
         setLoading(false);
@@ -86,10 +88,10 @@ const CreatePostPage = () => {
 
   return (
     <div className="flex h-full w-full flex-col gap-5 p-[20px]">
-      <div className="card rounded-md p-5">
-        <Typography.Title level={3} className="font-mono">
+      <div className="rounded-md">
+        {/* <Typography.Title level={3} className="font-mono">
           Create Post
-        </Typography.Title>
+        </Typography.Title> */}
         {loading && <LoadingPage />}
         <div className="flex items-center justify-between">
           <div className="flex min-w-[500px] gap-5">

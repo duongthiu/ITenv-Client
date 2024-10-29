@@ -1,19 +1,26 @@
-import { Tabs } from 'antd';
+import { useEffect, useMemo, useState } from 'react';
+import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
+import { paths } from '../../../routes/paths';
 import { getCategory } from '../../../services/post/post.service';
-import ListPostWithCategory from './components/ListPostWithCategory/ListPostWithCategory';
-import { useEffect, useMemo } from 'react';
 import { CategoryType } from '../../../types/CategoryType';
-import { useNavigate } from 'react-router-dom';
+import CategoryBlock from './components/CategoryBlock/CategoryBlock.component';
+import { Skeleton } from 'antd';
 
 const DiscussPage = () => {
-  const navigate = useNavigate();
-  const { data: categories, isLoading: isLoadingCate } = useSWR('category', getCategory);
-  const tabItems = useMemo(() => {
-    if (!categories?.data) return [];
-    const parentCategories = categories?.data?.filter((category) => !category.parentCategory);
+  const { parentCateId } = useParams();
 
-    const childCategoriesMap = categories?.data?.reduce((acc: Record<string, CategoryType[]>, category) => {
+  const navigate = useNavigate();
+  const [activeCategory, setActiveCategory] = useState<string>(parentCateId || '');
+
+  console.log(activeCategory);
+
+  const { data: categories, isLoading: isLoadingCate } = useSWR('category', getCategory);
+  const cates = useMemo(() => {
+    if (!categories?.data) return [];
+
+    const parentCategories = categories.data.filter((category) => !category.parentCategory);
+    const childCategoriesMap = categories.data.reduce((acc: Record<string, CategoryType[]>, category) => {
       if (category.parentCategory) {
         if (!acc[category.parentCategory]) {
           acc[category.parentCategory] = [];
@@ -22,33 +29,43 @@ const DiscussPage = () => {
       }
       return acc;
     }, {});
+
     return parentCategories.map((parentCategory) => ({
-      key: parentCategory._id,
-      label: parentCategory.name,
-      value: parentCategory._id,
-      children: (
-        <ListPostWithCategory
-          categoryId={parentCategory._id}
-          childCategories={childCategoriesMap[parentCategory._id] || []}
-        />
-      )
+      ...parentCategory,
+      children: childCategoriesMap[parentCategory?._id || ''] || [] // Attach children if they exist
     }));
   }, [categories]);
+
   useEffect(() => {
-    navigate;
-  }, []);
+    if (categories?.data?.length) {
+      if (!parentCateId) {
+        navigate(paths.parentCateDisCuss.replace(':parentCateId', categories?.data[0]?._id || ''));
+        setActiveCategory(categories?.data[0]?._id || '');
+      }
+    }
+  }, [categories]);
+
   return (
     <div className="mx-auto p-4">
-      <header className="mb-8">
-        <Tabs
-          className="text-[1.6rem]"
-          type="card"
-          size="large"
-          items={tabItems}
-          defaultValue={categories?.data?.[0]?._id}
-          defaultActiveKey={categories?.data?.[0]?._id}
-        />
+      <header className="">
+        <div
+          className={`grid w-full gap-x-5`}
+          style={{ gridTemplateColumns: `repeat(${cates?.length || 1}, minmax(0, 1fr))` }}
+        >
+          {isLoadingCate && <Skeleton.Node active />}
+          {cates?.map((category) => (
+            <div
+              onClick={() => {
+                setActiveCategory(category._id);
+                navigate(paths.parentCateDisCuss.replace(':parentCateId', category._id));
+              }}
+            >
+              <CategoryBlock isActive={category._id === activeCategory} key={category._id} category={category} />
+            </div>
+          ))}
+        </div>
       </header>
+      <Outlet />
     </div>
   );
 };

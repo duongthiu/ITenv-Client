@@ -4,15 +4,15 @@ import React, { memo, useCallback, useState } from 'react';
 import { FaReply } from 'react-icons/fa';
 import { PiWarningFill } from 'react-icons/pi';
 import { KeyedMutator } from 'swr';
-import PreviewTextEditorComponent from '../../../../../../components/TextEditor/components/PreviewTextEditor.component.tdc';
-import TextEditorComponent from '../../../../../../components/TextEditor/TextEditor.component';
-import { useAppSelector } from '../../../../../../redux/app/hook';
-import { postComment, voteCommentById } from '../../../../../../services/comment/comment.service';
-import { ImageType, ResponsePagination } from '../../../../../../types/common';
-import { TypeVoteEnum } from '../../../../../../types/enum/typeVote.enum';
-import { CommentType } from '../../../../../../types/PostType';
-import { notifyError, notifySuccess } from '../../../../../../utils/helpers/notify';
-import useVoteStatus from '../../../../../../utils/hooks/useVoteStatus.hook';
+import PreviewTextEditorComponent from '../../../../components/TextEditor/components/PreviewTextEditor.component.tdc';
+import TextEditorComponent from '../../../../components/TextEditor/TextEditor.component';
+import { useAppSelector } from '../../../../redux/app/hook';
+import { postComment, voteCommentById } from '../../../../services/comment/comment.service';
+import { ImageType, ResponsePagination } from '../../../../types/common';
+import { TypeVoteEnum } from '../../../../types/enum/typeVote.enum';
+import { CommentType } from '../../../../types/PostType';
+import { notifyError, notifySuccess } from '../../../../utils/helpers/notify';
+import useVoteStatus from '../../../../utils/hooks/useVoteStatus.hook';
 import { MdModeEdit } from 'react-icons/md';
 import { MdDelete } from 'react-icons/md';
 type CommentCartProps = {
@@ -21,7 +21,7 @@ type CommentCartProps = {
   mutate: KeyedMutator<ResponsePagination<CommentType[]>>;
 };
 const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId, mutate }) => {
-  const initContent = `<strong>@${comment.commentBy?.username} </strong>` + '<br>';
+  const initContent = `<strong style="background-color: #d9e6f4; padding:4px; border-radius: 4px; margin-right:10px">@${comment.commentBy?.username} </strong><p></p>`;
   const [openDrawer, setOpenDrawer] = useState(false);
   const [isFullComment, setIsFullComment] = useState(false);
   const [newComment, setNewComment] = useState(initContent);

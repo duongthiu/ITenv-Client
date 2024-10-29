@@ -15,11 +15,12 @@ import { notifyError } from '../../../../utils/helpers/notify';
 import useVoteStatus from '../../../../utils/hooks/useVoteStatus.hook';
 import ListCommentComponent from '../components/ListComment/ListComment.component';
 import { FaArrowLeft } from 'react-icons/fa';
+import LoadingPage from '../../../commons/LoadingPage';
 const DetailDiscussPage = () => {
   const { id } = useParams<{ id: string }>();
 
   const { user } = useAppSelector((state) => state.user);
-  const { data: postData, isLoading, isError, mutate } = useSWR(`detailpost/${id}`, () => getPostById(id!));
+  const { data: postData, isLoading, mutate } = useSWR(`detailpost/${id}`, () => getPostById(id!));
   const { isVoted, isDownvoted } = useVoteStatus({
     vote: postData?.data?.vote || [],
     downVote: postData?.data?.downVote || []
@@ -47,13 +48,14 @@ const DetailDiscussPage = () => {
     }
   };
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p>Error loading the postData?.data.</p>;
+  // if (isLoading) return <p>Loading...</p>;
+  // if (isError) return <p>Error loading the postData?.data.</p>;
   return (
     <div className="m-[10px] overflow-y-hidden rounded-lg shadow-md">
       {isLoading && (
         <div className="skeleton-wrapper w-full p-10">
           <Skeleton active />
+          <LoadingPage />
         </div>
       )}
       <div className="card overflow-y-auto">

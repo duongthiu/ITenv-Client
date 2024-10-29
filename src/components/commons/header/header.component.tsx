@@ -88,7 +88,7 @@ const HeaderComponent: React.FC = () => {
 
   return (
     <div className="header-wraper box fixed top-0 z-10 flex h-[60px] w-full justify-center shadow-md">
-      <div className="flex h-full w-full items-center justify-between px-5 desktop:max-w-[1464px]">
+      <div className="flex h-full w-full max-w-[1440px] items-center justify-between px-5">
         <div onClick={() => navigate(paths.home)} className="flex cursor-pointer items-center gap-2">
           <img src={logo} className="h-[32px] w-[32px]" style={{ userSelect: 'none' }} alt="Logo" />
           <h6 className="font-mono text-[2.2rem] font-extrabold" style={{ userSelect: 'none' }}>

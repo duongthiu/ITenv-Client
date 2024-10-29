@@ -1,6 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import LazyLoadComponent from '../components/commons/LazyComponent';
 import DefaultLayout from '../layouts/DefaultLayout/DefaultLayout';
+import DiscussByCate from '../pages/Public/Discuss/DiscussByCate/DiscussByCate.page';
+import DiscussPage from '../pages/Public/Discuss/DiscussPage';
 import { paths } from './paths';
 export type RouteType = {
   element: React.ReactNode;
@@ -10,6 +12,7 @@ export type RouteType = {
   useFooter?: boolean;
   path: string;
   private?: 'public' | 'auth' | 'admin';
+  children?: RouteType[];
 };
 const LazyHomePage = LazyLoadComponent(() => import('../pages/Public/Home/HomePage'))(true);
 
@@ -44,7 +47,7 @@ export const PUBLIC_ROUTES: RouteType[] = [
     private: 'public',
     useHeader: true,
     useSidebar: true,
-    useFooter: true
+    useFooter: false
   },
   {
     path: paths.discuss,
@@ -52,17 +55,18 @@ export const PUBLIC_ROUTES: RouteType[] = [
     layout: DefaultLayout,
     private: 'public',
     useHeader: true,
-    useSidebar: true,
-    useFooter: true
+    useSidebar: false,
+    useFooter: false
   },
+
   {
     path: paths.detailDiscuss,
     element: <LazyDetailDiscussPage />,
     layout: DefaultLayout,
     private: 'public',
     useHeader: true,
-    useSidebar: true,
-    useFooter: true
+    useSidebar: false,
+    useFooter: false
   },
   {
     path: paths.createPost,
@@ -71,7 +75,7 @@ export const PUBLIC_ROUTES: RouteType[] = [
     private: 'auth',
     useHeader: true,
     useSidebar: true,
-    useFooter: true
+    useFooter: false
   },
   {
     path: paths.messages,
@@ -110,7 +114,17 @@ export const PUBLIC_ROUTES: RouteType[] = [
     useFooter: false
   }
 ];
-
+export const DISCUSS_ROUTES: RouteType[] = [
+  {
+    path: paths.parentCateDisCuss,
+    element: <DiscussByCate />,
+    layout: DefaultLayout,
+    private: 'public',
+    useHeader: true,
+    useSidebar: false,
+    useFooter: false
+  }
+];
 export const AUTHEN_ROUTES: RouteType[] = [
   {
     path: paths.authentication,
@@ -149,4 +163,3 @@ export const AUTHEN_ROUTES: RouteType[] = [
     useFooter: false
   }
 ];
-

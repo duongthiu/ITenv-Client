@@ -4,6 +4,7 @@ import { TagType } from '../../../types/TagType';
 import { useDebounce } from '../../../utils/hooks/useDebounce.hook';
 import useSWR from 'swr';
 import { getTags } from '../../../services/tags/tag.service';
+import { notifyWarning } from '../../../utils/helpers/notify';
 type TagMenuProps = {
   selectedTags: string[];
   setSelectedTags: React.Dispatch<React.SetStateAction<string[]>>;
@@ -19,6 +20,9 @@ const TagMenu: React.FC<TagMenuProps> = ({ selectedTags = [], setSelectedTags })
     setSelectedTags((prevTags: string[]) => {
       if (prevTags.includes(tag)) {
         return prevTags.filter((t: string) => t !== tag);
+      } else if (prevTags.length === 10) {
+        notifyWarning('You can only select 10 tags');
+        return prevTags;
       }
       return [...prevTags, tag];
     });

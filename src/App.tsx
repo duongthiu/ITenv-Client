@@ -10,7 +10,9 @@ import NotFoundPage from './pages/ExceptionPage/NotFoundPage';
 import { THEME } from './redux/app/app.slice';
 import { useAppDispatch, useAppSelector } from './redux/app/hook';
 import { getUser } from './redux/user/user.slice';
-import { AUTHEN_ROUTES, PUBLIC_ROUTES, RouteType } from './routes/routes';
+import { AUTHEN_ROUTES, DISCUSS_ROUTES, PUBLIC_ROUTES, RouteType } from './routes/routes';
+import { paths } from './routes/paths';
+import DiscussPage from './pages/Public/Discuss/DiscussPage';
 // import { Helmet } from 'react-helmet';
 
 // const pathname = location.path
@@ -90,9 +92,27 @@ function App() {
               }
             })}
 
-            {AUTHEN_ROUTES.map((route: RouteType, index: number) => {
+            {DISCUSS_ROUTES.map((route: RouteType) => {
+              let Layout: any = DefaultLayout;
+              if (route?.layout) Layout = route.layout;
+              else if (route.layout === null) Layout = Fragment;
               return (
-                <Route key={index} path={route.path} element={<AuthenticationPage />}>
+                <Route
+                  path={route.path}
+                  element={
+                    <Layout>
+                      <DiscussPage />
+                    </Layout>
+                  }
+                >
+                  <Route path={route.path} element={route.element} />
+                </Route>
+              );
+            })}
+
+            {AUTHEN_ROUTES.map((route: RouteType) => {
+              return (
+                <Route key={route.path} path={route.path} element={<AuthenticationPage />}>
                   <Route path={route.path} element={route.element} />
                 </Route>
               );

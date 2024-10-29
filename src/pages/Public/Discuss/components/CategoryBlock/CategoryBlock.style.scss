@@ -1,0 +1,20 @@
+.category-block {
+  transition: transform 0.2s ease-in-out;
+  &:hover {
+    transform: scale(1.02);
+  }
+ 
+
+  .category-title {
+    // color: #2d88e6; // primary color
+  }
+
+  .child-categories {
+    .child-category {
+      transition: color 0.2s ease;
+      &:hover {
+        color: #2d88e6; // primary hover color
+      }
+    }
+  }
+}

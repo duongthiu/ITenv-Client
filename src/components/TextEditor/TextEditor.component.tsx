@@ -97,7 +97,7 @@ const TextEditorComponent: React.FC<TextEditorProps> = ({
             ],
             images_upload_handler: handleImageUpload
           }}
-          value={content}
+          value={content + ' '}
         />
         {buttonTitle && (
           <div className="flex w-full items-center justify-end border-t-[1px] p-3">
