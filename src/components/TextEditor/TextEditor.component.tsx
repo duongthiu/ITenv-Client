@@ -51,7 +51,7 @@ const TextEditorComponent: React.FC<TextEditorProps> = ({
   };
 
   return (
-    <div className="text-editor-wrapper h-full flex-1 rounded-sm p-0 shadow-md">
+    <div className="text-editor-wrapper h-full flex-1 rounded-sm p-0">
       {isLoading && (
         <div className="skeleton-wrapper w-full p-10">
           <Skeleton active />
@@ -83,16 +83,8 @@ const TextEditorComponent: React.FC<TextEditorProps> = ({
               'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker',
             menubar: false,
             toolbar:
-              'undo redo | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap codesample | removeformat | myCustomButton',
-            setup: (editor) => {
-              buttonTitle &&
-                editor.ui.registry.addButton('myCustomButton', {
-                  text: buttonTitle,
-                  onAction: () => {
-                    buttonFunction && buttonFunction(editor.getContent());
-                  }
-                });
-            },
+              'undo redo | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap codesample | removeformat ',
+
             codesample_languages: [
               { text: 'JavaScript', value: 'javascript' },
               { text: 'PHP', value: 'php' },
@@ -107,6 +99,16 @@ const TextEditorComponent: React.FC<TextEditorProps> = ({
           }}
           value={content}
         />
+        {buttonTitle && (
+          <div className="flex w-full items-center justify-end border-t-[1px] pt-3">
+            <button
+              onClick={() => buttonFunction && buttonFunction(content)}
+              className="mb-2 mr-2 rounded-lg bg-primary-color px-6 py-2 text-[1.4rem] font-medium text-white duration-200 hover:bg-primary-color-hover focus:ring-4 focus:ring-blue-300"
+            >
+              {buttonTitle}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

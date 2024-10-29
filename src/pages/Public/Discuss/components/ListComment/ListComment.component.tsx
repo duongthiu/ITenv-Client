@@ -55,8 +55,10 @@ const ListCommentComponent: React.FC<ListCommentProps> = memo(({ postById, postI
   return (
     <div>
       <Form className="mt-6" onFinish={handleSubmit}>
-        <div className="list-comment-editor-wrapper rounded-md border border-t-[#CFCFCF] shadow-md">
+        <div className="list-comment-editor-wrapper mb-10 rounded-md border border-t-[#CFCFCF] shadow-md">
           <TextEditorComponent
+            buttonTitle="Post Comment"
+            buttonFunction={handleSubmit}
             key="comment"
             content={newComment}
             setContent={handleEditorChange}
@@ -64,21 +66,14 @@ const ListCommentComponent: React.FC<ListCommentProps> = memo(({ postById, postI
             setPostImages={setPostImages}
           />
         </div>
-        <Form.Item>
-          <Button type="primary" htmlType="submit" className="mt-2 rounded-md bg-blue-500 text-white">
-            Post Comment
-          </Button>
-        </Form.Item>
       </Form>
       {isLoading && (
         <div className="skeleton-wrapper w-full p-10">
           <Skeleton active />
         </div>
       )}
-      {/* {comments?.data?.map((comment: CommentType) => (
-        <CommentCardComponent key={comment._id} comment={comment} postId={postId} />
-      ))} */}
-      <CommentTree postId={postId} comments={comments?.data || []} />
+
+      <CommentTree postId={postId} comments={comments?.data || []} mutate={mutate} />
     </div>
   );
 });

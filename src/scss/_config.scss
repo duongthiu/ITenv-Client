@@ -248,10 +248,10 @@ $second-orange: (
 html {
   font-size: 62.5% !important;
   @include respond(phone) {
-    font-size: 50% !important;
+    font-size: 62.5% !important;
   }
   @include respond(tablet) {
-    font-size: 56.25% !important;
+    font-size: 62.5% !important;
   }
   @include respond(laptop) {
     font-size: 62.5% !important;

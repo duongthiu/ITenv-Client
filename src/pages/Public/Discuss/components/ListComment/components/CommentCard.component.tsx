@@ -1,27 +1,26 @@
-import React, { memo, useCallback, useState } from 'react';
-import { CommentType } from '../../../../../../types/PostType';
-import { Avatar, Drawer, Tooltip } from 'antd';
-import PreviewTextEditorComponent from '../../../../../../components/TextEditor/components/PreviewTextEditor.component.tdc';
-import { motion } from 'framer-motion';
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
-import useVoteStatus from '../../../../../../utils/hooks/useVoteStatus.hook';
-import { postComment, voteCommentById } from '../../../../../../services/comment/comment.service';
-import { TypeVoteEnum } from '../../../../../../types/enum/typeVote.enum';
-import { notifyError, notifySuccess } from '../../../../../../utils/helpers/notify';
-import { useAppSelector } from '../../../../../../redux/app/hook';
+import { Avatar, Drawer, Tooltip } from 'antd';
+import React, { memo, useCallback, useState } from 'react';
 import { FaReply } from 'react-icons/fa';
 import { PiWarningFill } from 'react-icons/pi';
-import { ImageType } from '../../../../../../types/common';
+import { KeyedMutator } from 'swr';
+import PreviewTextEditorComponent from '../../../../../../components/TextEditor/components/PreviewTextEditor.component.tdc';
 import TextEditorComponent from '../../../../../../components/TextEditor/TextEditor.component';
-import { mutate } from 'swr';
+import { useAppSelector } from '../../../../../../redux/app/hook';
+import { postComment, voteCommentById } from '../../../../../../services/comment/comment.service';
+import { ImageType, ResponsePagination } from '../../../../../../types/common';
+import { TypeVoteEnum } from '../../../../../../types/enum/typeVote.enum';
+import { CommentType } from '../../../../../../types/PostType';
+import { notifyError, notifySuccess } from '../../../../../../utils/helpers/notify';
+import useVoteStatus from '../../../../../../utils/hooks/useVoteStatus.hook';
 
 type CommentCartProps = {
   postId: string;
   comment: CommentType;
+  mutate: KeyedMutator<ResponsePagination<CommentType[]>>;
 };
-const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId }) => {
-  console.log(comment);
-  const initContent = `<strong>@${comment.commentBy?.username} </strong> <br/> `;
+const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId, mutate }) => {
+  const initContent = `<strong>@${comment.commentBy?.username} </strong>` + '<br>';
   const [openDrawer, setOpenDrawer] = useState(false);
   const [isFullComment, setIsFullComment] = useState(false);
   const [newComment, setNewComment] = useState(initContent);
@@ -65,7 +64,7 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
         notifySuccess('Comment posted successfully');
         setNewComment('');
         setPostImages([]);
-        //  mutate();
+        mutate();
         // if (socket) {
         //   socket.emit('notify', { message: 'comment ne' });
         // }
@@ -91,32 +90,7 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
     <div className="mb-4 rounded-md">
       <div className="flex flex-col gap-5">
         <div className="flex gap-5">
-          <div className="ml-8 flex flex-none flex-col items-center">
-            <motion.button
-              onClick={() => handleVote(TypeVoteEnum.upvote)}
-              className={`h-fit rounded-md text-[2rem] text-gray-500 hover:text-green-500 focus:outline-none focus:ring-green-500 ${isVoted && 'text-green-500'}`}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              aria-label="Upvote"
-            >
-              <CaretUpOutlined />
-            </motion.button>
-            <p className="m-0 text-center text-[2rem] font-semibold">
-              {(commentState?.vote?.length || 0) - (commentState?.downVote?.length || 0) > 0
-                ? (commentState?.vote?.length || 0) - (commentState?.downVote?.length || 0)
-                : 0}
-            </p>
-            <motion.button
-              onClick={() => handleVote(TypeVoteEnum.downvote)}
-              className={`rounded-md text-[2rem] text-gray-500 hover:text-red-500 focus:outline-none focus:ring-red-500 ${isDownvoted && 'text-red-500'}`}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              aria-label="Downvote"
-            >
-              <CaretDownOutlined />
-            </motion.button>
-          </div>
-          <div className="comment-card card flex flex-col gap-5 pr-14">
+          <div className="flex flex-col gap-5 pr-14">
             <div className="flex items-start gap-5">
               <Avatar className="flex-none" src={commentState?.commentBy?.avatar} size={40} />
               <div className="flex flex-col gap-3">
@@ -124,10 +98,35 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
                   <p className="text-[1.4rem] font-semibold group-hover:text-primary-color">
                     {commentState?.commentBy?.username}
                   </p>
-                  <p className="sub-title self-center">{new Date(commentState?.createdAt || 0).toLocaleString()}</p>
+                  <p className="sub-title text-[1.2rem]">{new Date(commentState?.createdAt || 0).toLocaleString()}</p>
                 </div>
                 <PreviewTextEditorComponent content={commentState?.content} fontSize={1.2} />
-                <div className="flex items-center gap-5 text-[1.2rem]">
+                <div className="flex items-center gap-8 text-[1.2rem] duration-200">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleVote(TypeVoteEnum.upvote)}
+                      className={`flex h-fit items-center rounded-md text-[1.6rem] text-gray-500 hover:text-green-500 focus:outline-none focus:ring-green-500 ${isVoted && 'text-green-500'}`}
+                      // whileHover={{ scale: 1.1 }}
+                      //   whileTap={{ scale: 0.9 }}
+                      aria-label="Upvote"
+                    >
+                      <CaretUpOutlined size={16} />
+                    </button>
+                    <p className="m-0 text-center font-semibold">
+                      {(commentState?.vote?.length || 0) - (commentState?.downVote?.length || 0) > 0
+                        ? (commentState?.vote?.length || 0) - (commentState?.downVote?.length || 0)
+                        : 0}
+                    </p>
+                    <button
+                      onClick={() => handleVote(TypeVoteEnum.downvote)}
+                      className={`flex items-center rounded-md text-[1.6rem] text-gray-500 hover:text-red-500 focus:outline-none focus:ring-red-500 ${isDownvoted && 'text-red-500'}`}
+                      // whileHover={{ scale: 1.1 }}
+                      // whileTap={{ scale: 0.9 }}
+                      aria-label="Downvote"
+                    >
+                      <CaretDownOutlined />
+                    </button>
+                  </div>
                   <button
                     className="flex items-center gap-2 duration-200 hover:text-primary-color"
                     onClick={showDrawer}

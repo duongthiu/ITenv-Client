@@ -87,10 +87,10 @@ const DetailDiscussPage = () => {
         </div>
         <Divider className="my-[15px]" />
         <div className="flex gap-12">
-          <div className="ml-8 flex flex-none flex-col items-center">
+          <div className="ml-2 flex flex-none flex-col items-center">
             <motion.button
               onClick={() => handleVote(TypeVoteEnum.upvote)}
-              className={`h-fit rounded-md text-[3rem] text-gray-500 hover:text-green-500 focus:outline-none focus:ring-green-500 ${isVoted && 'text-green-500'}`}
+              className={`flex h-fit items-start rounded-md text-[3rem] text-gray-500 hover:text-green-500 focus:outline-none focus:ring-green-500 ${isVoted && 'text-green-500'}`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               aria-label="Upvote"
@@ -104,7 +104,7 @@ const DetailDiscussPage = () => {
             </p>
             <motion.button
               onClick={() => handleVote(TypeVoteEnum.downvote)}
-              className={`rounded-md text-[3rem] text-gray-500 hover:text-red-500 focus:outline-none focus:ring-red-500 ${isDownvoted && 'text-red-500'}`}
+              className={`flex h-fit items-start rounded-md text-[3rem] text-gray-500 hover:text-red-500 focus:outline-none focus:ring-red-500 ${isDownvoted && 'text-red-500'}`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               aria-label="Downvote"
