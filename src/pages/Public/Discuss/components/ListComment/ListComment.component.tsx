@@ -11,6 +11,8 @@ import CommentCardComponent from '../CommentCard.component';
 import './ListComment.style.scss';
 import { useSocket } from '../../../../../context/SocketContext';
 import CommentTree from './components/CommentTree/CommentTree';
+import { NotificationRequestType } from '../../../../../types/NotificationType';
+import { NotificationTypeEnum } from '../../../../../types/enum/notification.enum';
 type ListCommentProps = {
   postById: string;
   postId: string;
@@ -43,7 +45,13 @@ const ListCommentComponent: React.FC<ListCommentProps> = memo(({ postById, postI
         setPostImages([]);
         mutate();
         if (socket) {
-          socket.emit('notify', { message: 'comment ne' });
+          const notification: NotificationRequestType = {
+            notificationType: NotificationTypeEnum.COMMENT_POST,
+            postId,
+            content: newComment
+          };
+
+          socket.emit('notify', notification);
         }
       } else {
         notifyError(res.message);

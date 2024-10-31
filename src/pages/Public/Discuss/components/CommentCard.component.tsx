@@ -15,12 +15,17 @@ import { notifyError, notifySuccess } from '../../../../utils/helpers/notify';
 import useVoteStatus from '../../../../utils/hooks/useVoteStatus.hook';
 import { MdModeEdit } from 'react-icons/md';
 import { MdDelete } from 'react-icons/md';
+import { useSocket } from '../../../../context/SocketContext';
+import { NotificationTypeEnum } from '../../../../types/enum/notification.enum';
+import { NotificationRequestType } from '../../../../types/NotificationType';
 type CommentCartProps = {
   postId: string;
   comment: CommentType;
   mutate: KeyedMutator<ResponsePagination<CommentType[]>>;
 };
 const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId, mutate }) => {
+  const socket = useSocket();
+
   const initContent = `<strong style="background-color: #d9e6f4; padding:4px; border-radius: 4px; margin-right:10px">@${comment.commentBy?.username} </strong><p></p>`;
   const [openDrawer, setOpenDrawer] = useState(false);
   const [isFullComment, setIsFullComment] = useState(false);
@@ -45,6 +50,18 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
       const response = await voteCommentById(comment?._id as string, type);
       if (response.success) {
         setCommentState(response.data!);
+        if ((isVoted && type === TypeVoteEnum.upvote) || (isDownvoted && type === TypeVoteEnum.downvote)) {
+          return;
+        }
+        if (socket) {
+          const notificationPayload: NotificationRequestType = {
+            notificationType:
+              type === TypeVoteEnum.upvote ? NotificationTypeEnum.VOTE_COMMENT : NotificationTypeEnum.DOWNVOTE_COMMENT,
+            postId: postId,
+            commentId: comment._id
+          };
+          socket.emit('notify', notificationPayload);
+        }
       } else {
         notifyError(response?.message || 'Something went wrong. Please try again...');
       }
@@ -66,9 +83,15 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
         setNewComment('');
         setPostImages([]);
         mutate();
-        // if (socket) {
-        //   socket.emit('notify', { message: 'comment ne' });
-        // }
+        if (socket) {
+          const notificationPayload: NotificationRequestType = {
+            notificationType: NotificationTypeEnum.REP_COMMENT,
+            content: replyComment.content,
+            postId: postId,
+            commentId: comment._id
+          };
+          socket.emit('notify', notificationPayload);
+        }
         onClose();
       } else {
         notifyError(res.message);

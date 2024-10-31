@@ -9,6 +9,7 @@ export type UserType = {
   phoneNumber?: string;
   avatar: string;
   posts?: PostType[];
+  friends?: UserType[];
   notifications?: NotificationType[];
   submissions: SubmissionType[];
   gender?: number;

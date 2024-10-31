@@ -13,7 +13,7 @@ const appPersistConfig = {
 const userPersistConfig = {
   key: 'user',
   storage,
-  whitelist: ['isLogged', 'token']
+  whitelist: ['isLogged', 'token', 'user._id']
 };
 
 // Combine reducers with persisted slices

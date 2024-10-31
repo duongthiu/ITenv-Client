@@ -16,8 +16,12 @@ import useVoteStatus from '../../../../utils/hooks/useVoteStatus.hook';
 import ListCommentComponent from '../components/ListComment/ListComment.component';
 import { FaArrowLeft } from 'react-icons/fa';
 import LoadingPage from '../../../commons/LoadingPage';
+import { useSocket } from '../../../../context/SocketContext';
+import { NotificationRequestType } from '../../../../types/NotificationType';
+import { NotificationTypeEnum } from '../../../../types/enum/notification.enum';
 const DetailDiscussPage = () => {
   const { id } = useParams<{ id: string }>();
+  const socket = useSocket();
 
   const { user } = useAppSelector((state) => state.user);
   const { data: postData, isLoading, mutate } = useSWR(`detailpost/${id}`, () => getPostById(id!));
@@ -40,6 +44,17 @@ const DetailDiscussPage = () => {
       const response = await votePostById(id!, type);
       if (response.success) {
         mutate();
+        if ((isVoted && type === TypeVoteEnum.upvote) || (isDownvoted && type === TypeVoteEnum.downvote)) {
+          return;
+        }
+        if (socket) {
+          const notificationPayload = {
+            notificationType:
+              type === TypeVoteEnum.upvote ? NotificationTypeEnum.VOTE_POST : NotificationTypeEnum.DOWNVOTE_POST,
+            postId: id
+          };
+          socket.emit('notify', notificationPayload);
+        }
       } else {
         notifyError(response.message);
       }

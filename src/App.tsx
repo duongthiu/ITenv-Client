@@ -19,15 +19,15 @@ import DiscussPage from './pages/Public/Discuss/DiscussPage';
 
 function App() {
   const location = window.location;
-  const dispatch = useAppDispatch();
   const [pathname, setPathname] = useState(location?.pathname?.split('/')[1]);
   const theme = useAppSelector((state) => state.app.theme);
   const { isLogged, token } = useAppSelector((state) => state.user);
-  useEffect(() => {
-    if (isLogged && token) {
-      dispatch(getUser());
-    }
-  }, [isLogged, token, dispatch]);
+  // console.log(user);
+  // useEffect(() => {
+  //   if (isLogged && token) {
+  //     dispatch(getUser());
+  //   }
+  // }, [isLogged, token, dispatch]);
 
   useEffect(() => {
     setPathname(location?.pathname?.split('/')[1]);

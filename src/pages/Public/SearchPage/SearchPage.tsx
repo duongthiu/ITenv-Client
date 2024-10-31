@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
+import { FiSearch } from 'react-icons/fi';
 import useSWR from 'swr';
 import { ResponsePagination } from '../../../types/common';
 import { UserType } from '../../../types/UserType';
 import { getAllUser } from '../../../services/user/user.service';
-import { Empty, Pagination, PaginationProps, Spin } from 'antd';
-import { useLocation, useParams } from 'react-router-dom';
+import { Empty, Pagination, Spin } from 'antd';
+import { useLocation } from 'react-router-dom';
+import PeopleCard from './components/PeopleCard/PeopleCard.component';
 
-const SearchPage = () => {
+const PeopleSearch = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const search = useLocation().search;
-  const q = new URLSearchParams(search).get('q');
+  const q = new URLSearchParams(search).get('q') || '';
 
   const {
     data: userList,
@@ -20,72 +22,48 @@ const SearchPage = () => {
     getAllUser(`page=${currentPage}&limit=${pageSize}${q ? `&q=${q}` : ''}`)
   );
 
-  if (isLoading) return <p>Loading...</p>;
-
-  if (error) return <p>Error loading users</p>;
-
-  const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
-    setCurrentPage(current);
+  const onPaginationChange = (page: number, pageSize: number) => {
+    setCurrentPage(page);
     setPageSize(pageSize);
   };
 
-  const onPaginationChange = (page: number, pageSize: number) => {
-    setCurrentPage(page); // Update current page
-    setPageSize(pageSize); // Optionally update page size if needed
+  const [searchTerm, setSearchTerm] = useState('');
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
   };
 
+  if (isLoading) return <Spin spinning={isLoading} />;
+  if (error) return <p>Error loading users</p>;
+
   return (
-    <div className="mx-auto p-6">
-      <h1 className="mb-6 text-2xl font-bold">User List</h1>
-      {isLoading && <Spin spinning={isLoading}></Spin>}
-      {userList?.data?.length === 0 ? (
-        <Empty />
-      ) : (
-        <div>
-          <ul className="space-y-4">
-            {userList?.data?.map((user) => (
-              <li key={user._id} className="user-item card flex items-center rounded-lg p-4 shadow-md">
-                <div className="flex items-center space-x-4">
-                  <img
-                    src={user.avatar || '/default-avatar.png'}
-                    alt={user.username}
-                    className="h-12 w-12 rounded-full object-cover"
-                  />
-                  <div>
-                    <p className="text-[1.4rem] font-semibold">
-                      {user.username} - {user.email}
-                    </p>
-                    <p className="text-[1rem]">
-                      Status:{' '}
-                      {user.status ? (
-                        <span className="font-semibold text-green-600">Online</span>
-                      ) : (
-                        <span className="font-semibold text-red-600">
-                          {user?.lastOnline
-                            ? `Offline - Last online at ${new Date(user.lastOnline).toLocaleString()}`
-                            : 'Offline'}
-                        </span>
-                      )}
-                    </p>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-6 flex justify-end">
-            <Pagination
-              current={currentPage}
-              total={userList?.total || 0}
-              showSizeChanger
-              onShowSizeChange={onShowSizeChange}
-              pageSize={pageSize}
-              onChange={onPaginationChange}
-            />
+    <div className="min-h-screen p-8">
+      <div className="mx-auto">
+        {userList?.data?.length === 0 ? (
+          <Empty />
+        ) : (
+          <div>
+            <div className="grid grid-cols-4 gap-6">
+              {userList?.data?.map((user) => <PeopleCard key={user._id} user={user} />)}
+            </div>
+            {/* Pagination */}
+            <div className="mt-6 flex justify-end">
+              <Pagination
+                current={currentPage}
+                total={userList?.total || 0}
+                showSizeChanger
+                onShowSizeChange={(current, pageSize) => {
+                  setCurrentPage(current);
+                  setPageSize(pageSize);
+                }}
+                pageSize={pageSize}
+                onChange={onPaginationChange}
+              />
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
 
-export default SearchPage;
+export default PeopleSearch;

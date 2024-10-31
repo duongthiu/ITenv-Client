@@ -20,8 +20,8 @@ const DefaultLayout: React.FC<PropsWithChildren<DefaultLayoutProps>> = ({
   useSidebar = true,
   useFooter = true
 }) => {
-  const { pathname } = useLocation();
-  console.log(pathname);
+  // const { pathname } = useLocation();
+  // console.log(pathname);
   const [collapsed, setCollapsed] = useState<boolean>(true);
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);

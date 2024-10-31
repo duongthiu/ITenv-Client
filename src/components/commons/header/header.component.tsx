@@ -1,7 +1,7 @@
 import { Anchor, Badge, Button, Form, Input, Popover } from 'antd';
 import { AnchorLinkItemProps } from 'antd/es/anchor/Anchor';
 import { TooltipPlacement } from 'antd/es/tooltip';
-import React, { ReactNode, SetStateAction, useState } from 'react';
+import React, { memo, ReactNode, SetStateAction, useState } from 'react';
 import { HiOutlineUsers } from 'react-icons/hi2';
 import { IoSearchOutline } from 'react-icons/io5';
 import { PiBell, PiMessengerLogo } from 'react-icons/pi';
@@ -41,7 +41,7 @@ const ComponentPopover: React.FC<ComponentPopoverProps> = ({ content, isOpen, se
   </Popover>
 );
 
-const HeaderComponent: React.FC = () => {
+const HeaderComponent: React.FC = memo(() => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, isLogged } = useSelector((state: any) => state.user);
@@ -172,6 +172,6 @@ const HeaderComponent: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
 export default HeaderComponent;
