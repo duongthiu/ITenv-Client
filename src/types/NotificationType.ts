@@ -14,7 +14,7 @@ export type NotificationType = {
 //vote downvote comment share repcomment vote_comment downvote_comment
 //vote downvote share --> postId
 //comment  --> postId, content
-//repcomment-->  replied commentId
+//repcomment-->  replied commentId, content
 // vote_comment downvote_comment --> postId, commentId
 export type NotificationRequestType = {
   notificationType?: NotificationTypeEnum;

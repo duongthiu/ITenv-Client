@@ -1,3 +1,4 @@
+import { FriendType } from './FriendType';
 import { NotificationType } from './NotificationType';
 import { PostType } from './PostType';
 import { SubmissionType } from './SubmissionType';
@@ -9,7 +10,7 @@ export type UserType = {
   phoneNumber?: string;
   avatar: string;
   posts?: PostType[];
-  friends?: UserType[];
+  friends?: FriendType[] | Pick<UserType, '_id' | 'username' | 'avatar'>[];
   notifications?: NotificationType[];
   submissions: SubmissionType[];
   gender?: number;
@@ -18,4 +19,5 @@ export type UserType = {
   email: string;
   role: string;
   isBlocked: boolean;
+  createdAt?: Date;
 };
