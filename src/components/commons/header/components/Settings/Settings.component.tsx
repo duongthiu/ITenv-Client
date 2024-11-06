@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/app/hook';
 import { logout } from '../../../../../redux/user/user.slice';
 import DarkMode from './DarkmodeToggle/DarkMode';
+import { paths } from '../../../../../routes/paths';
 // const menuItems = [
 //   label: 'Profile',
 // ]
@@ -33,7 +34,7 @@ const SettingsComponent = () => {
         children={
           <div>
             <Link
-              to={'/profile/TranDuongThieu'}
+              to={paths.profile.replace(':userId', user?._id || '')}
               className="link-hover flex cursor-pointer items-center gap-4 rounded-lg p-2 text-current duration-500"
             >
               <Avatar size={36} src={user?.avatar} />

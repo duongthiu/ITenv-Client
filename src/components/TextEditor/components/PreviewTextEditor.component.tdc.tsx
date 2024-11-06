@@ -5,8 +5,9 @@ import './PreviewTextEditor.style.scss';
 type PreviewTextEditorProps = {
   content: any;
   fontSize?: number;
+  inline?: boolean;
 };
-const PreviewTextEditorComponent: React.FC<PreviewTextEditorProps> = ({ content, fontSize = 1.6 }) => {
+const PreviewTextEditorComponent: React.FC<PreviewTextEditorProps> = ({ content, fontSize = 1.6, inline }) => {
   useEffect(() => {
     document.querySelectorAll('pre code').forEach((block) => {
       hljs.highlightBlock(block as HTMLElement);
@@ -21,7 +22,7 @@ const PreviewTextEditorComponent: React.FC<PreviewTextEditorProps> = ({ content,
         </Typography.Text>
       )} */}
       <div
-        className={`preview-text-editor-wrapper w-full overflow-y-auto text-[${fontSize}rem]`}
+        className={`preview-text-editor-wrapper w-full overflow-y-auto text-[${fontSize}rem] ${inline && 'flex flex-wrap gap-1'}`}
         dangerouslySetInnerHTML={{ __html: content }}
       />
     </div>

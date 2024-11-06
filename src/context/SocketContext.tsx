@@ -15,7 +15,6 @@ export const SocketProvider: React.FC<SocketContextProviderProps> = ({ children 
   const socket = useRef<Socket<DefaultEventsMap, DefaultEventsMap> | null>(null);
   const { token, isLogged, user } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
-  console.log(user?._id);
   useEffect(() => {
     if (isLogged && token) {
       dispatch(getUser());
@@ -28,9 +27,9 @@ export const SocketProvider: React.FC<SocketContextProviderProps> = ({ children 
         console.log('Connected');
       });
 
-      socket.current.on('receive_notification', (notification: NotificationType) => {
-        if (notification.receivers.includes(user?._id as string)) notifyInfo(notification.content);
-      });
+      // socket.current.on('receive_notification', (notification: NotificationType) => {
+      //   if (notification.receivers.includes(user?._id as string)) notifyInfo(notification.content);
+      // });
     }
     return () => {
       if (socket.current) {

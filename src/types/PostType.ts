@@ -12,6 +12,7 @@ export type PostType = {
   downVote: string[];
   createdAt: string;
   updatedAt: string;
+  totalComment?: number;
 };
 
 export type CommentType = {

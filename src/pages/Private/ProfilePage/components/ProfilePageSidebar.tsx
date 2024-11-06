@@ -1,28 +1,11 @@
-import { CheckSquareFilled, EyeFilled, GithubOutlined, MessageFilled, StarFilled } from '@ant-design/icons';
-import { Avatar, Button, Divider, Tag } from 'antd';
+import { CheckSquareFilled, EyeFilled, MessageFilled, StarFilled } from '@ant-design/icons';
+import { Tag } from 'antd';
 import React from 'react';
 import { cn } from '../../../../utils/helpers/cn';
 
 const ProfileSidebar: React.FC = () => {
   return (
-    <div className={cn('card m-5 ml-0 flex h-fit flex-col rounded-2xl p-8 text-[1.4rem] shadow-xl duration-200')}>
-      <div className="flex flex-col items-center">
-        <Avatar size={64} icon={<GithubOutlined />} />
-        <h2 className="mt-2 text-[1.6rem] font-semibold">tranduongthieu</h2>
-        <p className="text-[1.2rem]">TranDuongThieu</p>
-        <p className="text-[1.4rem] text-gray-400">Rank ~5,000,000</p>
-        <Button type="primary" className="mt-4 w-full bg-green-700 hover:bg-green-600">
-          Edit Profile
-        </Button>
-      </div>
-      <Divider />
-      {/* GitHub Link */}
-      <div className="mt-6 flex items-center gap-x-5">
-        <GithubOutlined size={30} className="text-[2rem]" />
-        <span className="text-[1.4rem]">TranDuongThieu</span>
-      </div>
-
-      {/* Community Stats */}
+    <div className={cn('card mr-0 mt-5 flex h-fit flex-col text-[1.4rem] shadow-xl duration-200')}>
       <div className="mt-4">
         <h3 className="text-[1.6rem] font-semibold">Community Stats</h3>
         <div className="mt-2">

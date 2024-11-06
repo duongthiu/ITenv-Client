@@ -19,5 +19,6 @@ export type UserType = {
   email: string;
   role: string;
   isBlocked: boolean;
+  friendWithMe?: FriendType;
   createdAt?: Date;
 };

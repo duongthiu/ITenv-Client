@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-import { FiSearch } from 'react-icons/fi';
+import { Empty, Pagination, Spin } from 'antd';
+import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import useSWR from 'swr';
+import { getAllUser } from '../../../services/user/user.service';
 import { ResponsePagination } from '../../../types/common';
 import { UserType } from '../../../types/UserType';
-import { getAllUser } from '../../../services/user/user.service';
-import { Empty, Pagination, Spin } from 'antd';
-import { useLocation } from 'react-router-dom';
-import PeopleCard from './components/PeopleCard/PeopleCard.component';
+import PersonCard from './components/PersonCard/PersonCard.component';
 
 const PeopleSearch = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -28,7 +27,7 @@ const PeopleSearch = () => {
   };
 
   const [searchTerm, setSearchTerm] = useState('');
-  const handleSearch = (e) => {
+  const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
   };
 
@@ -43,7 +42,7 @@ const PeopleSearch = () => {
         ) : (
           <div>
             <div className="grid grid-cols-4 gap-6">
-              {userList?.data?.map((user) => <PeopleCard key={user._id} user={user} />)}
+              {userList?.data?.map((user) => <PersonCard key={user._id} user={user} />)}
             </div>
             {/* Pagination */}
             <div className="mt-6 flex justify-end">

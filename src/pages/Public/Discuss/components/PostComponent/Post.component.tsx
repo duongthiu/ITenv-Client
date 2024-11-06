@@ -82,7 +82,7 @@ const PostComponent: React.FC<PostComponentProps> = ({ post }) => {
               <div className="flex items-center space-x-2">
                 <FaComment className="text-gray-500" size={18} />
                 <span>
-                  {post?.commentBy?.length} {post?.commentBy?.length > 1 ? 'comments' : 'comment'}
+                  {post?.totalComment} {post?.totalComment && post?.totalComment > 1 ? 'comments' : 'comment'}
                 </span>
               </div>
             </div>

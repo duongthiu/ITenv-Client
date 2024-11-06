@@ -310,3 +310,8 @@ body.dark-mode {
     list-style-type: square;
   }
 }
+.avatar-wrapper {
+  .ant-image-mask {
+    border-radius: 100% !important;
+  }
+}

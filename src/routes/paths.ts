@@ -17,6 +17,7 @@ export const paths = {
 
   createPost: '/discuss/:parentCateId/create-post',
   messages: '/messages',
-  profile: '/profile/:slug',
+  profile: '/profile/:userId',
+  me: '/profile/me',
   search: '/search'
 };

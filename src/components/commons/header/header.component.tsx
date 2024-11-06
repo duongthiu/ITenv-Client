@@ -1,7 +1,7 @@
 import { Anchor, Badge, Button, Form, Input, Popover } from 'antd';
 import { AnchorLinkItemProps } from 'antd/es/anchor/Anchor';
 import { TooltipPlacement } from 'antd/es/tooltip';
-import React, { memo, ReactNode, SetStateAction, useState } from 'react';
+import React, { memo, ReactNode, SetStateAction, useEffect, useState } from 'react';
 import { HiOutlineUsers } from 'react-icons/hi2';
 import { IoSearchOutline } from 'react-icons/io5';
 import { PiBell, PiMessengerLogo } from 'react-icons/pi';
@@ -15,6 +15,14 @@ import MessageComponent from './components/Message/Message.component';
 import NotificationComponent from './components/Notification/Notification.component';
 import SettingsComponent from './components/Settings/Settings.component';
 import './header.style.scss';
+import useSWR from 'swr';
+import { getNotifications } from '../../../services/notification/notification.service';
+import { useSocket } from '../../../context/SocketContext';
+import { NotificationType } from '../../../types/NotificationType';
+import { notifyInfo } from '../../../utils/helpers/notify';
+import { getFriendByType } from '../../../services/user/user.service';
+import { UseFriendStatusTypeEnum } from '../../../utils/hooks/useFriendStatus.hook';
+import { EnumFriend } from '../../../types/FriendType';
 
 interface ComponentPopoverProps {
   content: ReactNode;
@@ -22,9 +30,17 @@ interface ComponentPopoverProps {
   setOpen: (value: SetStateAction<boolean>) => void;
   icon: ReactNode;
   placement: TooltipPlacement;
+  total?: number;
 }
 
-const ComponentPopover: React.FC<ComponentPopoverProps> = ({ content, isOpen, setOpen, icon, placement }) => (
+const ComponentPopover: React.FC<ComponentPopoverProps> = ({
+  content,
+  isOpen,
+  setOpen,
+  icon,
+  placement,
+  total = 0
+}) => (
   <Popover
     rootClassName="popover-wrapper"
     placement={placement || 'bottom'}
@@ -37,19 +53,25 @@ const ComponentPopover: React.FC<ComponentPopoverProps> = ({ content, isOpen, se
     open={isOpen}
     onOpenChange={(visible) => setOpen(visible)}
   >
-    <Badge count={1}>{icon}</Badge>
+    <Badge count={total}>{icon}</Badge>
   </Popover>
 );
 
 const HeaderComponent: React.FC = memo(() => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const socket = useSocket();
   const { user, isLogged } = useSelector((state: any) => state.user);
   const [friendsVisible, setFriendsVisible] = useState(false);
   const [messagesVisible, setMessagesVisible] = useState(false);
   const [notificationsVisible, setNotificationsVisible] = useState(false);
   const [settingsVisible, setSettingsVisible] = useState(false);
-
+  const { data: notificationData, mutate: mutateNotifications } = useSWR('notification', () => getNotifications(''));
+  const { data: friendRequestData, mutate: mutateFriendRequest } = useSWR('friendRequest', () =>
+    getFriendByType(EnumFriend.TYPE_PENDING)
+  );
+  useEffect(() => {});
   const menuItems: AnchorLinkItemProps[] = [
     {
       key: 'problems',
@@ -67,7 +89,16 @@ const HeaderComponent: React.FC = memo(() => {
       href: '/discuss'
     }
   ];
-
+  useEffect(() => {
+    if (socket) {
+      socket.on('receive_notification', (notification: NotificationType) => {
+        if (notification.receivers.includes(user?._id as string)) {
+          mutateNotifications();
+          notifyInfo(notification.content);
+        }
+      });
+    }
+  }, [mutateNotifications, socket, user?._id]);
   const handleSearch = (values: any) => {
     if (values.search.trim()) {
       const searchQuery = values?.search ? `?q=${values.search.trim()}` : '';
@@ -136,7 +167,7 @@ const HeaderComponent: React.FC = memo(() => {
             placement="bottomRight"
           />
           <ComponentPopover
-            content={<NotificationComponent />}
+            content={<NotificationComponent notification={notificationData!} />}
             isOpen={notificationsVisible}
             setOpen={setNotificationsVisible}
             icon={
@@ -147,6 +178,7 @@ const HeaderComponent: React.FC = memo(() => {
               />
             }
             placement="bottomRight"
+            total={notificationData?.total}
           />
 
           {!isLogged ? (

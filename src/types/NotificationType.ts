@@ -2,11 +2,12 @@ import { NotificationTypeEnum } from './enum/notification.enum';
 import { UserType } from './UserType';
 
 export type NotificationType = {
+  _id?: string;
   title: string;
   content: string;
   isSeen: boolean;
   postedBy: Pick<UserType, '_id' | 'username' | 'avatar' | 'email'>;
-  postAt: Date;
+  createdAt: Date;
   notificationType?: string;
   receivers: string[];
 };
