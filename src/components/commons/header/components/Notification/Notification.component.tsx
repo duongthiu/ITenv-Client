@@ -1,57 +1,71 @@
-import { Badge, Empty, Tabs, Typography } from 'antd';
+import { Badge, Empty, List, Skeleton, Tabs, Typography } from 'antd';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { NotificationType } from '../../../../../types/NotificationType';
 import { ResponsePagination } from '../../../../../types/common';
 import './Notification.style.scss';
 import NotificationItem from './NotificationItem.component';
-import { KeyedMutator } from 'swr';
+import { memo } from 'react';
 
 type NotificationProps = {
   notification: ResponsePagination<NotificationType[]>;
-  mutate: KeyedMutator<ResponsePagination<NotificationType[]>>;
+  mutate: () => Promise<void>;
+  loadMoreNotification: () => void;
 };
 
-const NotificationComponent: React.FC<NotificationProps> = ({ notification, mutate }) => {
+const NotificationComponent: React.FC<NotificationProps> = memo(({ notification, mutate, loadMoreNotification }) => {
   const allNotifications = notification?.data || [];
   const unreadNotifications = allNotifications.filter((n) => !n.isSeen);
   const unreadCount = unreadNotifications.length;
+
+  const renderInfiniteList = (notifications: NotificationType[]) => (
+    <InfiniteScroll
+      dataLength={notifications.length}
+      next={loadMoreNotification}
+      hasMore={(notification?.data?.length || 0) < (notification?.total || 0)}
+      loader={
+        <div className="p-[12px]">
+          <Skeleton avatar paragraph={{ rows: 1 }} active />
+        </div>
+      }
+      endMessage={<Typography.Text>No more notifications</Typography.Text>}
+      scrollableTarget="scrollableDiv"
+    >
+      <List
+        dataSource={notifications}
+        renderItem={(notif) => <NotificationItem key={notif._id} notification={notif} mutate={mutate} />}
+        locale={{ emptyText: <Empty description="No notifications" /> }}
+      />
+    </InfiniteScroll>
+  );
 
   const tabItems = [
     {
       key: '1',
       label: 'All',
-      children:
-        allNotifications.length > 0 ? (
-          allNotifications.map((notif) => <NotificationItem key={notif._id} notification={notif} mutate={mutate} />)
-        ) : (
-          <Empty description="No notifications" />
-        )
+      children: renderInfiniteList(allNotifications)
     },
     {
       key: '2',
-      label: `Unread`,
-      children:
-        unreadNotifications.length > 0 ? (
-          unreadNotifications.map((notif) => <NotificationItem key={notif._id} notification={notif} mutate={mutate} />)
-        ) : (
-          <Empty description="No unread notifications" />
-        )
+      label: 'Unread',
+      children: renderInfiniteList(unreadNotifications)
     }
   ];
 
   return (
-    <div className="notification-component w-[350px]">
+    <div
+      className="notification-component w-[350px]"
+      id="scrollableDiv"
+      style={{ maxHeight: '500px', overflow: 'auto' }}
+    >
       <div className="flex gap-2 p-[12px] pb-0 text-[1.6rem] font-semibold">
         Notifications
         <Badge count={unreadCount} />
       </div>
-      <div className="tab-wrapper max-h-[500px] overflow-y-auto">
+      <div className="tab-wrapper">
         <Tabs items={tabItems} />
-      </div>
-      <div className="flex justify-center p-3">
-        <Typography.Link className="text-center">All notifications</Typography.Link>
       </div>
     </div>
   );
-};
+});
 
 export default NotificationComponent;

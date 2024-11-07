@@ -1,27 +1,28 @@
 import { Anchor, Badge, Button, Form, Input, Popover } from 'antd';
 import { AnchorLinkItemProps } from 'antd/es/anchor/Anchor';
 import { TooltipPlacement } from 'antd/es/tooltip';
-import React, { memo, ReactNode, SetStateAction, useEffect, useState } from 'react';
+import React, { memo, ReactNode, SetStateAction, useCallback, useEffect, useState } from 'react';
 import { HiOutlineUsers } from 'react-icons/hi2';
 import { IoSearchOutline } from 'react-icons/io5';
 import { PiBell, PiMessengerLogo } from 'react-icons/pi';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import useSWR from 'swr';
 import logo from '../../../assets/logo/logo.png';
 import { useSocket } from '../../../context/SocketContext';
 import { paths } from '../../../routes/paths';
 import { getNotifications } from '../../../services/notification/notification.service';
-import { getFriendByType } from '../../../services/user/user.service';
-import { EnumFriend } from '../../../types/FriendType';
+import { QueryOptions } from '../../../types/common';
 import { NotificationType } from '../../../types/NotificationType';
 import { cn } from '../../../utils/helpers/cn';
 import { notifyInfo } from '../../../utils/helpers/notify';
+import { usePagination } from '../../../utils/hooks/usePagination.hook';
 import FriendsComponent from './components/Friends/Friends.component';
 import MessageComponent from './components/Message/Message.component';
 import NotificationComponent from './components/Notification/Notification.component';
 import SettingsComponent from './components/Settings/Settings.component';
 import './header.style.scss';
+import { FriendType } from '../../../types/FriendType';
+import { getFriendRequests } from '../../../services/user/user.service';
 
 interface ComponentPopoverProps {
   content: ReactNode;
@@ -66,13 +67,40 @@ const HeaderComponent: React.FC = memo(() => {
   const [messagesVisible, setMessagesVisible] = useState(false);
   const [notificationsVisible, setNotificationsVisible] = useState(false);
   const [settingsVisible, setSettingsVisible] = useState(false);
-  const { data: notificationData, mutate: mutateNotifications } = useSWR('notification', () => getNotifications(''));
-  const allNotifications = notificationData?.data || [];
-  const unreadNotifications = allNotifications.filter((n) => !n.isSeen);
-  const unreadCount = unreadNotifications.length;
-  const { data: friendRequestData, mutate: mutateFriendRequest } = useSWR('friendRequest', () =>
-    getFriendByType(EnumFriend.TYPE_PENDING)
+  // const { data: notificationData, mutate: mutateNotifications } = useSWR('notification', () => getNotifications(''));
+  const [queryOptionNotification, setQueryOptionNotification] = useState<QueryOptions>({
+    page: 1,
+    pageSize: 20
+  });
+  const [queryOptionFriendRequest, setQueryOptionFriendRequest] = useState<QueryOptions>({
+    page: 1,
+    pageSize: 20
+  });
+  const {
+    data: notificationData,
+    refresh: mutateNotifications,
+    isLoading: isLoadingNotifications
+  } = usePagination<NotificationType[]>(
+    `notification ${JSON.stringify(queryOptionNotification)}`,
+    queryOptionNotification,
+    () => getNotifications(queryOptionNotification)
   );
+
+  const {
+    data: friendRequestData,
+    refresh: mutateFriendRequest,
+    isLoading: isLoadingFriendRequese
+  } = usePagination<FriendType[]>(
+    `friend ${JSON.stringify(queryOptionFriendRequest)}`,
+    queryOptionFriendRequest,
+    () => getFriendRequests(queryOptionFriendRequest),
+    true
+  );
+
+  const allNotifications = notificationData?.data || [];
+  const unreadNotifications = allNotifications?.filter((n: NotificationType) => !n.isSeen) || [];
+  const unreadCount = unreadNotifications.length;
+
   useEffect(() => {});
   const menuItems: AnchorLinkItemProps[] = [
     {
@@ -119,6 +147,20 @@ const HeaderComponent: React.FC = memo(() => {
     navigate(link.href);
   };
 
+  const loadMoreNotification = useCallback(() => {
+    if (isLoadingNotifications) return;
+    setTimeout(() => {
+      setQueryOptionNotification((prev) => ({ ...prev, pageSize: prev.pageSize! + 10 }));
+    }, 1000);
+  }, [isLoadingNotifications]);
+
+  const loadMoreFriendRequest = useCallback(() => {
+    if (isLoadingFriendRequese) return;
+    setTimeout(() => {
+      setQueryOptionFriendRequest((prev) => ({ ...prev, pageSize: prev.pageSize! + 10 }));
+    }, 1000);
+  }, [isLoadingFriendRequese]);
+
   return (
     <div className="header-wraper box fixed top-0 z-10 flex h-[60px] w-full justify-center shadow-md">
       <div className="flex h-full w-full max-w-[1440px] items-center justify-between px-5">
@@ -143,7 +185,13 @@ const HeaderComponent: React.FC = memo(() => {
         </Form>
         <div className="flex items-center gap-8">
           <ComponentPopover
-            content={<FriendsComponent />}
+            content={
+              <FriendsComponent
+                friendRequestData={friendRequestData!}
+                mutate={mutateFriendRequest}
+                loadMoreFriendRequest={loadMoreFriendRequest}
+              />
+            }
             isOpen={friendsVisible}
             setOpen={setFriendsVisible}
             icon={
@@ -154,6 +202,7 @@ const HeaderComponent: React.FC = memo(() => {
               />
             }
             placement="bottomRight"
+            total={friendRequestData?.total || 0}
           />
           <ComponentPopover
             content={<MessageComponent />}
@@ -169,7 +218,13 @@ const HeaderComponent: React.FC = memo(() => {
             placement="bottomRight"
           />
           <ComponentPopover
-            content={<NotificationComponent notification={notificationData!} mutate={mutateNotifications} />}
+            content={
+              <NotificationComponent
+                notification={notificationData!}
+                mutate={mutateNotifications}
+                loadMoreNotification={loadMoreNotification}
+              />
+            }
             isOpen={notificationsVisible}
             setOpen={setNotificationsVisible}
             icon={

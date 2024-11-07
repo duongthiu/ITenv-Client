@@ -7,12 +7,14 @@ type PreviewTextEditorProps = {
   fontSize?: number;
   inline?: boolean;
   lineHeight?: number;
+  className?: string;
 };
 const PreviewTextEditorComponent: React.FC<PreviewTextEditorProps> = ({
   content,
   fontSize = 1.6,
   inline,
-  lineHeight = 2
+  lineHeight = 2,
+  className
 }) => {
   useEffect(() => {
     document.querySelectorAll('pre code').forEach((block) => {
@@ -28,7 +30,7 @@ const PreviewTextEditorComponent: React.FC<PreviewTextEditorProps> = ({
         </Typography.Text>
       )} */}
       <div
-        className={`preview-text-editor-wrapper w-full overflow-y-auto text-[${fontSize}rem] leading-[${lineHeight}rem] ${inline && 'flex flex-wrap gap-1'}`}
+        className={`preview-text-editor-wrapper w-full overflow-y-auto text-[${fontSize}rem] leading-[${lineHeight}rem] ${inline && 'flex flex-wrap gap-1'} ${className}`}
         dangerouslySetInnerHTML={{ __html: content }}
       />
     </div>

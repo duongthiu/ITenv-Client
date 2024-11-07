@@ -1,30 +1,48 @@
-import { Badge, List } from 'antd';
-import React from 'react';
-import FriendRequest from './FriendRequest.component';
-import { Typography } from 'antd';
+import { Badge, Divider, Empty, List, Skeleton } from 'antd';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { ResponsePagination } from '../../../../../types/common';
 import { FriendType } from '../../../../../types/FriendType';
+import FriendRequest from './FriendRequest.component';
+
 type FriendsComponentProps = {
   friendRequestData: ResponsePagination<FriendType[]>;
+  mutate: () => Promise<void>;
+  loadMoreFriendRequest: () => void;
 };
-const FriendsComponent: React.FC<FriendsComponentProps> = ({ friendRequestData }) => {
+
+const FriendsComponent: React.FC<FriendsComponentProps> = ({ friendRequestData, mutate, loadMoreFriendRequest }) => {
+  const allRequests = friendRequestData?.data || [];
+  console.log(friendRequestData?.total);
   return (
-    <List
-      header={
-        <div className="flex gap-2 pb-0 text-[1.6rem] font-semibold">
-          <div className="mb-5 flex gap-2 text-[1.6rem] font-semibold">
-            <Typography.Title className="text-[1.6rem]">Friend Requests</Typography.Title>
-            <Badge count={friendRequestData?.total} />
+    <div>
+      <div className="flex gap-2 pb-0 text-[1.6rem] font-semibold">
+        <div className="flex gap-2 p-[12px] pb-0 text-[1.6rem] font-semibold">
+          Notifications
+          <Badge count={friendRequestData?.total} />
+        </div>
+      </div>
+      <Divider className="my-[12px]" />
+      <InfiniteScroll
+        dataLength={allRequests.length}
+        next={loadMoreFriendRequest}
+        hasMore={(friendRequestData?.data?.length ?? 0) < (friendRequestData?.total ?? 0)}
+        loader={
+          <div className="p-[12px]">
+            <Skeleton active paragraph={{ rows: 1 }} />
           </div>
-        </div>
-      }
-      children={<FriendRequest />}
-      footer={
-        <div className="flex justify-center">
-          <Typography.Link className="text-center">All notification</Typography.Link>
-        </div>
-      }
-    />
+        }
+        scrollThreshold={0.9}
+        scrollableTarget="scrollableDiv"
+      >
+        <List
+          dataSource={allRequests}
+          renderItem={(friendRequest) => (
+            <FriendRequest key={friendRequest._id} friendRequest={friendRequest} mutate={mutate} />
+          )}
+          locale={{ emptyText: <Empty description="No friend requests" /> }}
+        />
+      </InfiniteScroll>
+    </div>
   );
 };
 
