@@ -7,22 +7,21 @@ import { IoSearchOutline } from 'react-icons/io5';
 import { PiBell, PiMessengerLogo } from 'react-icons/pi';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
+import useSWR from 'swr';
 import logo from '../../../assets/logo/logo.png';
+import { useSocket } from '../../../context/SocketContext';
 import { paths } from '../../../routes/paths';
+import { getNotifications } from '../../../services/notification/notification.service';
+import { getFriendByType } from '../../../services/user/user.service';
+import { EnumFriend } from '../../../types/FriendType';
+import { NotificationType } from '../../../types/NotificationType';
 import { cn } from '../../../utils/helpers/cn';
+import { notifyInfo } from '../../../utils/helpers/notify';
 import FriendsComponent from './components/Friends/Friends.component';
 import MessageComponent from './components/Message/Message.component';
 import NotificationComponent from './components/Notification/Notification.component';
 import SettingsComponent from './components/Settings/Settings.component';
 import './header.style.scss';
-import useSWR from 'swr';
-import { getNotifications } from '../../../services/notification/notification.service';
-import { useSocket } from '../../../context/SocketContext';
-import { NotificationType } from '../../../types/NotificationType';
-import { notifyInfo } from '../../../utils/helpers/notify';
-import { getFriendByType } from '../../../services/user/user.service';
-import { UseFriendStatusTypeEnum } from '../../../utils/hooks/useFriendStatus.hook';
-import { EnumFriend } from '../../../types/FriendType';
 
 interface ComponentPopoverProps {
   content: ReactNode;
@@ -167,7 +166,7 @@ const HeaderComponent: React.FC = memo(() => {
             placement="bottomRight"
           />
           <ComponentPopover
-            content={<NotificationComponent notification={notificationData!} />}
+            content={<NotificationComponent notification={notificationData!} mutate={mutateNotifications} />}
             isOpen={notificationsVisible}
             setOpen={setNotificationsVisible}
             icon={

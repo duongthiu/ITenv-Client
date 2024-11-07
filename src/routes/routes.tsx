@@ -2,7 +2,6 @@
 import LazyLoadComponent from '../components/commons/LazyComponent';
 import DefaultLayout from '../layouts/DefaultLayout/DefaultLayout';
 import DiscussByCate from '../pages/Public/Discuss/DiscussByCate/DiscussByCate.page';
-import DiscussPage from '../pages/Public/Discuss/DiscussPage';
 import { paths } from './paths';
 export type RouteType = {
   element: React.ReactNode;
@@ -52,6 +51,15 @@ export const PUBLIC_ROUTES: RouteType[] = [
   {
     path: paths.discuss,
     element: <LazyDiscussPage />,
+    layout: DefaultLayout,
+    private: 'public',
+    useHeader: true,
+    useSidebar: false,
+    useFooter: false
+  },
+  {
+    path: paths.detailDiscuss2,
+    element: <LazyDetailDiscussPage />,
     layout: DefaultLayout,
     private: 'public',
     useHeader: true,

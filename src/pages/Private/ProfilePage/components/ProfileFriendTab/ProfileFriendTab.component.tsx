@@ -23,8 +23,8 @@ const ProfileFriendTab: React.FC<ProfileFriendTabProps> = ({ userId }) => {
           className="flex cursor-pointer flex-col items-center gap-3"
           onClick={() => navigate(paths.profile.replace(':userId', user._id))}
         >
-          <img src={user.avatar} alt="avatar" className="aspect-square w-full rounded-md" />
-          <p className="truncate text-center text-[1.4rem] font-bold">{user.username}</p>
+          <img src={user.avatar} alt="avatar" className="aspect-square w-[100px] rounded-md" />
+          <p className="truncate text-center text-[1.2rem] font-bold">{user.username}</p>
         </div>
       </Tooltip>
     );

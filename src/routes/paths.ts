@@ -14,6 +14,7 @@ export const paths = {
   parentCateDisCuss: '/discuss/:parentCateId',
   childCateDisCuss: '/discuss/:parentCateId/:childCateId',
   detailDiscuss: '/discuss/:parentCateId/:id',
+  detailDiscuss2: '/discuss/detail-discuss/:id',
 
   createPost: '/discuss/:parentCateId/create-post',
   messages: '/messages',

@@ -66,14 +66,14 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-6">
-          <div className="col-span-2">
+        <div className="flex">
+          <div className="">
             <ProfileFriendTab userId={userData?.data?._id || ''} />
           </div>
-          <div className="col-span-3">
+          <div className="flex-1">
             <ActivityTab userId={userData?.data?._id || ''} />
           </div>
-          <div className="col-span-1 flex justify-end">
+          <div className="">
             <ProfilePageSidebar />
           </div>
         </div>

@@ -4,25 +4,24 @@ import { motion } from 'framer-motion';
 import hljs from 'highlight.js';
 import { useEffect } from 'react';
 import { CiBookmark, CiWarning } from 'react-icons/ci';
+import { FaArrowLeft } from 'react-icons/fa';
 import { VscShare } from 'react-icons/vsc';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import PreviewTextEditorComponent from '../../../../components/TextEditor/components/PreviewTextEditor.component.tdc';
+import { useSocket } from '../../../../context/SocketContext';
 import { useAppSelector } from '../../../../redux/app/hook';
 import { getPostById, votePostById } from '../../../../services/post/post.service';
+import { NotificationTypeEnum } from '../../../../types/enum/notification.enum';
 import { TypeVoteEnum } from '../../../../types/enum/typeVote.enum';
 import { notifyError } from '../../../../utils/helpers/notify';
 import useVoteStatus from '../../../../utils/hooks/useVoteStatus.hook';
-import ListCommentComponent from '../components/ListComment/ListComment.component';
-import { FaArrowLeft } from 'react-icons/fa';
 import LoadingPage from '../../../commons/LoadingPage';
-import { useSocket } from '../../../../context/SocketContext';
-import { NotificationRequestType } from '../../../../types/NotificationType';
-import { NotificationTypeEnum } from '../../../../types/enum/notification.enum';
+import ListCommentComponent from '../components/ListComment/ListComment.component';
 const DetailDiscussPage = () => {
   const { id } = useParams<{ id: string }>();
   const socket = useSocket();
-
+  const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.user);
   const { data: postData, isLoading, mutate } = useSWR(`detailpost/${id}`, () => getPostById(id!));
   const { isVoted, isDownvoted } = useVoteStatus({
@@ -78,7 +77,7 @@ const DetailDiscussPage = () => {
           <div className="flex items-center gap-5">
             <div className="flex cursor-pointer items-center justify-center opacity-30 duration-200 hover:opacity-100">
               <Tooltip title="Back">
-                <FaArrowLeft size={16} />
+                <FaArrowLeft size={16} onClick={() => navigate(-1)} />
               </Tooltip>
             </div>
             <Divider type="vertical" className="ml-0 h-full" />

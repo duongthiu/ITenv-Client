@@ -10,6 +10,7 @@ export type NotificationType = {
   createdAt: Date;
   notificationType?: string;
   receivers: string[];
+  postId?: string;
 };
 
 //vote downvote comment share repcomment vote_comment downvote_comment

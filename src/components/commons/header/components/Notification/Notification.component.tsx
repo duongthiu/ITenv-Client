@@ -3,16 +3,18 @@ import { NotificationType } from '../../../../../types/NotificationType';
 import { ResponsePagination } from '../../../../../types/common';
 import './Notification.style.scss';
 import NotificationItem from './NotificationItem.component';
+import { KeyedMutator } from 'swr';
 type NotificationProps = {
   notification: ResponsePagination<NotificationType[]>;
+  mutate: KeyedMutator<ResponsePagination<NotificationType[]>>;
 };
-const NotificationComponent: React.FC<NotificationProps> = ({ notification }) => {
+const NotificationComponent: React.FC<NotificationProps> = ({ notification, mutate }) => {
   const tabItems: TabsProps['items'] = [
     {
       key: '1',
       label: `All`,
       children: notification?.data?.map((notification: NotificationType) => (
-        <NotificationItem key={notification?._id} notification={notification} />
+        <NotificationItem key={notification?._id} notification={notification} mutate={mutate} />
       )) || <div>No notifications</div>
     },
     {
@@ -21,13 +23,13 @@ const NotificationComponent: React.FC<NotificationProps> = ({ notification }) =>
       children: notification?.data
         ?.filter((notification: NotificationType) => !notification.isSeen)
         .map((notification: NotificationType) => (
-          <NotificationItem key={notification?._id} notification={notification} />
+          <NotificationItem key={notification?._id} notification={notification} mutate={mutate} />
         )) || <div>No unread notifications</div>
     }
   ];
 
   return (
-    <div className="min-w-[300px]">
+    <div className="max-w-[350px]">
       <div className="flex gap-2 p-[12px] pb-0 text-[1.6rem] font-semibold">
         Notifications
         {/* <Badge count={data?.data?.filter((notification: NotificationType) => !notification.isSeen).length} /> */}
