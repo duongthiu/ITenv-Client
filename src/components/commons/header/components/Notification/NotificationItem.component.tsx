@@ -16,7 +16,6 @@ type NotificationItemProps = {
   mutate: KeyedMutator<ResponsePagination<NotificationType[]>>;
 };
 const NotificationItem: React.FC<NotificationItemProps> = ({ notification, mutate }) => {
-  const [isSeenNotification, setIsSeenNotification] = useState(notification.isSeen);
   console.log(notification);
   const navigate = useNavigate();
   const handleSeenNotification = async () => {
