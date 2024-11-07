@@ -67,6 +67,9 @@ const HeaderComponent: React.FC = memo(() => {
   const [notificationsVisible, setNotificationsVisible] = useState(false);
   const [settingsVisible, setSettingsVisible] = useState(false);
   const { data: notificationData, mutate: mutateNotifications } = useSWR('notification', () => getNotifications(''));
+  const allNotifications = notificationData?.data || [];
+  const unreadNotifications = allNotifications.filter((n) => !n.isSeen);
+  const unreadCount = unreadNotifications.length;
   const { data: friendRequestData, mutate: mutateFriendRequest } = useSWR('friendRequest', () =>
     getFriendByType(EnumFriend.TYPE_PENDING)
   );
@@ -177,7 +180,7 @@ const HeaderComponent: React.FC = memo(() => {
               />
             }
             placement="bottomRight"
-            total={notificationData?.total}
+            total={unreadCount}
           />
 
           {!isLogged ? (

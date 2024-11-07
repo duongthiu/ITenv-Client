@@ -16,31 +16,55 @@ const StatusButton: React.FC<StatusButtonProps> = ({ relationship, user, relatio
   const navigate = useNavigate();
   const { user: userSelector } = useAppSelector((state) => state.user);
   const [relationshipState, setRelationshipState] = useState(relationship);
-  const handleAddFriend = async () => {
-    if (user?._id) {
-      const res = await createFriendRequest({ receiver: user._id });
-      if (res.success) {
-        notifySuccess('Friend request sent successfully');
-        setRelationshipState(UseFriendStatusTypeEnum.PENDING_SENDING);
-      } else notifyError('Failed to send friend request');
+  const handleAddFriend = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      if (user?._id) {
+        const res = await createFriendRequest({ receiver: user._id });
+        if (res.success) {
+          notifySuccess('Friend request sent successfully');
+          setRelationshipState(UseFriendStatusTypeEnum.PENDING_SENDING);
+        } else {
+          notifyError('Failed to send friend request');
+        }
+      }
+    } catch (error) {
+      notifyError('An error occurred');
     }
   };
-  const handleRejectFriendRequest = async () => {
-    if (user?._id && relationshipId) {
-      const res = await rejectFriendRequest({ friendId: relationshipId });
-      if (res.success) {
-        notifySuccess('Friend request rejected successfully');
-        setRelationshipState(UseFriendStatusTypeEnum.NOT_FRIEND);
-      } else notifyError('Failed to reject friend request');
+
+  const handleRejectFriendRequest = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    try {
+      if (user?._id && relationshipId) {
+        const res = await rejectFriendRequest({ friendId: relationshipId });
+        if (res.success) {
+          notifySuccess('Friend request rejected successfully');
+          setRelationshipState(UseFriendStatusTypeEnum.NOT_FRIEND);
+        } else {
+          notifyError('Failed to reject friend request');
+        }
+      }
+    } catch (error) {
+      notifyError('An error occurred');
     }
   };
-  const handleAcceptFriendRequest = async () => {
-    if (relationshipId) {
-      const res = await acceptFriendRequest({ friendId: relationshipId });
-      if (res.success) {
-        notifySuccess('Friend request accepted successfully');
-        setRelationshipState(UseFriendStatusTypeEnum.FRIEND);
-      } else notifyError('Failed to accept friend request');
+
+  const handleAcceptFriendRequest = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      if (relationshipId) {
+        const res = await acceptFriendRequest({ friendId: relationshipId });
+        if (res.success) {
+          notifySuccess('Friend request accepted successfully');
+          setRelationshipState(UseFriendStatusTypeEnum.FRIEND);
+        } else {
+          notifyError('Failed to accept friend request');
+        }
+      }
+    } catch (error) {
+      notifyError('An error occurred');
     }
   };
   return (
