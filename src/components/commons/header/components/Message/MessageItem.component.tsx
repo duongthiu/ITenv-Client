@@ -1,33 +1,60 @@
-import { Avatar, Popover, Typography } from 'antd';
-import React from 'react';
-import { UserOutlined } from '@ant-design/icons';
+import { Avatar, Typography } from 'antd';
+import React, { memo } from 'react';
 import { GoDotFill } from 'react-icons/go';
-import { HiDotsHorizontal } from 'react-icons/hi';
+import { HiOutlineUserGroup } from 'react-icons/hi2';
+import { useAppSelector } from '../../../../../redux/app/hook';
+import { ConversationType } from '../../../../../types/ConversationType';
 import { cn } from '../../../../../utils/helpers/cn';
+import timeAgo from '../../../../../utils/helpers/timeAgo';
 import './MessageItem.style.scss';
 type MessageItemProps = {
-  isRead?: boolean;
+  conversation: ConversationType;
+  activeConversationId?: string;
+  setActiveConversation?: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const MessageItem: React.FC<MessageItemProps> = ({ isRead }) => {
-  // console.log(isRead);
-  return (
-    <div className="link-hover group container flex cursor-pointer items-center gap-5 rounded-lg p-[12px] duration-200">
-      <Avatar size={42} icon={<UserOutlined />} />
-      <div className="content flex flex-2 items-center justify-between">
-        <div className="flex flex-col">
-          <Typography.Text strong className="text-[1.6rem]">
-            tranduongthieu
-          </Typography.Text>
-          <div className="flex gap-3">
-            <Typography.Text strong={isRead ? false : true}>tranduongthieu</Typography.Text>
-            <Typography.Text strong={isRead ? false : true} className="text-gray-400">
-              1 hour ago
-            </Typography.Text>
-          </div>
+const MessageItem: React.FC<MessageItemProps> = memo(
+  ({ conversation, activeConversationId, setActiveConversation }) => {
+    const { user } = useAppSelector((state) => state.user);
+    const isSeenMessage = conversation?.lastMessage?.isSeenBy.find((seenBy) => seenBy === user?._id);
+    return (
+      <div
+        className={`link-hover group container relative mb-2 flex cursor-pointer items-center gap-5 rounded-lg p-[12px] duration-200 ${activeConversationId === conversation?._id && 'active-link'}`}
+        onClick={() => {
+          if (conversation && setActiveConversation) setActiveConversation(conversation._id!);
+        }}
+      >
+        <div className="flex-none">
+          <Avatar
+            size={42}
+            icon={conversation?.isGroupChat && <HiOutlineUserGroup />}
+            src={
+              !conversation?.isGroupChat &&
+              conversation?.participants?.find((member) => member?._id !== user?._id)?.avatar
+            }
+          />
         </div>
-        <div className="flex items-center gap-3">
-          <Popover
+        <div className="content flex flex-auto items-center justify-between truncate">
+          <div className={`flex flex-col ${isSeenMessage && 'opacity-50'} `}>
+            <Typography.Text strong={!isSeenMessage} className="text-[1.4rem]">
+              {conversation?.isGroupChat
+                ? conversation?.groupName
+                : conversation?.participants?.find((member) => member?._id !== user?._id)?.username}
+            </Typography.Text>
+            <div className="flex flex-auto gap-3">
+              <Typography.Text strong={!isSeenMessage} className="text-[1.2rem]">
+                {conversation?.lastMessage?.sender?._id === user?._id && 'You: '}{' '}
+                {conversation?.lastMessage?.content?.substring(0, 50) ||
+                  (conversation?.isGroupChat &&
+                    `${conversation?.createdBy?.username?.slice(0, 10)} created this GroupChat`)}
+              </Typography.Text>
+              <Typography.Text strong={!isSeenMessage} className="flex-none text-[1.2rem] text-gray-400">
+                {timeAgo(conversation?.lastMessage?.createdAt || conversation?.createdAt || '')}
+              </Typography.Text>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            {/* <Popover
             placement="bottomRight"
             content={<>hehe</>}
             trigger="click"
@@ -40,12 +67,16 @@ const MessageItem: React.FC<MessageItemProps> = ({ isRead }) => {
               size={22}
               className="hidden text-gray-500 duration-200 hover:text-gray-800 group-hover:block"
             />
-          </Popover>
-          <GoDotFill size={18} className={cn('text-primary-color', !isRead ? 'opacity-100' : 'opacity-0')} />
+          </Popover> */}
+            <GoDotFill
+              size={18}
+              className={cn('absolute right-0 text-primary-color', !isSeenMessage ? 'opacity-100' : 'opacity-0')}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+);
 
 export default MessageItem;

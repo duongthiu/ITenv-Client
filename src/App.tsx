@@ -32,7 +32,7 @@ function App() {
   useEffect(() => {
     setPathname(location?.pathname?.split('/')[1]);
   }, [location.pathname]);
-  
+
   useEffect(() => {
     const bodyClass = theme === THEME.DARK ? 'dark-mode' : 'light-mode';
     document.body.classList.remove('dark-mode', 'light-mode');

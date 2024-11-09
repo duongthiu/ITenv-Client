@@ -29,6 +29,7 @@ const LazyMessagesPage = LazyLoadComponent(() => import('../pages/Private/Messag
 const LazyProfilePage = LazyLoadComponent(() => import('../pages/Private/ProfilePage/ProfilePage.page'))(true);
 const LazyProblemListPage = LazyLoadComponent(() => import('../pages/Public/ProblemPage/ProblemListPage'))(true);
 const LazySearchPage = LazyLoadComponent(() => import('../pages/Public/SearchPage/SearchPage'))(true);
+
 export const PUBLIC_ROUTES: RouteType[] = [
   {
     path: paths.singleProblem,

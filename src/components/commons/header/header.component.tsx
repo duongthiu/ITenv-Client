@@ -23,6 +23,8 @@ import SettingsComponent from './components/Settings/Settings.component';
 import './header.style.scss';
 import { FriendType } from '../../../types/FriendType';
 import { getFriendRequests } from '../../../services/user/user.service';
+import { ConversationType } from '../../../types/ConversationType';
+import { getConversationsByUserId } from '../../../services/conversation/conversation.service';
 
 interface ComponentPopoverProps {
   content: ReactNode;
@@ -76,6 +78,21 @@ const HeaderComponent: React.FC = memo(() => {
     page: 1,
     pageSize: 20
   });
+  const [queryOptionConversation, setQueryOptionConversation] = useState<QueryOptions>({
+    page: 1,
+    pageSize: 20
+  });
+
+  const {
+    data: conversationData,
+    refresh: mutateConversation,
+    isLoading: isLoadingConversation
+  } = usePagination<ConversationType[]>(
+    `conversation ${JSON.stringify(queryOptionConversation)}`,
+    queryOptionConversation,
+    () => getConversationsByUserId(queryOptionConversation)
+  );
+
   const {
     data: notificationData,
     refresh: mutateNotifications,
@@ -90,17 +107,12 @@ const HeaderComponent: React.FC = memo(() => {
     data: friendRequestData,
     refresh: mutateFriendRequest,
     isLoading: isLoadingFriendRequese
-  } = usePagination<FriendType[]>(
-    `friend ${JSON.stringify(queryOptionFriendRequest)}`,
-    queryOptionFriendRequest,
-    () => getFriendRequests(queryOptionFriendRequest),
-    true
+  } = usePagination<FriendType[]>(`friend ${JSON.stringify(queryOptionFriendRequest)}`, queryOptionFriendRequest, () =>
+    getFriendRequests(queryOptionFriendRequest)
   );
-
   const allNotifications = notificationData?.data || [];
   const unreadNotifications = allNotifications?.filter((n: NotificationType) => !n.isSeen) || [];
   const unreadCount = unreadNotifications.length;
-
   useEffect(() => {});
   const menuItems: AnchorLinkItemProps[] = [
     {
@@ -119,8 +131,12 @@ const HeaderComponent: React.FC = memo(() => {
       href: '/discuss'
     }
   ];
+  let hasNotificationListener = false;
+
   useEffect(() => {
-    if (socket) {
+    if (socket && !hasNotificationListener) {
+      hasNotificationListener = true;
+
       socket.on('receive_notification', (notification: NotificationType) => {
         if (notification.receivers.includes(user?._id as string)) {
           mutateNotifications();
@@ -128,6 +144,13 @@ const HeaderComponent: React.FC = memo(() => {
         }
       });
     }
+
+    return () => {
+      if (socket) {
+        socket.off('receive_notification');
+        hasNotificationListener = false;
+      }
+    };
   }, [mutateNotifications, socket, user?._id]);
   const handleSearch = (values: any) => {
     if (values.search.trim()) {
@@ -205,7 +228,7 @@ const HeaderComponent: React.FC = memo(() => {
             total={friendRequestData?.total || 0}
           />
           <ComponentPopover
-            content={<MessageComponent />}
+            content={<MessageComponent conversations={conversationData!} mutate={mutateConversation} />}
             isOpen={messagesVisible}
             setOpen={setMessagesVisible}
             icon={

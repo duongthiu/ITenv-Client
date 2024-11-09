@@ -1,9 +1,7 @@
-import { createContext, useContext, useEffect, useRef } from 'react';
-import { useAppDispatch, useAppSelector } from '../redux/app/hook';
-import { io, Socket } from 'socket.io-client';
 import { DefaultEventsMap } from '@socket.io/component-emitter';
-import { notifyInfo } from '../utils/helpers/notify';
-import { NotificationType } from '../types/NotificationType';
+import { createContext, useContext, useEffect, useRef } from 'react';
+import { io, Socket } from 'socket.io-client';
+import { useAppDispatch, useAppSelector } from '../redux/app/hook';
 import { getUser } from '../redux/user/user.slice';
 
 const SocketContext = createContext<Socket<DefaultEventsMap, DefaultEventsMap> | null>(null);

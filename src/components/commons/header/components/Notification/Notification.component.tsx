@@ -1,10 +1,10 @@
-import { Badge, Empty, List, Skeleton, Tabs, Typography } from 'antd';
+import { Badge, Empty, List, Skeleton, Tabs } from 'antd';
+import { memo } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { NotificationType } from '../../../../../types/NotificationType';
 import { ResponsePagination } from '../../../../../types/common';
 import './Notification.style.scss';
 import NotificationItem from './NotificationItem.component';
-import { memo } from 'react';
 
 type NotificationProps = {
   notification: ResponsePagination<NotificationType[]>;
@@ -27,7 +27,6 @@ const NotificationComponent: React.FC<NotificationProps> = memo(({ notification,
           <Skeleton avatar paragraph={{ rows: 1 }} active />
         </div>
       }
-      endMessage={<Typography.Text>No more notifications</Typography.Text>}
       scrollableTarget="scrollableDiv"
     >
       <List

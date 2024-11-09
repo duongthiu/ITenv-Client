@@ -92,6 +92,9 @@ body.light-mode {
   .link-hover:hover {
     background-color: rgba(0, 0, 0, 0.12);
   }
+  .active-link {
+    background-color: rgba(0, 0, 0, 0.12);
+  }
   .input-mode {
     background-color: #f0f0f0 !important;
     color: black;
@@ -132,7 +135,7 @@ body.dark-mode {
     color: white !important;
   }
   .ant-typography {
-    color: white !important;
+    color: white;
   }
   .header-wraper {
     background-color: rgb(40, 40, 40);
@@ -169,7 +172,9 @@ body.dark-mode {
   .link-hover:hover {
     background-color: rgba(255, 255, 255, 0.12);
   }
-
+  .active-link {
+    background-color: rgba(255, 255, 255, 0.12);
+  }
   html *::-webkit-scrollbar-thumb {
     border-radius: 0.4rem;
     background-color: rgba(209, 209, 209, 0.15);

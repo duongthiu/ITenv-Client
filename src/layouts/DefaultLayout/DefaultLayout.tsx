@@ -38,7 +38,7 @@ const DefaultLayout: React.FC<PropsWithChildren<DefaultLayoutProps>> = ({
           'flex h-screen w-full justify-center'
         )}
       >
-        <Content style={{ minHeight: 'calc(100vh - 120px)' }} className={cn('duration-200', 'flex max-w-[1440px]')}>
+        <Content style={{ minHeight: 'calc(100vh - 120px)' }} className={cn('duration-200', 'flex max-w-[1440px]') }>
           {/* {useSidebar && (
             <div
               className="p-4"
