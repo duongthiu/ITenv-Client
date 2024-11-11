@@ -24,10 +24,6 @@ export const SocketProvider: React.FC<SocketContextProviderProps> = ({ children 
       socket.current.on('connect', () => {
         console.log('Connected');
       });
-
-      // socket.current.on('receive_notification', (notification: NotificationType) => {
-      //   if (notification.receivers.includes(user?._id as string)) notifyInfo(notification.content);
-      // });
     }
     return () => {
       if (socket.current) {

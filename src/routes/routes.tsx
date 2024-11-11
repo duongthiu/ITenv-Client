@@ -96,6 +96,15 @@ export const PUBLIC_ROUTES: RouteType[] = [
     useFooter: false
   },
   {
+    path: paths.messageWithoutId,
+    element: <LazyMessagesPage />,
+    layout: DefaultLayout,
+    private: 'auth',
+    useHeader: true,
+    useSidebar: false,
+    useFooter: false
+  },
+  {
     path: paths.profile,
     element: <LazyProfilePage />,
     layout: DefaultLayout,

@@ -1,54 +1,28 @@
+import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Typography } from 'antd';
 import React from 'react';
-import { UserOutlined } from '@ant-design/icons';
 import { GoDotFill } from 'react-icons/go';
-import { cn } from '../../../../../utils/helpers/cn';
-import { FriendType } from '../../../../../types/FriendType';
-import timeAgo from '../../../../../utils/helpers/timeAgo';
 import { useNavigate } from 'react-router-dom';
-import { paths } from '../../../../../routes/paths';
-import { notifyError, notifySuccess } from '../../../../../utils/helpers/notify';
-import { acceptFriendRequest, rejectFriendRequest } from '../../../../../services/user/user.service';
+import { useSocket } from '../../../../../context/SocketContext';
 import { useAppSelector } from '../../../../../redux/app/hook';
+import { paths } from '../../../../../routes/paths';
+import { FriendType } from '../../../../../types/FriendType';
+import { cn } from '../../../../../utils/helpers/cn';
+import timeAgo from '../../../../../utils/helpers/timeAgo';
+import { useFriendAction } from '../../../../../utils/hooks/useFriendAction.hook';
 type FriendRequestItemProps = {
   friendRequest: FriendType;
   mutate: () => Promise<void>;
 };
 const FriendRequest: React.FC<FriendRequestItemProps> = ({ friendRequest, mutate }) => {
-  const {user}= useAppSelector(state=>state.user)
-  const handleRejectFriendRequest = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    try {
-      if (user?._id && friendRequest?._id) {
-        const res = await rejectFriendRequest({ friendId: friendRequest?._id });
-        if (res.success) {
-          notifySuccess('Friend request rejected successfully');
-        } else {
-          notifyError('Failed to reject friend request');
-        }
-      }
-    } catch (error) {
-      notifyError('An error occurred');
-    }
-  };
-
-  const handleAcceptFriendRequest = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-    try {
-      if (friendRequest?._id) {
-        const res = await acceptFriendRequest({ friendId: friendRequest?._id });
-        if (res.success) {
-          notifySuccess('Friend request accepted successfully');
-          mutate();
-        } else {
-          notifyError('Failed to accept friend request');
-        }
-      }
-    } catch (error) {
-      notifyError('An error occurred');
-    }
-  };
+  const socket = useSocket();
+  const { user } = useAppSelector((state) => state.user);
+  console.log(friendRequest);
+  const { handleRejectFriendRequest, handleAcceptFriendRequest } = useFriendAction({
+    userId: friendRequest?.sendBy?._id,
+    relationshipId: friendRequest?._id,
+    mutate
+  });
   const navigate = useNavigate();
   return (
     <div

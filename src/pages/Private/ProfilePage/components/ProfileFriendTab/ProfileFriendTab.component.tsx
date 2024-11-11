@@ -24,7 +24,9 @@ const ProfileFriendTab: React.FC<ProfileFriendTabProps> = ({ userId }) => {
           onClick={() => navigate(paths.profile.replace(':userId', user._id))}
         >
           <img src={user.avatar} alt="avatar" className="aspect-square w-[100px] rounded-md" />
-          <p className="truncate text-center text-[1.2rem] font-bold">{user.username}</p>
+          <div className="w-[100px]">
+            <p className="truncate text-center text-[1.2rem] font-bold">{user.username}</p>
+          </div>
         </div>
       </Tooltip>
     );

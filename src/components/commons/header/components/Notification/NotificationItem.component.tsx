@@ -9,6 +9,7 @@ import { NotificationType } from '../../../../../types/NotificationType';
 import { cn } from '../../../../../utils/helpers/cn';
 import timeAgo from '../../../../../utils/helpers/timeAgo';
 import PreviewTextEditorComponent from '../../../../TextEditor/components/PreviewTextEditor.component.tdc';
+import { NotificationTypeEnum } from '../../../../../types/enum/notification.enum';
 type NotificationItemProps = {
   notification: NotificationType;
   mutate: () => Promise<void>;
@@ -18,8 +19,14 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, mutat
   const handleSeenNotification = async () => {
     const resp = await seenNotification({ notificationId: notification._id! });
     if (resp.success) {
+      console.log(notification.notificationType);
       mutate();
-      navigate(paths.detailDiscuss2.replace(':id', notification?.postId || ''));
+      if (
+        notification.notificationType === NotificationTypeEnum.ACCEPT_FRIEND_REQUEST ||
+        notification.notificationType === NotificationTypeEnum.REJECT_FRIEND_REQUEST
+      )
+        navigate(paths.profile.replace(':userId', notification?.receivers[0] || ''));
+      else navigate(paths.detailDiscuss2.replace(':id', notification?.postId || ''));
     }
   };
   return (

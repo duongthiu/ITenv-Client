@@ -7,6 +7,8 @@ import { ConversationType } from '../../../../../types/ConversationType';
 import { cn } from '../../../../../utils/helpers/cn';
 import timeAgo from '../../../../../utils/helpers/timeAgo';
 import './MessageItem.style.scss';
+import { useNavigate } from 'react-router-dom';
+import { paths } from '../../../../../routes/paths';
 type MessageItemProps = {
   conversation: ConversationType;
   activeConversationId?: string;
@@ -16,12 +18,14 @@ type MessageItemProps = {
 const MessageItem: React.FC<MessageItemProps> = memo(
   ({ conversation, activeConversationId, setActiveConversation }) => {
     const { user } = useAppSelector((state) => state.user);
+    const navigate = useNavigate();
     const isSeenMessage = conversation?.lastMessage?.isSeenBy.find((seenBy) => seenBy === user?._id);
     return (
       <div
         className={`link-hover group container relative mb-2 flex cursor-pointer items-center gap-5 rounded-lg p-[12px] duration-200 ${activeConversationId === conversation?._id && 'active-link'}`}
         onClick={() => {
-          if (conversation && setActiveConversation) setActiveConversation(conversation._id!);
+          navigate(paths.messages.replace(':id', conversation._id!));
+          // if (conversation && setActiveConversation) setActiveConversation(conversation._id!);
         }}
       >
         <div className="flex-none">
@@ -35,7 +39,7 @@ const MessageItem: React.FC<MessageItemProps> = memo(
           />
         </div>
         <div className="content flex flex-auto items-center justify-between truncate">
-          <div className={`flex flex-col ${isSeenMessage && 'opacity-50'} `}>
+          <div className={`flex flex-col ${isSeenMessage && 'opacity-80'} `}>
             <Typography.Text strong={!isSeenMessage} className="text-[1.4rem]">
               {conversation?.isGroupChat
                 ? conversation?.groupName
@@ -44,9 +48,12 @@ const MessageItem: React.FC<MessageItemProps> = memo(
             <div className="flex flex-auto gap-3">
               <Typography.Text strong={!isSeenMessage} className="text-[1.2rem]">
                 {conversation?.lastMessage?.sender?._id === user?._id && 'You: '}{' '}
-                {conversation?.lastMessage?.content?.substring(0, 50) ||
-                  (conversation?.isGroupChat &&
-                    `${conversation?.createdBy?.username?.slice(0, 10)} created this GroupChat`)}
+                {conversation?.lastMessage?.hasText
+                  ? conversation?.lastMessage?.content?.substring(0, 50)
+                  : conversation?.lastMessage?.hasFile
+                    ? 'sent a image'
+                    : conversation?.isGroupChat &&
+                      `${conversation?.createdBy?.username?.slice(0, 10)} created this GroupChat`}
               </Typography.Text>
               <Typography.Text strong={!isSeenMessage} className="flex-none text-[1.2rem] text-gray-400">
                 {timeAgo(conversation?.lastMessage?.createdAt || conversation?.createdAt || '')}

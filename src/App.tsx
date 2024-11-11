@@ -7,12 +7,10 @@ import DefaultLayout from './layouts/DefaultLayout/DefaultLayout';
 import AuthenticationPage from './pages/Authentication/Authentication.page';
 import NotAuthPage from './pages/ExceptionPage/NotAuthPage';
 import NotFoundPage from './pages/ExceptionPage/NotFoundPage';
-import { THEME } from './redux/app/app.slice';
-import { useAppDispatch, useAppSelector } from './redux/app/hook';
-import { getUser } from './redux/user/user.slice';
-import { AUTHEN_ROUTES, DISCUSS_ROUTES, PUBLIC_ROUTES, RouteType } from './routes/routes';
-import { paths } from './routes/paths';
 import DiscussPage from './pages/Public/Discuss/DiscussPage';
+import { THEME } from './redux/app/app.slice';
+import { useAppSelector } from './redux/app/hook';
+import { AUTHEN_ROUTES, DISCUSS_ROUTES, PUBLIC_ROUTES, RouteType } from './routes/routes';
 // import { Helmet } from 'react-helmet';
 
 // const pathname = location.path
@@ -56,7 +54,9 @@ function App() {
       <Helmet>
         <title>{`ITenv ${pathname && `- ${pathname}`}`}</title>
       </Helmet>
-
+      {/* <div className="fixed bottom-0 right-20 z-50">
+        <MessageBox />
+      </div> */}
       <main className="">
         <Router>
           <Routes>

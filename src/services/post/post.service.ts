@@ -20,6 +20,7 @@ export const deleteImages = async (requestOption: { images: string[] }): Promise
   const data = await post(import.meta.env.VITE_APP_API + 'storage/upload/delete-image', requestOption);
   return data;
 };
+
 export const getPostsWithCategoryId = async (
   categoryId: string,
   query: string

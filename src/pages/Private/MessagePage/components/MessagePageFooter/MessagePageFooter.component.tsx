@@ -1,71 +1,121 @@
-import { Tooltip } from 'antd';
-import React, { useState } from 'react';
-import { IoMdDocument, IoMdSend } from 'react-icons/io';
-import { RiImageFill } from 'react-icons/ri';
+import { Image, Tooltip } from 'antd';
+import React, { useRef, useState } from 'react';
+import { AiFillCloseCircle, AiOutlineFileAdd } from 'react-icons/ai';
+import { IoMdSend } from 'react-icons/io';
+import { RiImageAddLine } from 'react-icons/ri';
 import InputWithEmoji from '../../../../../components/commons/InputWithEmoji/InputWithEmoji';
 import { useSocket } from '../../../../../context/SocketContext';
-import { MessageType } from '../../../../../types/ConversationType';
-import { notifyError } from '../../../../../utils/helpers/notify';
 import { useAppSelector } from '../../../../../redux/app/hook';
+import { MessageType } from '../../../../../types/ConversationType';
+import { getBase64 } from '../../../../../utils/helpers/getBase64';
+import { notifyError } from '../../../../../utils/helpers/notify';
 
+type PreviewImage = { name: string; path: string };
 type MessagePageFooterProps = {
   conversationId?: string;
   receiver?: string;
   setMessageList: React.Dispatch<React.SetStateAction<MessageType[]>>;
 };
+
 const MessagePageFooter: React.FC<MessagePageFooterProps> = ({ conversationId, receiver, setMessageList }) => {
   const socket = useSocket();
   const [message, setMessage] = useState<string>('');
   const { user } = useAppSelector((state) => state.user);
+  const [previewImage, setPreviewImage] = useState<PreviewImage[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const onEmojiClick = (emojiObject: any) => {
-    console.log(emojiObject);
     setMessage((prev) => prev + emojiObject.emoji);
   };
+
   const handleSendMessage = async () => {
     try {
-      if (socket) {
-        if (message.trim()) {
-          // Create the message data as a plain object
-          const messageData = {
-            content: message.trim(),
-            hasText: true,
-            hasFile: false,
-            conversationId: conversationId || null,
-            receiver: receiver || null
-          };
+      if (socket && message.trim()) {
+        const messageData = {
+          content: message.trim(),
+          hasText: true,
+          hasFile: false,
+          conversationId: conversationId || null,
+          receiver: receiver || null,
+          isSeenBy: [user?._id]
+        };
 
-          // Emit message data to the server
-          socket.emit('message', messageData);
-          if (messageData) {
-            setMessage('');
-            setMessageList((prev: any) => [
-              ...prev,
-              { sender: { _id: user?._id, username: user?.username, avatar: user?.avatar }, ...messageData }
-            ]);
-          }
-        }
+        socket.emit('message', messageData);
+        setMessage('');
+        setMessageList((prev: any) => [
+          ...prev,
+          { sender: { _id: user?._id, username: user?.username, avatar: user?.avatar }, ...messageData }
+        ]);
       }
-
-      // Call API (optional)
-      // const response = await sendMessage(formData);
-      // if (response.success) setMessage('');
-      // else notifyError('Error sending message');
     } catch (error) {
       notifyError('Error sending message');
     }
   };
 
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const imgs: PreviewImage[] = [];
+      for (const file of Array.from(e.target.files)) {
+        if (!['image/png', 'image/jpg', 'image/jpeg'].includes(file.type)) {
+          notifyError('Only image files are allowed');
+          return;
+        }
+        const res = await getBase64(file);
+        imgs.push({ name: file.name, path: res });
+      }
+      setPreviewImage(imgs);
+    }
+  };
+
+  const handleDeleteImage = (index: number) => {
+    setPreviewImage((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleIconClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   return (
-    <div className="flex h-[60px] items-center gap-4 px-3">
+    <div className="relative flex h-[60px] items-center gap-4 px-3">
       <div className="flex items-center gap-2">
-        <IoMdDocument
+        <AiOutlineFileAdd
           className="cursor-pointer duration-200 hover:text-primary-color-hover"
           color="#21a1d3"
           size={25}
         />
 
-        <RiImageFill className="cursor-pointer duration-200 hover:text-primary-color-hover" color="#21a1d3" size={25} />
+        {/* Custom Icon Button for File Input */}
+        <RiImageAddLine
+          onClick={handleIconClick}
+          className="cursor-pointer duration-200 hover:text-primary-color-hover"
+          color="#21a1d3"
+          size={25}
+        />
+        <input type="file" ref={fileInputRef} multiple onChange={handleImageChange} className="hidden" />
+
+        {previewImage.length > 0 && (
+          <div className="card absolute bottom-[60px] flex w-[99%] gap-5 overflow-x-auto">
+            {previewImage.map((img, index) => (
+              <div key={index} className="relative h-[100px] w-[100px] flex-none">
+                <Image
+                  rootClassName="flex-none"
+                  className="h-[100px] w-[100px] object-cover"
+                  src={img.path}
+                  alt={img.name}
+                />
+                <AiFillCloseCircle
+                  onClick={() => handleDeleteImage(index)}
+                  className="absolute right-1 top-1 cursor-pointer rounded-full bg-black text-white"
+                  size={20}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
+
       <div className="input-mode flex flex-1 items-center rounded-full py-2 pr-3">
         <input
           onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
@@ -77,12 +127,13 @@ const MessagePageFooter: React.FC<MessagePageFooterProps> = ({ conversationId, r
         />
         <InputWithEmoji onEmojiClick={onEmojiClick} />
       </div>
+
       <Tooltip title="Send">
         <IoMdSend
           className="cursor-pointer duration-200 hover:text-primary-color-hover"
           color="#21a1d3"
           size={25}
-          onClick={() => handleSendMessage()}
+          onClick={handleSendMessage}
         />
       </Tooltip>
     </div>

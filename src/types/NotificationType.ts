@@ -8,7 +8,7 @@ export type NotificationType = {
   isSeen: boolean;
   postedBy: Pick<UserType, '_id' | 'username' | 'avatar' | 'email'>;
   createdAt: Date;
-  notificationType?: string;
+  notificationType?: NotificationTypeEnum;
   receivers: string[];
   postId?: string;
 };

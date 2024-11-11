@@ -14,7 +14,7 @@ type MessageSidebarProps = {
 };
 const MessageSidebar: React.FC<MessageSidebarProps> = memo(
   ({ conversations, mutate, activeConversationId, setActiveConversation }) => {
-    const [collapsed, setCollapsed] = useState<boolean>(true);
+    const [collapsed, setCollapsed] = useState<boolean>(false);
     const toggleCollapsed = () => {
       setCollapsed(!collapsed);
     };

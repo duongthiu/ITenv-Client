@@ -1,25 +1,28 @@
-import { Avatar, Divider, Empty, Typography } from 'antd';
+import { Avatar, Divider, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import { GoDotFill } from 'react-icons/go';
 import { HiOutlineUserGroup } from 'react-icons/hi2';
 import useSWR from 'swr';
+import { useSocket } from '../../../../context/SocketContext';
 import { useAppSelector } from '../../../../redux/app/hook';
 import { getMessageByConversationId } from '../../../../services/message/message.service';
-import { getUserById } from '../../../../services/user/user.service';
 import { QueryOptions, ResponsePagination } from '../../../../types/common';
 import { ConversationType, MessageType } from '../../../../types/ConversationType';
-import timeAgo from '../../../../utils/helpers/timeAgo';
 import MessageItem from '../components/MessageItem/MessageItem';
 import MessagePageFooter from '../components/MessagePageFooter/MessagePageFooter.component';
-import { useSocket } from '../../../../context/SocketContext';
-import { usePagination } from '../../../../utils/hooks/usePagination.hook';
-import messageSound from '../../../../assets/sound/message_sound.mp3';
+import { notifyInfo } from '../../../../utils/helpers/notify';
 type MessagePageContentProps = {
   conversation?: ConversationType;
   receiverId?: string;
+  mutateConversation: () => Promise<void>;
+  activeConversationId: string;
 };
-const MessagePageContent: React.FC<MessagePageContentProps> = ({ conversation, receiverId }) => {
+const MessagePageContent: React.FC<MessagePageContentProps> = ({
+  conversation,
+  receiverId,
+  mutateConversation,
+  activeConversationId
+}) => {
   const { user } = useAppSelector((state) => state.user);
   const socket = useSocket();
   // const [conversationState, setConverSationState] = useState<ConversationType>(
@@ -34,14 +37,6 @@ const MessagePageContent: React.FC<MessagePageContentProps> = ({ conversation, r
     page: 1,
     pageSize: 20
   });
-  // const {
-  //   data: messageData,
-  //   mutate: mutateMessage,
-  //   isLoading: isLoadingMessage
-  // } = useSWR(`message ${JSON.stringify(queryOptionMessage)} ${conversation?._id}`, () =>
-  //   getMessageByConversationId(conversation?._id || '', queryOptionMessage)
-  // );
-
   // const {
   //   data: messageData,
   //   refresh: mutateMessage,
@@ -83,16 +78,25 @@ const MessagePageContent: React.FC<MessagePageContentProps> = ({ conversation, r
         console.log('message received', message?.data);
         if (message && message.data) {
           setMessageList((prevList) => [...prevList, message.data!]);
-          const audio = new Audio(messageSound);
-          audio.play();
+          if (message.data.conversationId === activeConversationId) socket.emit('seen_message', message.data);
         }
+      });
+      socket.on('seen_message', (messageInfo: MessageType) => {
+        console.log('seen_message received', messageInfo);
+        notifyInfo('Message has been seen');
       });
     }
 
     return () => {
       socket?.off('message');
+      socket?.off('seen_message');
     };
-  }, [socket]);
+  }, [activeConversationId, socket]);
+
+  useEffect(() => {
+    mutateConversation();
+  }, [messageList, mutateConversation]);
+
   return (
     <div className="card m-5 mb-0 flex flex-1 flex-col rounded-2xl pb-2 shadow-xl duration-200">
       {/* <div className="h-full w-full items-center justify-center">

@@ -13,11 +13,10 @@ type PersonCardProps = {
 };
 
 const PersonCard: React.FC<PersonCardProps> = ({ user }) => {
-  console.log(user);
   const navigate = useNavigate();
   const { user: userSelector } = useAppSelector((state) => state.user);
 
-  const relationship = useFriendStatus({ friendWithMe: user?.friendWithMe, userId: userSelector?._id || '' });
+  const relationship = useFriendStatus({ friendWithMe: user?.friendWithMe, currentUserId: userSelector?._id || '' });
 
   return (
     <div
@@ -42,7 +41,11 @@ const PersonCard: React.FC<PersonCardProps> = ({ user }) => {
                 <span className="text-center text-[1.2rem]">{user?.friends?.length || 0} connections</span>
               </p>
             </div>
-            <StatusButton relationship={relationship} user={user} relationshipId={user.friendWithMe?._id || ''} />
+            <StatusButton
+              relationship={relationship}
+              userId={user?._id}
+              relationshipId={user.friendWithMe?._id || ''}
+            />
           </div>
         </div>
       </div>

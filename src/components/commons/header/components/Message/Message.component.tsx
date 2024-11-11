@@ -9,9 +9,10 @@ import { ConversationType } from '../../../../../types/ConversationType';
 type ConversationProps = {
   conversations: ResponsePagination<ConversationType[]>;
   mutate: () => Promise<void>;
+  totalNotSeen: number;
 };
 
-const MessageComponent: React.FC<ConversationProps> = ({ conversations, mutate }) => {
+const MessageComponent: React.FC<ConversationProps> = ({ conversations, mutate, totalNotSeen }) => {
   return (
     <div className="w-[350px]">
       <List
@@ -22,7 +23,7 @@ const MessageComponent: React.FC<ConversationProps> = ({ conversations, mutate }
                 <Typography.Title level={3} className="text-[1.6rem]">
                   Messages
                 </Typography.Title>
-                <Badge count={1} />
+                <Badge count={totalNotSeen} />
               </div>
             </div>
             <Input placeholder="Search your friends..." prefix={<IoSearchOutline />} />
@@ -30,7 +31,7 @@ const MessageComponent: React.FC<ConversationProps> = ({ conversations, mutate }
         }
         footer={
           <div className="flex justify-center">
-            <Link to={paths.messages} className="text-center">
+            <Link to={paths.messages.replace(':id', '')} className="text-center">
               Read all messages
             </Link>
           </div>

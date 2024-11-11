@@ -2,7 +2,7 @@ import { EnumFriend, FriendType } from '../../types/FriendType';
 
 interface UseFriendStatusType {
   friendWithMe?: FriendType;
-  userId: string;
+  currentUserId: string;
 }
 
 export enum UseFriendStatusTypeEnum {
@@ -14,14 +14,14 @@ export enum UseFriendStatusTypeEnum {
 }
 
 const useFriendStatus = (data: UseFriendStatusType): UseFriendStatusTypeEnum => {
-  const { friendWithMe, userId } = data;
+  const { friendWithMe, currentUserId } = data;
 
   if (!friendWithMe) {
     return UseFriendStatusTypeEnum.NOT_FRIEND;
   }
 
   if (friendWithMe.status === EnumFriend.TYPE_BLOCKED) {
-    return friendWithMe.isBlockBy?._id === userId
+    return friendWithMe.isBlockBy?._id === currentUserId
       ? UseFriendStatusTypeEnum.BLOCKED
       : UseFriendStatusTypeEnum.NOT_FRIEND;
   }
@@ -31,7 +31,7 @@ const useFriendStatus = (data: UseFriendStatusType): UseFriendStatusTypeEnum => 
   }
 
   if (friendWithMe.status === EnumFriend.TYPE_PENDING) {
-    return friendWithMe.sendBy === userId
+    return friendWithMe.sendBy._id === currentUserId
       ? UseFriendStatusTypeEnum.PENDING_SENDING
       : UseFriendStatusTypeEnum.PENDING_RECEIVING;
   }

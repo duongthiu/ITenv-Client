@@ -17,7 +17,8 @@ export const paths = {
   detailDiscuss2: '/discuss/detail-discuss/:id',
 
   createPost: '/discuss/:parentCateId/create-post',
-  messages: '/messages',
+  messages: '/messages/:id',
+  messageWithoutId: '/messages/',
   profile: '/profile/:userId',
   me: '/profile/me',
   search: '/search'
