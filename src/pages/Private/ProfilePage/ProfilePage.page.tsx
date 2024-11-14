@@ -28,11 +28,13 @@ const ProfilePage = () => {
     friendWithMe: userData?.data?.friendWithMe,
     currentUserId: userSelector?._id || ''
   });
+  console.log(userData?.data?.friendWithMe, userSelector?._id);
+  console.log(status);
   const TabItems = [
     {
       key: '1',
       label: `Discuss`,
-      children: <ListPost userId={userData?.data?._id || ''} />,
+      children: <ListPost userId={userId || ''} />,
       icon: <VscCommentDiscussion size={20} />
     },
     {
@@ -99,10 +101,10 @@ const ProfilePage = () => {
         </div>
         <div className="flex h-full">
           <div className="flex-none">
-            <ProfileFriendTab userId={userData?.data?._id || ''} />
+            <ProfileFriendTab userId={userId || ''} />
           </div>
           <div className="my-5 flex h-full flex-1 flex-auto flex-col gap-5">
-            <ActivityTab userId={userData?.data?._id || ''} />
+            <ActivityTab userId={userId || ''} />
 
             <div className="card tab-wraper h-full">
               <Tabs type="card" defaultActiveKey="1" items={TabItems} />

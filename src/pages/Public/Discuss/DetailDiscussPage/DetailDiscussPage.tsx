@@ -2,7 +2,7 @@ import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
 import { Avatar, Divider, Skeleton, Tooltip } from 'antd';
 import { motion } from 'framer-motion';
 import hljs from 'highlight.js';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { CiBookmark, CiWarning } from 'react-icons/ci';
 import { FaArrowLeft } from 'react-icons/fa';
 import { VscShare } from 'react-icons/vsc';
@@ -22,6 +22,8 @@ import { AnonymousIcon } from '../../../../utils/icons/Anonymous.icon';
 const DetailDiscussPage = () => {
   const { id } = useParams<{ id: string }>();
   const socket = useSocket();
+  const upvoteRef = useRef(null);
+  const downvoteRef = useRef(null);
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.user);
   const { data: postData, isLoading, mutate } = useSWR(`detailpost/${id}`, () => getPostById(id!));
@@ -106,6 +108,7 @@ const DetailDiscussPage = () => {
         <div className="flex gap-12">
           <div className="ml-2 flex flex-none flex-col items-center">
             <motion.button
+              ref={upvoteRef}
               onClick={() => handleVote(TypeVoteEnum.upvote)}
               className={`flex h-fit items-start rounded-md text-[3rem] text-gray-500 hover:text-green-500 focus:outline-none focus:ring-green-500 ${isVoted && 'text-green-500'}`}
               whileHover={{ scale: 1.1 }}
@@ -115,11 +118,12 @@ const DetailDiscussPage = () => {
               <CaretUpOutlined />
             </motion.button>
             <p className="m-0 text-center text-[2rem] font-semibold">
-              {(postData?.data?.vote.length || 0) - (postData?.data?.downVote.length || 0) > 0
-                ? (postData?.data?.vote.length || 0) - (postData?.data?.downVote.length || 0)
+              {(postData?.data?.vote?.length || 0) - (postData?.data?.downVote?.length || 0) > 0
+                ? (postData?.data?.vote?.length || 0) - (postData?.data?.downVote?.length || 0)
                 : 0}
             </p>
             <motion.button
+              ref={downvoteRef}
               onClick={() => handleVote(TypeVoteEnum.downvote)}
               className={`flex h-fit items-start rounded-md text-[3rem] text-gray-500 hover:text-red-500 focus:outline-none focus:ring-red-500 ${isDownvoted && 'text-red-500'}`}
               whileHover={{ scale: 1.1 }}
@@ -150,7 +154,7 @@ const DetailDiscussPage = () => {
         </div>
 
         <div className="mb-6">
-          {postData?.data?.tags.map((tag: any) => (
+          {postData?.data?.tags?.map((tag: any) => (
             <span
               key={tag._id}
               className="tag mb-2 mr-2 inline-block rounded-full px-5 py-2 text-[1.2rem] font-semibold"
@@ -161,7 +165,7 @@ const DetailDiscussPage = () => {
         </div>
         <div className="border-t pt-6">
           <h2 className="mb-4 text-2xl font-bold">Comments</h2>
-          <ListCommentComponent postById={postData?.data?.postedBy?._id || ''} postId={postData?.data?._id || ''} />
+          <ListCommentComponent postById={postData?.data?.postedBy?._id || ''} postId={id || ''} />
         </div>
       </div>
     </div>

@@ -224,7 +224,7 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
           <div className="list-comment-editor-wrapper border shadow-md">
             <TextEditorComponent
               buttonTitle="Post"
-              key={`reply-comment ${comment?._id}`}
+              keyEditor={`reply-comment ${comment?._id}`}
               content={newComment}
               setContent={handleEditorChange}
               postImages={postImages}

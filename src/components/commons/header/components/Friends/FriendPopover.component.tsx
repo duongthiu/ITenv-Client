@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import { HiOutlineUsers } from 'react-icons/hi2';
-import { getFriendRequests } from '../../../../../services/user/user.service';
 import { FriendType } from '../../../../../types/FriendType';
 import { cn } from '../../../../../utils/helpers/cn';
 import { usePagination } from '../../../../../utils/hooks/usePagination.hook';
@@ -11,6 +10,7 @@ import { useSocket } from '../../../../../context/SocketContext';
 import { NotificationType } from '../../../../../types/NotificationType';
 import { useAppSelector } from '../../../../../redux/app/hook';
 import { notifyInfo } from '../../../../../utils/helpers/notify';
+import { getFriendRequests } from '../../../../../services/friend/friend.service';
 
 const FriendPopover = () => {
   const socket = useSocket();

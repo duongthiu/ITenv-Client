@@ -6,7 +6,7 @@ import { FaFacebook, FaGithub, FaGoogle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../../../redux/app/hook';
 import useSWR from 'swr';
-import { getAllAccount } from '../../../../services/user/user.service';
+import { getAllAccount } from '../../../../services/authentication.service';
 
 const { Item } = Form;
 const socialNetwork = [
@@ -56,7 +56,7 @@ const AccountSettings: React.FC = () => {
       <div className="mb-6">
         <h3 className="mb-8 text-start text-[1.6rem] font-semibold">Account Information</h3>
         <Form form={form} layout="vertical" onFinish={onFinish}>
-          <Item name="email" label="Email" initialValue={data?.data?.email}>
+          <Item name="email" label="Email" initialValue={data?.data?.[0]?.email}>
             <Input disabled />
           </Item>
           <p className="text-start font-semibold">Password</p>

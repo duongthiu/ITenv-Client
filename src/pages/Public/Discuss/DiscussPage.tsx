@@ -52,6 +52,7 @@ const DiscussPage = () => {
           {isLoadingCate && <Skeleton.Node active />}
           {cates?.map((category) => (
             <div
+              key={category._id}
               onClick={() => {
                 setActiveCategory(category._id);
                 navigate(paths.parentCateDisCuss.replace(':parentCateId', category._id));

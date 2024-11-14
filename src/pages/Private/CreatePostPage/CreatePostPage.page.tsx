@@ -7,7 +7,7 @@ import { LuSplitSquareHorizontal } from 'react-icons/lu';
 import TagMenu from '../../../components/post/TagMenu/TagMenu.component';
 import PreviewTextEditorComponent from '../../../components/TextEditor/components/PreviewTextEditor.component.tdc';
 import TextEditorComponent from '../../../components/TextEditor/TextEditor.component';
-import { createPost, deleteImages } from '../../../services/post/post.service';
+import { createPost } from '../../../services/post/post.service';
 import { ImageType } from '../../../types/common';
 import { cn } from '../../../utils/helpers/cn';
 import { notifyError, notifySuccess } from '../../../utils/helpers/notify';
@@ -16,6 +16,7 @@ import LoadingPage from '../../commons/LoadingPage';
 import './CreatePostPage.style.scss';
 import { Tab } from './Tabs';
 import { useBeforeUnload, useParams } from 'react-router-dom';
+import { deleteImages } from '../../../services/upload/upload.service';
 export interface Ingredient {
   label: string;
 }
@@ -192,7 +193,7 @@ const CreatePostPage = () => {
                   )}
                 >
                   <TextEditorComponent
-                    key="createpost"
+                    keyEditor="createpost"
                     content={content}
                     setContent={handleEditorChange}
                     postImages={postImages}

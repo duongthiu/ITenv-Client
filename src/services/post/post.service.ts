@@ -20,7 +20,7 @@ export const getPostsWithCategoryId = async (
   categoryId: string,
   query: string
 ): Promise<ResponsePagination<PostType[]>> => {
-  const data = await get(import.meta.env.VITE_APP_API + 'posts/' + categoryId + '/?' + query);
+  const data = await get(import.meta.env.VITE_APP_API + 'posts/category/' + categoryId + '/?' + query);
   return data as unknown as ResponsePagination<PostType[]>;
 };
 
@@ -37,7 +37,7 @@ export const getPostByUserId = async (
   userId: string,
   queryOptions: QueryOptions
 ): Promise<ResponsePagination<PostType[]>> => {
-  const data = await get(import.meta.env.VITE_APP_API + 'posts/' + userId, { params: queryOptions });
+  const data = await get(import.meta.env.VITE_APP_API + 'posts/user/' + userId, { params: queryOptions });
   return data as unknown as ResponsePagination<PostType[]>;
 };
 

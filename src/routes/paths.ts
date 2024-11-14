@@ -13,8 +13,8 @@ export const paths = {
   discuss: '/discuss',
   parentCateDisCuss: '/discuss/:parentCateId',
   childCateDisCuss: '/discuss/:parentCateId/:childCateId',
-  detailDiscuss: '/discuss/:parentCateId/:id',
   detailDiscuss2: '/discuss/detail-discuss/:id',
+  detailDiscuss: '/discuss/:parentCateId/:id',
 
   createPost: '/discuss/:parentCateId/create-post',
   messages: '/messages/:id',
@@ -23,5 +23,5 @@ export const paths = {
   me: '/profile/me',
   search: '/search',
   editProfile: '/edit-profile/:tab',
-  editProfileWithoutTab : '/edit-profile/'
+  editProfileWithoutTab: '/edit-profile/'
 };

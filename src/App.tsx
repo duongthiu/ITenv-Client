@@ -1,6 +1,6 @@
 import { ConfigProvider, theme as themeAntd } from 'antd';
 import { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet';
+// import { Helmet } from 'react-helmet';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import { Fragment } from 'react/jsx-runtime';
 import DefaultLayout from './layouts/DefaultLayout/DefaultLayout';
@@ -51,9 +51,9 @@ function App() {
         algorithm: theme === THEME.DARK ? themeAntd.darkAlgorithm : themeAntd.defaultAlgorithm
       }}
     >
-      <Helmet>
+      {/* <Helmet>
         <title>{`ITenv ${pathname && `- ${pathname}`}`}</title>
-      </Helmet>
+      </Helmet> */}
       {/* <div className="fixed bottom-0 right-20 z-50">
         <MessageBox />
       </div> */}
@@ -70,10 +70,15 @@ function App() {
                     key={index}
                     path={route.path}
                     element={
-                      Layout === Fragment ? (
-                        <Fragment> {route.element}</Fragment>
+                      route.layout === null ? (
+                        <Fragment key={index}> {route.element}</Fragment>
                       ) : (
-                        <Layout useHeader={route.useHeader} useSidebar={route.useSidebar} useFooter={route.useFooter}>
+                        <Layout
+                          key={index}
+                          useHeader={route.useHeader}
+                          useSidebar={route.useSidebar}
+                          useFooter={route.useFooter}
+                        >
                           {route.element}
                         </Layout>
                       )
@@ -87,9 +92,18 @@ function App() {
                       key={index}
                       path={route.path}
                       element={
-                        <Layout useHeader={route.useHeader} useSidebar={route.useSidebar} useFooter={route.useFooter}>
-                          {route.element}
-                        </Layout>
+                        route.layout === null ? (
+                          <Fragment> {route.element}</Fragment>
+                        ) : (
+                          <Layout
+                            key={index}
+                            useHeader={route.useHeader}
+                            useSidebar={route.useSidebar}
+                            useFooter={route.useFooter}
+                          >
+                            {route.element}
+                          </Layout>
+                        )
                       }
                     ></Route>
                   );
@@ -103,6 +117,7 @@ function App() {
               else if (route.layout === null) Layout = Fragment;
               return (
                 <Route
+                  key={route.path}
                   path={route.path}
                   element={
                     <Layout>

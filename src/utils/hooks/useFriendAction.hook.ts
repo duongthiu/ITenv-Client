@@ -1,5 +1,5 @@
 import { useSocket } from '../../context/SocketContext';
-import { acceptFriendRequest, createFriendRequest, rejectFriendRequest } from '../../services/user/user.service';
+import { acceptFriendRequest, createFriendRequest, rejectFriendRequest } from '../../services/friend/friend.service';
 import { NotificationTypeEnum } from '../../types/enum/notification.enum';
 import { notifyError, notifySuccess } from '../helpers/notify';
 import { UseFriendStatusTypeEnum } from './useFriendStatus.hook';

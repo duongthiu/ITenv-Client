@@ -46,6 +46,7 @@ const SettingsComponent = () => {
             <Divider className="my-2" />
             {menuItems.map((item) => (
               <div
+                key={item.label}
                 className="link-hover flex cursor-pointer items-center gap-5 rounded-lg px-2 py-3 text-[1.6rem] font-semibold duration-500"
                 onClick={item?.onClick}
               >

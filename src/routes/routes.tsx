@@ -45,10 +45,10 @@ export const PUBLIC_ROUTES: RouteType[] = [
     path: paths.home,
     element: <LazyHomePage />,
     layout: null,
-    private: 'public',
-    useHeader: true,
-    useSidebar: true,
-    useFooter: false
+    private: 'public'
+    // useHeader: true,
+    // useSidebar: true,
+    // useFooter: false
   },
   {
     path: paths.discuss,
@@ -170,27 +170,27 @@ export const AUTHEN_ROUTES: RouteType[] = [
     path: paths.login,
     element: <LazyLoginPage />,
     layout: null,
-    private: 'public',
-    useHeader: false,
-    useSidebar: false,
-    useFooter: false
+    private: 'public'
+    // useHeader: false,
+    // useSidebar: false,
+    // useFooter: false
   },
   {
     path: paths.signup,
     element: <LazySignupPage />,
     layout: null,
-    private: 'public',
-    useHeader: false,
-    useSidebar: false,
-    useFooter: false
+    private: 'public'
+    // useHeader: false,
+    // useSidebar: false,
+    // useFooter: false
   },
   {
     path: paths.forgetPassword,
     element: <LazyForgetPasswordPage />,
     layout: null,
-    private: 'public',
-    useHeader: false,
-    useSidebar: false,
-    useFooter: false
+    private: 'public'
+    // useHeader: false,
+    // useSidebar: false,
+    // useFooter: false
   }
 ];

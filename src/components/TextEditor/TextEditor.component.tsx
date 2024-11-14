@@ -9,7 +9,7 @@ import './TextEditor.style.scss';
 import { ImageType } from '../../types/common';
 
 type TextEditorProps = {
-  key: string;
+  keyEditor: string;
   buttonTitle?: string;
   buttonFunction?: (content: string) => void;
   content: string;
@@ -19,7 +19,7 @@ type TextEditorProps = {
 };
 
 const TextEditorComponent: React.FC<TextEditorProps> = ({
-  key,
+  keyEditor,
   content,
   setContent,
   postImages,
@@ -59,7 +59,7 @@ const TextEditorComponent: React.FC<TextEditorProps> = ({
       )}
       <div className={`text-editor-wraper h-full ${buttonTitle && 'button-title'}`}>
         <Editor
-          key={key + theme}
+          key={keyEditor + theme}
           onInit={() => {
             setIsLoading(false);
           }}
