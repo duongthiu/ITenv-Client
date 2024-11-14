@@ -1,0 +1,9 @@
+.tab-wraper {
+  .ant-tabs-tab-btn {
+    display: flex !important;
+    align-items: center !important;
+    .ant-tabs-tab-icon {
+      margin-inline-end: 6px !important;
+    }
+  }
+}

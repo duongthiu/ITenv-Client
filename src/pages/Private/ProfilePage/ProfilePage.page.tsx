@@ -1,28 +1,48 @@
-import { Button, Image, Skeleton } from 'antd';
+import { Button, Image, Skeleton, Tabs } from 'antd';
 import { useMemo, useState } from 'react';
 import { FaEdit } from 'react-icons/fa';
-import { useAppSelector } from '../../../redux/app/hook';
-import ProfileFriendTab from './components/ProfileFriendTab/ProfileFriendTab.component';
-import ProfilePageSidebar from './components/ProfilePageSidebar';
-import { useParams } from 'react-router-dom';
+import { VscCommentDiscussion } from 'react-icons/vsc';
+import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
+import { useAppSelector } from '../../../redux/app/hook';
 import { getUserById } from '../../../services/user/user.service';
-import ActivityTab from './components/ActivityTab/ActivityTab.component';
 import useFriendStatus from '../../../utils/hooks/useFriendStatus.hook';
-
+import StatusButton from '../../Public/SearchPage/components/StatusButton';
+import ActivityTab from './components/ActivityTab/ActivityTab.component';
+import ListPost from './components/ListPost/ListPost.component';
+import ProfileFriendTab from './components/ProfileFriendTab/ProfileFriendTab.component';
+import './components/ListPost/ListPost.style.scss';
+import { IoCodeSlashOutline } from 'react-icons/io5';
+import { paths } from '../../../routes/paths';
 const ProfilePage = () => {
-  const [isEditing, setIsEditing] = useState(false);
   const { user: userSelector } = useAppSelector((state) => state.user);
-
   const { userId } = useParams();
+  const navigate = useNavigate();
   const isOwnProfile = useMemo(() => userSelector?._id === userId, [userSelector?._id, userId]);
   const { data: userData, isLoading: isLoadingUser } = useSWR('profile' + userId, () => getUserById(userId!));
-  console.log(userId);
+
   const handleEditProfile = () => {
-    setIsEditing(!isEditing);
+    navigate(paths.editProfile.replace(':tab', ''));
   };
-  const status = useFriendStatus({ friendWithMe: userData?.data?.friendWithMe, userId: userSelector?._id || '' });
-  console.log(status);
+  const status = useFriendStatus({
+    friendWithMe: userData?.data?.friendWithMe,
+    currentUserId: userSelector?._id || ''
+  });
+  const TabItems = [
+    {
+      key: '1',
+      label: `Discuss`,
+      children: <ListPost userId={userData?.data?._id || ''} />,
+      icon: <VscCommentDiscussion size={20} />
+    },
+    {
+      key: '2',
+      label: `Problems`,
+      children: 'tab 2',
+      icon: <IoCodeSlashOutline size={20} />
+    }
+  ];
+  
   return (
     <div className="min-h-screen py-8">
       <div className="mx-auto px-4">
@@ -38,14 +58,15 @@ const ProfilePage = () => {
                   <Skeleton round />
                 </div>
               ) : (
-                <div>
+                <div className="w-full">
                   <div className="avatar-wrapper absolute -top-24 rounded-full">
                     <Image
+                      loading="lazy"
                       className="h-40 w-40 rounded-full border-4 border-white shadow-lg"
                       src={userData?.data?.avatar}
                     />
                   </div>
-                  <div className="md:mt-0 md:ml-40 mt-16 pr-20">
+                  <div className="md:mt-0 md:ml-40 mt-16">
                     <div className="flex items-center justify-between">
                       <h1 className="text-[2.4rem] font-bold">{userData?.data?.username}</h1>
                       {isOwnProfile && (
@@ -57,7 +78,17 @@ const ProfilePage = () => {
                           <FaEdit className="mr-2 inline" /> Edit Profile
                         </Button>
                       )}
+                      {!isOwnProfile && (
+                        <div className="ml-4 rounded-lg">
+                          <StatusButton
+                            relationship={status}
+                            userId={userId || ''}
+                            relationshipId={userData?.data?.friendWithMe?._id || ''}
+                          />
+                        </div>
+                      )}
                     </div>
+
                     {/* <p className="mt-1 text-gray-600">{profileData.title}</p>
                 <p className="mt-2 text-gray-500">{profileData.location}</p> */}
                   </div>
@@ -66,18 +97,18 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
-        <div className="flex">
-          <div className="">
+        <div className="flex h-full">
+          <div className="flex-none">
             <ProfileFriendTab userId={userData?.data?._id || ''} />
           </div>
-          <div className="flex-1">
+          <div className="my-5 flex h-full flex-1 flex-auto flex-col gap-5">
             <ActivityTab userId={userData?.data?._id || ''} />
-          </div>
-          <div className="">
-            <ProfilePageSidebar />
+
+            <div className="card tab-wraper h-full">
+              <Tabs type="card" defaultActiveKey="1" items={TabItems} />
+            </div>
           </div>
         </div>
-        {/* Right Column - Projects & Social */}
       </div>
     </div>
   );

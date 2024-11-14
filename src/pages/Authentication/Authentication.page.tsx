@@ -2,18 +2,18 @@
 import { useGoogleLogin } from '@react-oauth/google';
 import { Typography } from 'antd';
 import { ChangeEvent, useEffect, useMemo, useState } from 'react';
-import FacebookLogin, { ReactFacebookLoginInfo } from 'react-facebook-login';
-import { FaFacebookF, FaGithub, FaGoogle } from 'react-icons/fa';
+import { ReactFacebookLoginInfo } from 'react-facebook-login';
+import { FaGithub, FaGoogle } from 'react-icons/fa';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Alignment, Fit, Layout, RiveState, StateMachineInput, useRive, useStateMachineInput } from 'rive-react';
 import logo from '../../assets/logo/logo.png';
+import { useAppSelector } from '../../redux/app/hook';
 import { paths } from '../../routes/paths';
 import { authenWithGithub, authenWithGoogle } from '../../services/authentication.service';
-import './Authentication.style.scss';
-import { useAppSelector } from '../../redux/app/hook';
-import { useAuth } from '../../utils/hooks/useAuth.hook';
 import { notifyError, notifySuccess } from '../../utils/helpers/notify';
+import { useAuth } from '../../utils/hooks/useAuth.hook';
 import LoadingPage from '../commons/LoadingPage';
+import './Authentication.style.scss';
 const STATE_MACHINE_NAME = 'Login Machine';
 export type AuthenticationProps = {
   onUsernameFocus: () => void;

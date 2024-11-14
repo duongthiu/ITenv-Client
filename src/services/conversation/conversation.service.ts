@@ -5,7 +5,6 @@ import { ConversationType } from '../../types/ConversationType';
 export const getConversationsByUserId = async (
   queryOptions: QueryOptions
 ): Promise<ResponsePagination<ConversationType[]>> => {
-  console.log('query', queryOptions);
   const data = await get(import.meta.env.VITE_APP_API + 'conversation/get?', {
     params: queryOptions
   });

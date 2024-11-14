@@ -29,6 +29,7 @@ const LazyMessagesPage = LazyLoadComponent(() => import('../pages/Private/Messag
 const LazyProfilePage = LazyLoadComponent(() => import('../pages/Private/ProfilePage/ProfilePage.page'))(true);
 const LazyProblemListPage = LazyLoadComponent(() => import('../pages/Public/ProblemPage/ProblemListPage'))(true);
 const LazySearchPage = LazyLoadComponent(() => import('../pages/Public/SearchPage/SearchPage'))(true);
+const LazyEditProfile = LazyLoadComponent(() => import('../pages/Private/EditProfilePage/EditProfilePage.page'))(true);
 
 export const PUBLIC_ROUTES: RouteType[] = [
   {
@@ -43,7 +44,7 @@ export const PUBLIC_ROUTES: RouteType[] = [
   {
     path: paths.home,
     element: <LazyHomePage />,
-    layout: DefaultLayout,
+    layout: null,
     private: 'public',
     useHeader: true,
     useSidebar: true,
@@ -108,10 +109,22 @@ export const PUBLIC_ROUTES: RouteType[] = [
     path: paths.profile,
     element: <LazyProfilePage />,
     layout: DefaultLayout,
-    private: 'auth',
+    private: 'public',
     useHeader: true,
     useSidebar: false,
     useFooter: false
+  },
+  {
+    path: paths.editProfile,
+    element: <LazyEditProfile />,
+    layout: null,
+    private: 'auth'
+  },
+  {
+    path: paths.editProfileWithoutTab,
+    element: <LazyEditProfile />,
+    layout: null,
+    private: 'auth'
   },
   {
     path: paths.problems,

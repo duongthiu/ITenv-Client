@@ -1,16 +1,17 @@
 import { Image, Tooltip } from 'antd';
 import React, { useRef, useState } from 'react';
 import { AiFillCloseCircle, AiOutlineFileAdd } from 'react-icons/ai';
+import { FaSpinner } from 'react-icons/fa';
 import { IoMdSend } from 'react-icons/io';
 import { RiImageAddLine } from 'react-icons/ri';
 import InputWithEmoji from '../../../../../components/commons/InputWithEmoji/InputWithEmoji';
 import { useSocket } from '../../../../../context/SocketContext';
 import { useAppSelector } from '../../../../../redux/app/hook';
-import { MessageType } from '../../../../../types/ConversationType';
+import { sendMessage } from '../../../../../services/message/message.service';
+import { MessageType, PreviewImage } from '../../../../../types/ConversationType';
 import { getBase64 } from '../../../../../utils/helpers/getBase64';
 import { notifyError } from '../../../../../utils/helpers/notify';
 
-type PreviewImage = { name: string; path: string };
 type MessagePageFooterProps = {
   conversationId?: string;
   receiver?: string;
@@ -23,29 +24,42 @@ const MessagePageFooter: React.FC<MessagePageFooterProps> = ({ conversationId, r
   const { user } = useAppSelector((state) => state.user);
   const [previewImage, setPreviewImage] = useState<PreviewImage[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [files, setFiles] = useState<FileList>();
   const onEmojiClick = (emojiObject: any) => {
     setMessage((prev) => prev + emojiObject.emoji);
   };
 
   const handleSendMessage = async () => {
     try {
-      if (socket && message.trim()) {
-        const messageData = {
-          content: message.trim(),
-          hasText: true,
-          hasFile: false,
-          conversationId: conversationId || null,
-          receiver: receiver || null,
-          isSeenBy: [user?._id]
-        };
-
-        socket.emit('message', messageData);
-        setMessage('');
-        setMessageList((prev: any) => [
-          ...prev,
-          { sender: { _id: user?._id, username: user?.username, avatar: user?.avatar }, ...messageData }
-        ]);
+      if (socket && (message.trim() || previewImage.length)) {
+        setIsLoading(true);
+        const formData = new FormData();
+        formData.append('content', message.trim());
+        formData.append('hasText', message.trim() ? 'true' : 'false');
+        formData.append('hasFile', previewImage.length > 0 ? 'true' : 'false');
+        formData.append('conversationId', conversationId || '');
+        formData.append('receiver', receiver || '');
+        if (files) {
+          Array.from(files).forEach((file) => {
+            formData.append('file', file);
+          });
+        }
+        formData.append('isSeenBy', JSON.stringify([user?._id]));
+        const messageRes = await sendMessage(formData);
+        if (messageRes?.success) {
+          socket.emit('message', messageRes?.data);
+          setIsLoading(false);
+          setMessage('');
+          setPreviewImage([]);
+          setMessageList((prev: any) => [
+            ...prev,
+            { sender: { _id: user?._id, username: user?.username, avatar: user?.avatar }, ...messageRes?.data }
+          ]);
+        } else {
+          setIsLoading(false);
+          notifyError(messageRes?.message || 'Error sending message');
+        }
       }
     } catch (error) {
       notifyError('Error sending message');
@@ -64,6 +78,7 @@ const MessagePageFooter: React.FC<MessagePageFooterProps> = ({ conversationId, r
         imgs.push({ name: file.name, path: res });
       }
       setPreviewImage(imgs);
+      setFiles(e.target.files); // Now works without error
     }
   };
 
@@ -128,14 +143,18 @@ const MessagePageFooter: React.FC<MessagePageFooterProps> = ({ conversationId, r
         <InputWithEmoji onEmojiClick={onEmojiClick} />
       </div>
 
-      <Tooltip title="Send">
-        <IoMdSend
-          className="cursor-pointer duration-200 hover:text-primary-color-hover"
-          color="#21a1d3"
-          size={25}
-          onClick={handleSendMessage}
-        />
-      </Tooltip>
+      {isLoading ? (
+        <FaSpinner size={25} color="#21a1d3" className="text:text-primary-color animate-spin" />
+      ) : (
+        <Tooltip title="Send">
+          <IoMdSend
+            className="cursor-pointer duration-200 hover:text-primary-color-hover"
+            color="#21a1d3"
+            size={25}
+            onClick={handleSendMessage}
+          />
+        </Tooltip>
+      )}
     </div>
   );
 };

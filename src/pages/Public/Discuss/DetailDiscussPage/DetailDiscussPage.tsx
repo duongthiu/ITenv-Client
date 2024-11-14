@@ -18,6 +18,7 @@ import { notifyError } from '../../../../utils/helpers/notify';
 import useVoteStatus from '../../../../utils/hooks/useVoteStatus.hook';
 import LoadingPage from '../../../commons/LoadingPage';
 import ListCommentComponent from '../components/ListComment/ListComment.component';
+import { AnonymousIcon } from '../../../../utils/icons/Anonymous.icon';
 const DetailDiscussPage = () => {
   const { id } = useParams<{ id: string }>();
   const socket = useSocket();
@@ -130,9 +131,15 @@ const DetailDiscussPage = () => {
           </div>
           <div className="flex-auto">
             <div className="mb-4 flex items-center gap-4 text-[1.2rem]">
-              <Avatar size={40} src={postData?.data?.postedBy?.avatar} />
+              {postData?.data?.isAnonymous ? (
+                <Avatar icon={<AnonymousIcon />} />
+              ) : (
+                <Avatar size={40} src={postData?.data?.postedBy?.avatar} />
+              )}
               <div>
-                <span className="mr-2 text-[1.4rem] font-semibold">{postData?.data?.postedBy?.username}</span>
+                <span className="mr-2 text-[1.4rem] font-semibold">
+                  {postData?.data?.isAnonymous ? 'Anonymous' : postData?.data?.postedBy?.username}
+                </span>
                 <span className="sub-title">{new Date(postData?.data?.createdAt || '').toLocaleString()}</span>
               </div>
             </div>

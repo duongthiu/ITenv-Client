@@ -19,9 +19,11 @@ export type MessageType = {
   hasText: boolean;
   hasFile: boolean;
   content: string;
-  fileUrl?: string;
+  file?: PreviewImage[];
+  fileUrl?: string[];
   isRecalled: boolean;
   isDeleted: boolean;
   parentMessage?: MessageType;
   createdAt?: Date;
 };
+export type PreviewImage = { name: string; path: string };

@@ -1,11 +1,11 @@
 import { CheckSquareFilled, EyeFilled, MessageFilled, StarFilled } from '@ant-design/icons';
 import { Tag } from 'antd';
-import React from 'react';
+import React, { memo } from 'react';
 import { cn } from '../../../../utils/helpers/cn';
 
-const ProfileSidebar: React.FC = () => {
+const ProfileSidebar: React.FC = memo(() => {
   return (
-    <div className={cn('card mr-0 mt-5 flex h-fit flex-col text-[1.4rem] shadow-xl duration-200')}>
+    <div className={cn('mr-0 mt-5 flex h-fit flex-col text-[1.4rem] duration-200')}>
       <div className="mt-4">
         <h3 className="text-[1.6rem] font-semibold">Community Stats</h3>
         <div className="mt-2">
@@ -40,7 +40,7 @@ const ProfileSidebar: React.FC = () => {
       </div>
     </div>
   );
-};
+});
 
 // Helper components
 interface StatItemProps {

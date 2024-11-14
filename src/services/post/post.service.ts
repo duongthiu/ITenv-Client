@@ -1,6 +1,6 @@
 import { get, post } from '../../apis';
 import { CategoryType } from '../../types/CategoryType';
-import { ResponseAxios, ResponsePagination } from '../../types/common';
+import { QueryOptions, ResponseAxios, ResponsePagination } from '../../types/common';
 import { TypeVoteEnum } from '../../types/enum/typeVote.enum';
 import { PostType } from '../../types/PostType';
 
@@ -40,4 +40,12 @@ export const votePostById = async (id: string, typeVote: TypeVoteEnum): Promise<
 export const getCategory = async (): Promise<ResponsePagination<CategoryType[]>> => {
   const data = await get(import.meta.env.VITE_APP_API + 'category/posts/get-cates');
   return data as unknown as ResponsePagination<CategoryType[]>;
+};
+
+export const getPostByUserId = async (
+  userId: string,
+  queryOptions: QueryOptions
+): Promise<ResponsePagination<PostType[]>> => {
+  const data = await get(import.meta.env.VITE_APP_API + 'post/get/' + userId, { params: queryOptions });
+  return data as unknown as ResponsePagination<PostType[]>;
 };

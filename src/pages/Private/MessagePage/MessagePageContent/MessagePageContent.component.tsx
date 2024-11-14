@@ -141,8 +141,10 @@ const MessagePageContent: React.FC<MessagePageContentProps> = ({
         </div>
       </div>
       <Divider className="my-[8px]" />
-      <div className="flex h-full flex-col-reverse gap-3 overflow-y-auto p-5">
-        <div className="mt-auto">{messageList?.map((message) => <MessageItem message={message} />)}</div>
+      <div className="flex h-full flex-col-reverse gap-0 overflow-y-auto p-5">
+        <div className="mt-auto flex flex-col gap-2">
+          {messageList?.map((message) => <MessageItem message={message} />)}
+        </div>
       </div>
       <MessagePageFooter conversationId={conversation?._id} setMessageList={setMessageList} />
     </div>

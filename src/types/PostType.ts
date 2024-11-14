@@ -13,6 +13,7 @@ export type PostType = {
   createdAt: string;
   updatedAt: string;
   totalComment?: number;
+  isAnonymous?: boolean;
 };
 
 export type CommentType = {

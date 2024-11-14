@@ -6,13 +6,14 @@ import { getAllUser } from '../../../services/user/user.service';
 import { ResponsePagination } from '../../../types/common';
 import { UserType } from '../../../types/UserType';
 import PersonCard from './components/PersonCard/PersonCard.component';
+import { useAppSelector } from '../../../redux/app/hook';
 
 const PeopleSearch = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const search = useLocation().search;
   const q = new URLSearchParams(search).get('q') || '';
-
+  const { user: userSelector } = useAppSelector((state) => state.user);
   const {
     data: userList,
     error,
@@ -41,8 +42,10 @@ const PeopleSearch = () => {
           <Empty />
         ) : (
           <div>
-            <div className="grid grid-cols-4 gap-6">
-              {userList?.data?.map((user) => <PersonCard key={user._id} user={user} />)}
+            <div className="grid grid-cols-5 gap-6">
+              {userList?.data?.map(
+                (user) => userSelector?._id !== user?._id && <PersonCard key={user._id} user={user} />
+              )}
             </div>
             {/* Pagination */}
             <div className="mt-6 flex justify-end">

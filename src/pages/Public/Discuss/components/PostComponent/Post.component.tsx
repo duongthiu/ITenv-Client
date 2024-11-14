@@ -7,6 +7,7 @@ import './Post.style.scss';
 import { AnonymousIcon } from '../../../../../utils/icons/Anonymous.icon';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../../../../redux/app/hook';
+import { paths } from '../../../../../routes/paths';
 type PostComponentProps = {
   post: PostType;
 };
@@ -36,7 +37,7 @@ const PostComponent: React.FC<PostComponentProps> = ({ post }) => {
     <motion.div
       key={post._id}
       className="group mb-6 cursor-pointer border-b-[1px] p-3"
-      onClick={() => navigate(`${post?._id}`)}
+      onClick={() => navigate(paths.detailDiscuss2.replace(':id', post?._id))}
     >
       <div className="flex items-center justify-between space-x-8">
         <div className="flex flex-col gap-5">
@@ -59,7 +60,8 @@ const PostComponent: React.FC<PostComponentProps> = ({ post }) => {
                 </div>
               </div>
               <p className="sub-title text-[1.2rem] group-hover:text-primary-color">
-                Posted by {post?.postedBy?.username || 'Anonymous'} on {new Date(post.createdAt).toLocaleString()}
+                Posted by {!post?.isAnonymous ? post?.postedBy?.username : 'Anonymous'} on{' '}
+                {new Date(post.createdAt).toLocaleString()}
               </p>
             </div>
           </div>

@@ -31,7 +31,7 @@ const StatusButton: React.FC<StatusButtonProps> = ({ relationship, userId, relat
         </Button>
       )}
       {relationshipState === UseFriendStatusTypeEnum.PENDING_RECEIVING && (
-        <div className="flex items-center justify-end gap-3">
+        <div className="flex w-full items-center justify-end gap-3">
           <Button type="default" className="flex-1" onClick={handleRejectFriendRequest}>
             Decline
           </Button>

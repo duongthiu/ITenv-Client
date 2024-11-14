@@ -21,5 +21,7 @@ export const paths = {
   messageWithoutId: '/messages/',
   profile: '/profile/:userId',
   me: '/profile/me',
-  search: '/search'
+  search: '/search',
+  editProfile: '/edit-profile/:tab',
+  editProfileWithoutTab : '/edit-profile/'
 };

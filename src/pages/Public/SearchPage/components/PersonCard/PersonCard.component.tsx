@@ -1,5 +1,5 @@
 import { Avatar } from 'antd';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../../../../redux/app/hook';
 import { UserType } from '../../../../../types/UserType';
@@ -15,9 +15,9 @@ type PersonCardProps = {
 const PersonCard: React.FC<PersonCardProps> = ({ user }) => {
   const navigate = useNavigate();
   const { user: userSelector } = useAppSelector((state) => state.user);
-
+  const isOwnProfile = useMemo(() => userSelector?._id === user?._id, [userSelector?._id, user?._id]);
   const relationship = useFriendStatus({ friendWithMe: user?.friendWithMe, currentUserId: userSelector?._id || '' });
-
+  
   return (
     <div
       key={user._id}
@@ -37,15 +37,19 @@ const PersonCard: React.FC<PersonCardProps> = ({ user }) => {
             <p className="text-center">Active {timeAgo(user.createdAt!)}</p>
             <div className="">
               <p className="flex items-center text-gray-500"></p>
-              <p className="mt-1 text-gray-500">
-                <span className="text-center text-[1.2rem]">{user?.friends?.length || 0} connections</span>
+              <p className="my-3 mt-1 text-center text-gray-500">
+                <span className="text-center text-[1.2rem]">
+                  {user?.friends?.length || 0} {(user?.friends?.length || 0) > 1 ? 'friends' : 'friend'}
+                </span>
               </p>
             </div>
-            <StatusButton
-              relationship={relationship}
-              userId={user?._id}
-              relationshipId={user.friendWithMe?._id || ''}
-            />
+            {!isOwnProfile && (
+              <StatusButton
+                relationship={relationship}
+                userId={user?._id}
+                relationshipId={user.friendWithMe?._id || ''}
+              />
+            )}
           </div>
         </div>
       </div>

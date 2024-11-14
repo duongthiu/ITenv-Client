@@ -22,3 +22,4 @@ export type UserType = {
   friendWithMe?: FriendType;
   createdAt?: Date;
 };
+

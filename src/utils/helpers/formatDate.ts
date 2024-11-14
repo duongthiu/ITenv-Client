@@ -49,3 +49,32 @@ function getDaySuffix(day: number): string {
       return 'th';
   }
 }
+
+export function formatDateWithoutTime(input: Date | number | string): string {
+  const date = input instanceof Date ? input : new Date(input);
+
+  if (isNaN(date.getTime())) {
+    throw new Error('Invalid date');
+  }
+
+  const months: string[] = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+
+  const day: number = date.getDate();
+  const daySuffix: string = getDaySuffix(day);
+  const month: string = months[date.getMonth()];
+  const year: number = date.getFullYear();
+  return `${month} ${day}${daySuffix} ${year}`;
+}

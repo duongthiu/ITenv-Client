@@ -1,11 +1,12 @@
-import { Empty, Skeleton, Tooltip } from 'antd';
+import { Divider, Empty, Skeleton, Tooltip } from 'antd';
 import Link from 'antd/es/typography/Link';
-import React from 'react';
+import React, { memo } from 'react';
 import useSWR from 'swr';
 import { getFriendsByUserId } from '../../../../../services/user/user.service';
 import { UserType } from '../../../../../types/UserType';
 import { useNavigate } from 'react-router-dom';
 import { paths } from '../../../../../routes/paths';
+import ProfileSidebar from '../ProfilePageSidebar';
 
 type ProfileFriendTabProps = {
   userId: string;
@@ -13,8 +14,9 @@ type ProfileFriendTabProps = {
 
 type FriendUserType = Pick<UserType, '_id' | 'username' | 'avatar'>;
 
-const ProfileFriendTab: React.FC<ProfileFriendTabProps> = ({ userId }) => {
+const ProfileFriendTab: React.FC<ProfileFriendTabProps> = memo(({ userId }) => {
   const { data: friendData, isLoading } = useSWR(`getFriendsByUserId-${userId}`, () => getFriendsByUserId(userId));
+  console.log(friendData);
   const navigate = useNavigate();
   const FriendBlock: React.FC<{ user: FriendUserType }> = ({ user }) => {
     return (
@@ -23,8 +25,8 @@ const ProfileFriendTab: React.FC<ProfileFriendTabProps> = ({ userId }) => {
           className="flex cursor-pointer flex-col items-center gap-3 overflow-x-hidden"
           onClick={() => navigate(paths.profile.replace(':userId', user._id))}
         >
-          <img src={user.avatar} alt="avatar" className="aspect-square w-[100px] rounded-md" />
-          <div className="w-[100px]">
+          <img src={user.avatar} alt="avatar" className="aspect-square w-[70px] rounded-md" />
+          <div className="w-[70px]">
             <p className="truncate text-center text-[1.2rem] font-bold">{user.username}</p>
           </div>
         </div>
@@ -42,17 +44,25 @@ const ProfileFriendTab: React.FC<ProfileFriendTabProps> = ({ userId }) => {
         {friendData?.total || 0} {friendData?.total === 1 ? 'friend' : 'friends'}
       </p>
       {friendData?.data?.length === 0 && <Empty />}
-      {isLoading && <Skeleton active />}
+      {isLoading && (
+        <div className="flex gap-5">
+          {[1, 2, 3].map((_) => (
+            <Skeleton.Image className="w-[70px]" active />
+          ))}
+        </div>
+      )}
       <div className="grid grid-cols-3 gap-5">
-        {friendData?.data?.map((friend) => {
+        {friendData?.data?.slice(0, 9)?.map((friend) => {
           const friendUser = friend.receiver?._id === userId ? friend.sendBy : friend.receiver;
           return typeof friendUser === 'object' && friendUser !== null ? (
             <FriendBlock key={friendUser._id} user={friendUser} />
           ) : null;
         })}
       </div>
+      <Divider />
+      <ProfileSidebar />
     </div>
   );
-};
+});
 
 export default ProfileFriendTab;

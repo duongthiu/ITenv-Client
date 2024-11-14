@@ -70,9 +70,13 @@ function App() {
                     key={index}
                     path={route.path}
                     element={
-                      <Layout useHeader={route.useHeader} useSidebar={route.useSidebar} useFooter={route.useFooter}>
-                        {route.element}
-                      </Layout>
+                      Layout === Fragment ? (
+                        <Fragment> {route.element}</Fragment>
+                      ) : (
+                        <Layout useHeader={route.useHeader} useSidebar={route.useSidebar} useFooter={route.useFooter}>
+                          {route.element}
+                        </Layout>
+                      )
                     }
                   ></Route>
                 );

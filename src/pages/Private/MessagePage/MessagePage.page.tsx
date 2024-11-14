@@ -1,14 +1,14 @@
-import { Empty, UploadProps } from 'antd';
+import { Empty } from 'antd';
 import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useSocket } from '../../../context/SocketContext';
+import { paths } from '../../../routes/paths';
 import { getConversationsByUserId } from '../../../services/conversation/conversation.service';
 import { QueryOptions } from '../../../types/common';
 import { ConversationType } from '../../../types/ConversationType';
 import { usePagination } from '../../../utils/hooks/usePagination.hook';
 import MessageSidebar from './components/sidebar/MessageSidebar';
 import MessagePageContent from './MessagePageContent/MessagePageContent.component';
-import { useNavigate, useParams } from 'react-router-dom';
-import { paths } from '../../../routes/paths';
-import { useSocket } from '../../../context/SocketContext';
 
 const MessagePage = () => {
   const socket = useSocket();
