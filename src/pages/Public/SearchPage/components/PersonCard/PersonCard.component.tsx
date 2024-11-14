@@ -16,8 +16,9 @@ const PersonCard: React.FC<PersonCardProps> = ({ user }) => {
   const navigate = useNavigate();
   const { user: userSelector } = useAppSelector((state) => state.user);
   const isOwnProfile = useMemo(() => userSelector?._id === user?._id, [userSelector?._id, user?._id]);
+
   const relationship = useFriendStatus({ friendWithMe: user?.friendWithMe, currentUserId: userSelector?._id || '' });
-  
+  console.log(user?.friendWithMe?.sendBy, userSelector?._id);
   return (
     <div
       key={user._id}

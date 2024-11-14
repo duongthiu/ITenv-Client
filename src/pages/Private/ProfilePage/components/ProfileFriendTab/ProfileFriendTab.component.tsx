@@ -25,7 +25,7 @@ const ProfileFriendTab: React.FC<ProfileFriendTabProps> = memo(({ userId }) => {
           className="flex cursor-pointer flex-col items-center gap-3 overflow-x-hidden"
           onClick={() => navigate(paths.profile.replace(':userId', user._id))}
         >
-          <img src={user.avatar} alt="avatar" className="aspect-square w-[70px] rounded-md" />
+          <img src={user.avatar} alt="avatar" className="aspect-square w-[70px] rounded-md object-cover" />
           <div className="w-[70px]">
             <p className="truncate text-center text-[1.2rem] font-bold">{user.username}</p>
           </div>

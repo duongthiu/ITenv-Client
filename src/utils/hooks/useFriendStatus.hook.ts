@@ -21,7 +21,8 @@ const useFriendStatus = (data: UseFriendStatusType): UseFriendStatusTypeEnum => 
   }
 
   if (friendWithMe.status === EnumFriend.TYPE_BLOCKED) {
-    return friendWithMe.isBlockBy?._id === currentUserId
+    return friendWithMe.isBlockBy?._id === currentUserId ||
+      (friendWithMe.isBlockBy as unknown as string) === currentUserId
       ? UseFriendStatusTypeEnum.BLOCKED
       : UseFriendStatusTypeEnum.NOT_FRIEND;
   }
@@ -31,7 +32,7 @@ const useFriendStatus = (data: UseFriendStatusType): UseFriendStatusTypeEnum => 
   }
 
   if (friendWithMe.status === EnumFriend.TYPE_PENDING) {
-    return friendWithMe.sendBy._id === currentUserId
+    return friendWithMe.sendBy._id === currentUserId || (friendWithMe.sendBy as unknown as string) === currentUserId
       ? UseFriendStatusTypeEnum.PENDING_SENDING
       : UseFriendStatusTypeEnum.PENDING_RECEIVING;
   }

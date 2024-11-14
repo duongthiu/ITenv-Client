@@ -6,12 +6,13 @@ export const getMessageByConversationId = async (
   conversationId: string,
   queryOptions: QueryOptions
 ): Promise<ResponsePagination<MessageType[]>> => {
-  const data = await get(import.meta.env.VITE_APP_API + 'message/get-mess/' + conversationId, {
+  const data = await get(import.meta.env.VITE_APP_API + 'messages/' + conversationId, {
     params: queryOptions
   });
   return data as unknown as ResponsePagination<MessageType[]>;
 };
+
 export const sendMessage = async (data: FormData): Promise<ResponsePagination<MessageType>> => {
-  const result = await post(import.meta.env.VITE_APP_API + 'message/post-mess', data);
-  return result;
+  const result = await post(import.meta.env.VITE_APP_API + 'messages', data);
+  return result as ResponsePagination<MessageType>;
 };

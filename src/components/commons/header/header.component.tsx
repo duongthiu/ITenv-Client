@@ -1,10 +1,9 @@
 import { Anchor, Button, Form } from 'antd';
 import { AnchorLinkItemProps } from 'antd/es/anchor/Anchor';
-import React, { memo, useEffect } from 'react';
+import React, { memo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import logo from '../../../assets/logo/logo.png';
-import { setTheme, THEME } from '../../../redux/app/app.slice';
-import { useAppDispatch, useAppSelector } from '../../../redux/app/hook';
+import { useAppSelector } from '../../../redux/app/hook';
 import { paths } from '../../../routes/paths';
 import FriendPopover from './components/Friends/FriendPopover.component';
 import MessagePopover from './components/Message/MessagePopover.component';
@@ -16,7 +15,6 @@ const HeaderComponent: React.FC = memo(() => {
   const navigate = useNavigate();
   const location = useLocation();
   const user = useAppSelector((state) => state.user);
-  const dispatch = useAppDispatch();
 
   const menuItems: AnchorLinkItemProps[] = [
     {
@@ -47,12 +45,6 @@ const HeaderComponent: React.FC = memo(() => {
     e.preventDefault();
     navigate(link.href);
   };
-
-  useEffect(() => {
-    if (location.pathname === paths.home) {
-      dispatch(setTheme(THEME.LIGHT));
-    }
-  }, [location.pathname, dispatch]);
 
   return (
     // header-wraper box

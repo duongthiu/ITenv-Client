@@ -77,7 +77,7 @@ export const useFriendAction = (data: FriendActionProps) => {
               relationshipId: relationshipId
             };
             socket.emit('notify', notificationPayload);
-            setRelationshipState && setRelationshipState(UseFriendStatusTypeEnum.PENDING_SENDING);
+            setRelationshipState && setRelationshipState(UseFriendStatusTypeEnum.FRIEND);
             mutate && mutate();
           }
         } else {

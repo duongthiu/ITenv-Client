@@ -36,7 +36,7 @@ const PostComponent: React.FC<PostComponentProps> = ({ post }) => {
   return (
     <motion.div
       key={post._id}
-      className="group mb-6 cursor-pointer border-b-[1px] p-3"
+      className="group mb-6 cursor-pointer border-b-[1px] p-3 duration-300 hover:translate-x-[20px]"
       onClick={() => navigate(paths.detailDiscuss2.replace(':id', post?._id))}
     >
       <div className="flex items-center justify-between space-x-8">

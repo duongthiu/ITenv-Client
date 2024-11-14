@@ -13,8 +13,6 @@ const DiscussPage = () => {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<string>(parentCateId || '');
 
-  console.log(activeCategory);
-
   const { data: categories, isLoading: isLoadingCate } = useSWR('category', getCategory);
   const cates = useMemo(() => {
     if (!categories?.data) return [];
@@ -35,7 +33,6 @@ const DiscussPage = () => {
       children: childCategoriesMap[parentCategory?._id || ''] || [] // Attach children if they exist
     }));
   }, [categories]);
-
   useEffect(() => {
     if (categories?.data?.length) {
       if (!parentCateId) {
@@ -65,7 +62,7 @@ const DiscussPage = () => {
           ))}
         </div>
       </header>
-      <Outlet />
+      <Outlet context={cates} />
     </div>
   );
 };

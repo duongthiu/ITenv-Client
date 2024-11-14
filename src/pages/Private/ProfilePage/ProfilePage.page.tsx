@@ -42,7 +42,7 @@ const ProfilePage = () => {
       icon: <IoCodeSlashOutline size={20} />
     }
   ];
-  
+
   return (
     <div className="min-h-screen py-8">
       <div className="mx-auto px-4">
@@ -62,7 +62,7 @@ const ProfilePage = () => {
                   <div className="avatar-wrapper absolute -top-24 rounded-full">
                     <Image
                       loading="lazy"
-                      className="h-40 w-40 rounded-full border-4 border-white shadow-lg"
+                      className="h-40 w-40 rounded-full border-4 border-white object-cover shadow-lg"
                       src={userData?.data?.avatar}
                     />
                   </div>
@@ -82,7 +82,7 @@ const ProfilePage = () => {
                         <div className="ml-4 rounded-lg">
                           <StatusButton
                             relationship={status}
-                            userId={userId || ''}
+                            userId={userData?.data?._id || ''}
                             relationshipId={userData?.data?.friendWithMe?._id || ''}
                           />
                         </div>

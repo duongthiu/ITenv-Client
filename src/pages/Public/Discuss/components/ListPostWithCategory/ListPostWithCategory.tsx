@@ -1,7 +1,7 @@
-import { Button, Divider, Drawer, Empty, Input, Pagination, PaginationProps, Skeleton } from 'antd';
+import { Button, Divider, Drawer, Empty, Input, Pagination, PaginationProps, Segmented, Skeleton } from 'antd';
 import React, { memo, useState } from 'react';
 import { FiSend } from 'react-icons/fi';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import TagMenu from '../../../../../components/post/TagMenu/TagMenu.component';
 import { getPostsWithCategoryId } from '../../../../../services/post/post.service';
@@ -11,7 +11,6 @@ import CreatePostPage from '../../../../Private/CreatePostPage/CreatePostPage.pa
 import './ListPostWithCategory.style.scss';
 type ListPostWithCategoryProps = {
   categoryId: string;
-  childCategories?: CategoryType[];
 };
 const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ categoryId }) => {
   const navigate = useNavigate();
@@ -41,28 +40,44 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
   const onClose = () => {
     setOpenDrawer(false);
   };
-
+  const cates = useOutletContext<CategoryType[]>();
+  console.log(cates);
+  const childCategories = cates.map((cate) => (cate._id === parentCateId ? cate.children : [])).flat();
+  const sortMenu = [
+    {
+      name: 'Hot',
+      key: 'hot'
+    },
+    {
+      name: 'Newest to Oldest',
+      key: 'newest'
+    },
+    {
+      name: 'Most Votes',
+      key: 'votes'
+    }
+  ];
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex gap-10">
-        {/* <div className="flex gap-40">
-          {childCategories && childCategories?.length > 0 && (
-            <Segmented
-              size="large"
-              className="w-fit"
-              options={childCategories?.map((category) => category.name) || []}
-              defaultValue={childCategories?.[0]?.name || ''}
-            />
-          )}
-        </div> */}
-      </div>
+      <div className="flex gap-10"></div>
 
       <div className="flex gap-4">
         {isLoading && <Skeleton active className="h-full" />}
         <main className={`flex h-fit flex-1 flex-col ${posts?.data?.length !== 0 && 'card'}`}>
+          {/* <div className="flex gap-40">
+            {childCategories && childCategories?.length > 0 && (
+              <Segmented
+                size="large"
+                className="w-fit"
+                options={childCategories?.map((category) => category.name) || []}
+                defaultValue={childCategories?.[0]?.name || ''}
+              />
+            )}
+          </div> */}
+          <div></div>
           <div className="flex items-center justify-between p-5 text-[1.4rem]">
             <div className="flex gap-5 text-[1.4rem]">
-              <div>Hot</div>
+              <Segmented size="large" className="w-fit" options={sortMenu.map((menu) => menu.name)} />
             </div>
             <div className="flex gap-5">
               <Input className="w-fit min-w-[300px]" placeholder="Search posts..." />
@@ -80,7 +95,7 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
           </div>
           <Divider className="my-[15px]" />
           {posts?.data?.length === 0 ? (
-            <div className="">
+            <div className=""> 
               <Empty className="" />
             </div>
           ) : (

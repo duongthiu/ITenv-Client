@@ -5,7 +5,7 @@ export type FriendType = {
   sendBy: Pick<UserType, '_id' | 'username' | 'avatar'>;
   receiver: Pick<UserType, '_id' | 'username' | 'avatar'>;
   status: EnumFriend;
-  isBlockBy: UserType;
+  isBlockBy: Pick<UserType, '_id' | 'username' | 'avatar'>;
   acceptedAt?: Date;
   createdAt?: Date;
 };

@@ -47,7 +47,6 @@ const CreatePostPage = () => {
     // post to the server
     try {
       setLoading(true);
-
       const deleteImage: { images: string[] } = { images: [] };
       for (const image of postImages) {
         if (content.indexOf(image.url) === -1) {
@@ -96,7 +95,7 @@ const CreatePostPage = () => {
         <div className="flex items-center justify-between">
           <div className="flex min-w-[500px] gap-5">
             <Input
-              size="middle"
+              size="large"
               className="max-w-[500px]"
               placeholder="Enter post title..."
               value={title}
@@ -104,11 +103,15 @@ const CreatePostPage = () => {
             />
             <Popover
               trigger={'click'}
-              content={<TagMenu selectedTags={selectedTags} setSelectedTags={setSelectedTags} />}
+              content={
+                <div className="h-[300px]">
+                  <TagMenu selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
+                </div>
+              }
               placement="bottom"
             >
               <Badge count={selectedTags.length}>
-                <Button type="dashed" icon={<TagOutlined />}>
+                <Button size="large" type="dashed" icon={<TagOutlined />}>
                   Tags
                 </Button>
               </Badge>

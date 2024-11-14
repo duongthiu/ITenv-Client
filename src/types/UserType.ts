@@ -1,3 +1,4 @@
+import { EnumGengerUser } from './enum/GenderEnum.enum';
 import { FriendType } from './FriendType';
 import { NotificationType } from './NotificationType';
 import { PostType } from './PostType';
@@ -13,7 +14,7 @@ export type UserType = {
   friends?: FriendType[] | Pick<UserType, '_id' | 'username' | 'avatar'>[];
   notifications?: NotificationType[];
   submissions: SubmissionType[];
-  gender?: number;
+  gender?: EnumGengerUser;
   status: boolean;
   lastOnline: Date;
   email: string;

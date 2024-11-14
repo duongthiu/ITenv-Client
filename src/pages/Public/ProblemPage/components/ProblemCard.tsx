@@ -44,7 +44,7 @@ const ContentCard: React.FC<ContentCardProps> = ({ title, slug, tags, votes, sav
     }
   };
   return (
-    <div className="card rounded-lg p-6 shadow-md">
+    <div className="border-b-[1px] px-3 pb-4">
       <h2
         className="mb-2 cursor-pointer text-[1.8rem] font-bold duration-200 hover:text-primary-color-hover"
         onClick={() => navigate(paths.singleProblem.replace(':slug', slug))}

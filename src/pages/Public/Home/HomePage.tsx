@@ -13,7 +13,7 @@ const HomePage = () => {
   // console.log(data);
   const navigate = useNavigate();
   return (
-    <div className="homepage-wrapper flex min-h-screen flex-col">
+    <div className="homepage-wrapper flex min-h-screen flex-col text-black">
       <img src={background} className="min-screen fixed w-full" alt="" />
       <HeaderComponent />
       <div className="relative flex w-full items-center justify-center">

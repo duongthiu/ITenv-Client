@@ -19,7 +19,12 @@ const BasicInfo: React.FC = () => {
       form.setFieldsValue({
         username: user.username,
         dob: user.dob ? dayjs(user.dob) : null,
-        gender: user.gender === 1 ? 'male' : user.gender === 2 ? 'female' : 'other',
+        gender:
+          user.gender === EnumGengerUser.GENDER_MALE
+            ? 'Male'
+            : user.gender === EnumGengerUser.GENDER_FEMALE
+              ? 'Female'
+              : 'Other',
         phoneNumber: user.phoneNumber || ''
       });
     }

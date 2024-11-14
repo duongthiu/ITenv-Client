@@ -1,4 +1,4 @@
-import { Input, Pagination, PaginationProps, Skeleton, Typography } from 'antd';
+import { Divider, Input, Pagination, PaginationProps, Select, Skeleton, Typography } from 'antd';
 import { useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import useSWR from 'swr';
@@ -7,6 +7,7 @@ import { ProblemType } from '../../../types/ProblemType';
 import { ResponsePagination } from '../../../types/common/response.type';
 import ContentCard from './components/ProblemCard';
 import { TagType } from '../../../types/TagType';
+import TagMenu from '../../../components/post/TagMenu/TagMenu.component';
 
 const ProblemListPage = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -29,23 +30,6 @@ const ProblemListPage = () => {
       </div>
     );
   }
-
-  const allTags: TagType[] = Array.from(
-    new Map(
-      problemList?.data
-        ?.flatMap((item: { tags: TagType[] }) => item.tags) // Flatten all tags arrays
-        .map((tag) => [tag._id, tag]) // Create a Map to deduplicate based on _id
-    ).values()
-  );
-
-  const handleTagToggle = (tag: string) => {
-    setSelectedTags((prevTags: any) => {
-      if (prevTags.includes(tag)) {
-        return prevTags.filter((t: any) => t !== tag);
-      }
-      return [...prevTags, tag];
-    });
-  };
 
   const handleSearch = (e: any) => {
     setSearchTerm(e.target.value);
@@ -73,60 +57,44 @@ const ProblemListPage = () => {
     setSearchTerm('');
   };
   return (
-    <div className="flex h-full gap-5">
-      <div className="flex h-full flex-1 flex-col px-4 py-5 pb-0">
-        <div className="card mb-8">
-          <Typography.Title level={3} className="font-mono">
-            Problem List
-          </Typography.Title>
-          <div className="">
-            <h2 className="mb-4 font-semibold">Filter by Tags</h2>
-            {isLoading ? (
-              <Skeleton className="mb-4" active />
-            ) : (
-              <div className="mb-4 flex flex-wrap gap-2">
-                {allTags?.map((tag: TagType) => (
-                  <button
-                    key={tag._id}
-                    onClick={() => handleTagToggle(tag._id)}
-                    className={`rounded-full px-3 py-1 font-medium ${
-                      selectedTags.includes(tag._id)
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                    } transition-colors duration-200`}
-                    aria-pressed={selectedTags.includes(tag._id)}
-                  >
-                    {tag.name}
-                  </button>
-                ))}
-              </div>
-            )}
-            <div className="flex items-center">
-              <Input
-                type="text"
-                placeholder="Search content..."
-                value={searchTerm}
-                onChange={handleSearch}
-                className="input flex-grow rounded-l-md border px-4 py-2 focus:outline-none focus:ring-2"
-                aria-label="Search content"
-              />
-              {(selectedTags.length > 0 || searchTerm) && (
-                <button
-                  onClick={clearFilters}
-                  className="rounded-r-md bg-red-500 px-4 py-2 text-white transition-colors duration-200 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-                  aria-label="Clear filters"
-                >
-                  <FaTimes />
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
+    <div className="flex h-full gap-5 py-5">
+      <div className="flex h-full flex-1 flex-col px-4 pb-0">
+        {/* <div className="card mb-8">
+         
+        </div> */}
         {isLoading ? (
           <Skeleton active />
         ) : (
           <div>
-            <div className="flex flex-col gap-4">
+            <div className="card flex flex-col gap-4">
+              <Typography.Title level={3} className="font-mono">
+                Problem List
+              </Typography.Title>
+              <div className="">
+                {/* <h2 className="mb-4 text-[1.4rem] font-semibold">Solve problems here</h2> */}
+
+                <div className="flex items-center gap-5">
+                  <Select options={[{ value: 'sample', label: <span>sample</span> }]} />
+                  <Input
+                    type="text"
+                    placeholder="Search content..."
+                    value={searchTerm}
+                    onChange={handleSearch}
+                    className="input rounded-l-md border px-4 py-2 focus:outline-none focus:ring-2"
+                    aria-label="Search content"
+                  />
+                  {(selectedTags.length > 0 || searchTerm) && (
+                    <button
+                      onClick={clearFilters}
+                      className="rounded-r-md bg-red-500 px-4 py-2 text-white transition-colors duration-200 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+                      aria-label="Clear filters"
+                    >
+                      <FaTimes />
+                    </button>
+                  )}
+                </div>
+              </div>
+              <Divider />
               {problemList?.data?.length === 0 ? (
                 <p className="sub-title text-[1.4rem]">
                   No content matches your current filters. Try adjusting your search or selected tags.
@@ -160,7 +128,9 @@ const ProblemListPage = () => {
           />
         </div>
       </div>
-      <div className="w-[200px]">123</div>
+      <div className="card h-[500px] max-w-[300px] px-[10px]">
+        <TagMenu selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
+      </div>
     </div>
   );
 };
