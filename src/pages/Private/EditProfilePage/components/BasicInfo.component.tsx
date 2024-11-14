@@ -23,7 +23,7 @@ const BasicInfo: React.FC = () => {
           user.gender === EnumGengerUser.GENDER_MALE
             ? 'Male'
             : user.gender === EnumGengerUser.GENDER_FEMALE
-              ? 'Female'
+              ? 'Femail'
               : 'Other',
         phoneNumber: user.phoneNumber || ''
       });
