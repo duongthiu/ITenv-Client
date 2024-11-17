@@ -12,7 +12,6 @@ type FriendsComponentProps = {
 
 const FriendsComponent: React.FC<FriendsComponentProps> = ({ friendRequestData, mutate, loadMoreFriendRequest }) => {
   const allRequests = friendRequestData?.data || [];
-  console.log(friendRequestData?.total);
   return (
     <div className="w-[350px]">
       <div className="flex gap-2 pb-0 text-[1.6rem] font-semibold">

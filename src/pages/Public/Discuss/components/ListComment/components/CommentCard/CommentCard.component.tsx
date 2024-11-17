@@ -85,7 +85,6 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
   };
   const handleReply = async (content: string) => {
     try {
-      console.log('newcomment', newComment);
       const replyComment: Pick<CommentType, 'content' | 'parentComment'> = {
         content,
         parentComment: comment?._id

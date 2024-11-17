@@ -17,7 +17,6 @@ type FriendUserType = Pick<UserType, '_id' | 'username' | 'avatar'>;
 const ProfileFriendTab: React.FC<ProfileFriendTabProps> = memo(({ userId }) => {
   
   const { data: friendData, isLoading } = useSWR(`getFriendsByUserId-${userId}`, () => getFriendsByUserId(userId));
-  console.log(friendData);
   const navigate = useNavigate();
   const FriendBlock: React.FC<{ user: FriendUserType }> = ({ user }) => {
     return (

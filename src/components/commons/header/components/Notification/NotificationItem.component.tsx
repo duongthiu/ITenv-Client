@@ -19,7 +19,6 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, mutat
   const handleSeenNotification = async () => {
     const resp = await seenNotification({ notificationId: notification._id! });
     if (resp.success) {
-      console.log(notification.notificationType);
       mutate();
       if (
         notification.notificationType === NotificationTypeEnum.ACCEPT_FRIEND_REQUEST ||

@@ -32,7 +32,6 @@ const MessagePopover = () => {
   // let hasNotificationListener = false;
   useEffect(() => {
     if (socket) {
-      console.log('messagePopover Listen...');
       socket.on('message', (message: ResponsePagination<MessageType>) => {
         mutateConversation();
       });

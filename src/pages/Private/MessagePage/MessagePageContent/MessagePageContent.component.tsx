@@ -70,7 +70,6 @@ const MessagePageContent: React.FC<MessagePageContentProps> = ({
       mutateMessage();
     }
   }, [activeConversationId, mutateMessage]);
-  console.log(messageList);
 
   useEffect(() => {
     if (messageData?.data) {
@@ -93,7 +92,6 @@ const MessagePageContent: React.FC<MessagePageContentProps> = ({
         // notifyInfo('Message has been seen');
       });
       socket.on('recall_message', (messageInfo: MessageType) => {
-        console.log(messageInfo);
         setMessageList((prevMessages) =>
           prevMessages.map((message) => (message._id === messageInfo._id ? { ...message, ...messageInfo } : message))
         );
@@ -107,7 +105,6 @@ const MessagePageContent: React.FC<MessagePageContentProps> = ({
   }, [activeConversationId, socket]);
   const handleRecallMessageSocket = (message: MessageType) => {
     if (socket) {
-      console.log(message);
       socket.emit('recall_message', message);
     }
   };

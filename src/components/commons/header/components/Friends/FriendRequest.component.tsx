@@ -17,7 +17,6 @@ type FriendRequestItemProps = {
 const FriendRequest: React.FC<FriendRequestItemProps> = ({ friendRequest, mutate }) => {
   const socket = useSocket();
   const { user } = useAppSelector((state) => state.user);
-  console.log(friendRequest);
   const { handleRejectFriendRequest, handleAcceptFriendRequest } = useFriendAction({
     userId: friendRequest?.sendBy?._id,
     relationshipId: friendRequest?._id,

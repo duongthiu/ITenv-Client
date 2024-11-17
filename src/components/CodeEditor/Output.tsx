@@ -47,10 +47,8 @@ const Output: React.FC<OutputType> = React.memo(({ editorRef, language }) => {
         name: 'two-sum',
         submissionBody
       });
-      console.log(response);
       setOutput(response.data as any);
     } catch (error) {
-      console.log(error);
       setError(error as any);
     } finally {
       setIsLoading(false);

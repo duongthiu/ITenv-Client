@@ -74,7 +74,7 @@ const HeaderComponent: React.FC = memo(() => {
             />
           </Form.Item>
         </Form>
-        {user.isLogged ? (
+        {user.isLogged && user?.user?._id ? (
           <div className="flex items-center gap-8">
             <FriendPopover />
             <MessagePopover />

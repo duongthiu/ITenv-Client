@@ -31,7 +31,6 @@ const SignupForm = () => {
   const [signUpInfo, setSignUpInfo] = useState<RegisterType>();
   const [isLoading, setIsLoading] = useState(false);
   const onSubmit = async (values: any) => {
-    console.log(values);
     if (values.password !== values.confirmPassword) {
       notifyError('Password does not match');
       onFailSubmit(); // Show an error for password mismatch
@@ -63,7 +62,7 @@ const SignupForm = () => {
 
       // navigate(paths.inforSignup);
     } catch (error) {
-      console.log(error);
+      notifyError(error as string);
       onFailSubmit();
     } finally {
       setIsLoading(false);
@@ -88,7 +87,6 @@ const SignupForm = () => {
         const response = await confirmSignup(confirmData);
         if (response.success) {
           // Handle success (e.g., redirect or show success message)
-          console.log('Signup confirmed successfully');
           notifySuccess('Signup confirmed successfully');
           navigate(paths.login);
         } else {

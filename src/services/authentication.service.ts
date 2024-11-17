@@ -46,32 +46,30 @@ interface ParamsLogin {
   email: string;
   password: string;
 }
-export const login = async (params: ParamsLogin) => {
-  const resp = await post<any, any>(import.meta.env.VITE_APP_API + 'accounts/login', {
+export const login = async (params: ParamsLogin): Promise<ResponsePagination<LoginInforResponseType>> => {
+  const resp = await post(import.meta.env.VITE_APP_API + 'accounts/login', {
     ...params,
     authenWith: 0
   });
 
-  return resp as unknown as ResponseAxios;
+  return resp as unknown as ResponsePagination<LoginInforResponseType>;
 };
-export const authenWithGithub = async (params: { code: string }): Promise<ResponseAxios | null> => {
-  try {
-    const resp = await post<any, any>(import.meta.env.VITE_APP_API + 'accounts/github-oauth', params);
-    return resp as unknown as ResponseAxios;
-  } catch (error) {
-    return null;
-  }
+export const authenWithGithub = async (params: {
+  code: string;
+}): Promise<ResponsePagination<LoginInforResponseType>> => {
+  const resp = await post<any, any>(import.meta.env.VITE_APP_API + 'accounts/github-oauth', params);
+  return resp as unknown as ResponsePagination<LoginInforResponseType>;
 };
-export const authenWithGoogle = async (params: { accessToken: string }) => {
-  try {
+export const authenWithGoogle = async (params: {
+  accessToken: string;
+}): Promise<ResponsePagination<LoginInforResponseType>> => {
+  
     const resp = await post<any, any>(
       import.meta.env.VITE_APP_API + 'accounts/google-oauth', // Your backend API URL
       params
     );
-    return resp as unknown as ResponseAxios;
-  } catch (error) {
-    return null;
-  }
+    return resp as unknown as ResponsePagination<LoginInforResponseType>;
+  
 };
 
 export const forgotPassword = async (email: string) => {
@@ -101,4 +99,9 @@ export const resetPassword = async (email: string) => {
 export const getAllAccount = async (): Promise<ResponsePagination<AccountType[]>> => {
   const result = await get(import.meta.env.VITE_APP_API + 'accounts');
   return result as unknown as ResponsePagination<AccountType[]>;
+};
+
+export const refreshAccessToken = async (): Promise<ResponsePagination<string>> => {
+  const result = await post(import.meta.env.VITE_APP_API + 'accounts/refresh-accessToken', {});
+  return result as unknown as ResponsePagination<string>;
 };

@@ -1,16 +1,13 @@
 import { Form, Typography } from 'antd';
+import Input from 'antd/es/input/Input';
 import { useState } from 'react';
 import { GoEye, GoEyeClosed } from 'react-icons/go';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { paths } from '../../routes/paths';
-import { AuthenticationProps } from './Authentication.page';
-import Input from 'antd/es/input/Input';
 import { login } from '../../services/authentication.service';
-import { UserType } from '../../types/UserType';
-import { useAppDispatch } from '../../redux/app/hook';
-import { setLogin, setToken, setUser } from '../../redux/user/user.slice';
-import { useAuth } from '../../utils/hooks/useAuth.hook';
 import { notifyError } from '../../utils/helpers/notify';
+import { useAuth } from '../../utils/hooks/useAuth.hook';
+import { AuthenticationProps } from './Authentication.page';
 
 const LOGIN_TEXT = 'Login';
 
@@ -34,15 +31,10 @@ const LoginForm = () => {
     password: string;
   };
   const onSubmit = async (values: ParamsLogin) => {
-    console.log(values);
     setLoginButtonText('Checking...');
 
     await onLogin(
-      () =>
-        login({
-          email: values.email,
-          password: values.password
-        }),
+      () => login({ email: values?.email || '', password: values?.password || '' }),
       {
         email: values.email,
         password: values.password

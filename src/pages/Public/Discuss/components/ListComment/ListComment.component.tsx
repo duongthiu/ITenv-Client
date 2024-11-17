@@ -18,7 +18,6 @@ type ListCommentProps = {
   postId: string;
 };
 const ListCommentComponent: React.FC<ListCommentProps> = memo(({ postById, postId }) => {
-  console.log(postId);
   const socket = useSocket();
   const [newComment, setNewComment] = useState('');
   const [postImages, setPostImages] = useState<ImageType[]>([]);

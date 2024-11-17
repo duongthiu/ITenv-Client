@@ -46,7 +46,6 @@ const AccountSettings: React.FC = () => {
     console.log('Form values:', values);
   };
   const { data, isLoading } = useSWR('edit-account', getAllAccount);
-  console.log(data);
 
   return (
     <div className="basic-info-wrapper container mx-auto p-4">

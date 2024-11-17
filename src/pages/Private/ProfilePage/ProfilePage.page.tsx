@@ -28,8 +28,7 @@ const ProfilePage = () => {
     friendWithMe: userData?.data?.friendWithMe,
     currentUserId: userSelector?._id || ''
   });
-  console.log(userData?.data?.friendWithMe, userSelector?._id);
-  console.log(status);
+  
   const TabItems = [
     {
       key: '1',

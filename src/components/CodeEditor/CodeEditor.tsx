@@ -98,7 +98,6 @@ const CodeEditor: React.FC<CodeEditorType> = ({
       }
     });
   };
-  console.log(mHeight.get());
   return (
     <div style={{ height: 'calc(100vh-20px)' }} className="flex w-full justify-end">
       <motion.div className="b card h-[calc(100vh-60px)] flex-1 overflow-auto rounded-lg shadow-md">
