@@ -1,5 +1,5 @@
 import { Button, Divider, Drawer, Empty, Input, Pagination, PaginationProps, Segmented, Skeleton } from 'antd';
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { FiSend } from 'react-icons/fi';
 import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import useSWR from 'swr';
@@ -9,6 +9,8 @@ import { CategoryType } from '../../../../../types/CategoryType';
 import PostComponent from '../PostComponent/Post.component';
 import CreatePostPage from '../../../../Private/CreatePostPage/CreatePostPage.page';
 import './ListPostWithCategory.style.scss';
+import { QueryOptions } from '../../../../../types/common';
+import { useDebounce } from '../../../../../utils/hooks/useDebounce.hook';
 type ListPostWithCategoryProps = {
   categoryId: string;
 };
@@ -19,19 +21,29 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 500);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-
+  const [queryOption, setQueryOption] = useState<QueryOptions>({
+    page: currentPage,
+    pageSize: pageSize,
+    sortField: 'VIEWS',
+    sortOrder: 'DESC',
+    search: search
+  });
   const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
     setCurrentPage(current);
     setPageSize(pageSize);
+    setQueryOption({ ...queryOption, page: current });
   };
   const onPaginationChange = (page: number, pageSize: number) => {
-    setCurrentPage(page); // Update current page
-    setPageSize(pageSize); // Optionally update page size if needed
+    setCurrentPage(page);
+    setPageSize(pageSize);
+    setQueryOption({ ...queryOption, pageSize: pageSize });
   };
 
-  const { data: posts, isLoading } = useSWR(`/api/post/${categoryId}page=${currentPage}&limit=${pageSize}`, () =>
-    getPostsWithCategoryId(categoryId, `page=${currentPage}&pageSize=${pageSize}&search=`)
+  const { data: posts, isLoading } = useSWR(`posts-${categoryId}-${JSON.stringify(queryOption)}`, () =>
+    getPostsWithCategoryId(categoryId, queryOption)
   );
   const showDrawer = () => {
     setOpenDrawer(true);
@@ -42,21 +54,29 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
   };
   const cates = useOutletContext<CategoryType[]>();
   console.log(cates);
-  const childCategories = cates.map((cate) => (cate._id === parentCateId ? cate.children : [])).flat();
+  // const childCategories = cates.map((cate) => (cate._id === parentCateId ? cate.children : [])).flat();
   const sortMenu = [
     {
       name: 'Hot',
-      key: 'hot'
+      key: 'VIEWS'
     },
     {
       name: 'Newest to Oldest',
-      key: 'newest'
+      key: 'createdAt'
     },
     {
       name: 'Most Votes',
-      key: 'votes'
+      key: 'VOTES'
     }
   ];
+  const handleSortChange = (value: string) => {
+    const selectedSortKey = sortMenu.find((menu) => menu.name === value)?.key || 'VIEWS'; // Default to 'VIEWS'
+    setQueryOption((prev) => ({ ...prev, sortField: selectedSortKey }));
+  };
+  useEffect(() => {
+    setQueryOption((prev) => ({ ...prev, search: debouncedSearch }));
+  }, [debouncedSearch]);
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-10"></div>
@@ -77,10 +97,19 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
           <div></div>
           <div className="flex items-center justify-between p-5 text-[1.4rem]">
             <div className="flex gap-5 text-[1.4rem]">
-              <Segmented size="large" className="w-fit" options={sortMenu.map((menu) => menu.name)} />
+              <Segmented
+                onChange={handleSortChange}
+                size="large"
+                className="w-fit"
+                options={sortMenu.map((menu) => menu.name)}
+              />
             </div>
             <div className="flex gap-5">
-              <Input className="w-fit min-w-[300px]" placeholder="Search posts..." />
+              <Input
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-fit min-w-[300px]"
+                placeholder="Search posts..."
+              />
 
               <Button
                 onClick={() => showDrawer()}
@@ -95,7 +124,7 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
           </div>
           <Divider className="my-[15px]" />
           {posts?.data?.length === 0 ? (
-            <div className=""> 
+            <div className="">
               <Empty className="" />
             </div>
           ) : (

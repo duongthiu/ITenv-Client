@@ -23,5 +23,8 @@ export const paths = {
   me: '/profile/me',
   search: '/search',
   editProfile: '/edit-profile/:tab',
-  editProfileWithoutTab: '/edit-profile/'
+  editProfileWithoutTab: '/edit-profile/',
+
+  // admin
+  adminDashboard: '/admin/dashboard'
 };

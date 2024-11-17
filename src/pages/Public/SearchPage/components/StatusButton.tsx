@@ -1,7 +1,8 @@
-import { Button } from 'antd';
+import { Button, Popconfirm } from 'antd';
 import React, { useState } from 'react';
 import { useFriendAction } from '../../../../utils/hooks/useFriendAction.hook';
 import { UseFriendStatusTypeEnum } from '../../../../utils/hooks/useFriendStatus.hook';
+import NewMessageModal from '../../../Private/MessagePage/components/sidebar/NewMessageModal';
 
 type StatusButtonProps = {
   relationship: UseFriendStatusTypeEnum;
@@ -15,6 +16,16 @@ const StatusButton: React.FC<StatusButtonProps> = ({ relationship, userId, relat
     relationshipId,
     setRelationshipState
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleModalOpen = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div className="flex w-full justify-end gap-3">
       {/* <Button className="w-full rounded-full" type="default" onClick={() => navigate(`/profile/${user?._id}`)}>
@@ -41,9 +52,23 @@ const StatusButton: React.FC<StatusButtonProps> = ({ relationship, userId, relat
         </div>
       )}
       {relationshipState === UseFriendStatusTypeEnum.FRIEND && (
-        <Button type="default" className="flex-1" onClick={handleRejectFriendRequest}>
-          Unfriend
-        </Button>
+        <div className="flex w-full items-center justify-end gap-3">
+          <div onClick={(e) => e.stopPropagation()}>
+            <Popconfirm
+              title="Are you sure to delete this friend?"
+              onConfirm={(e) => handleRejectFriendRequest(e as unknown as React.MouseEvent)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="default" className="flex-1">
+                Unfriend
+              </Button>
+            </Popconfirm>
+          </div>
+          <Button className="flex-1" type="primary" onClick={handleModalOpen}>
+            Message
+          </Button>
+        </div>
       )}
       {relationshipState === UseFriendStatusTypeEnum.BLOCKED && (
         <Button
@@ -54,6 +79,7 @@ const StatusButton: React.FC<StatusButtonProps> = ({ relationship, userId, relat
           Unblock
         </Button>
       )}
+      <NewMessageModal isModalOpen={isModalOpen} handleClose={handleModalClose} receiverId={userId} />
     </div>
   );
 };

@@ -16,9 +16,15 @@ type MessagePageFooterProps = {
   conversationId?: string;
   receiver?: string;
   setMessageList: React.Dispatch<React.SetStateAction<MessageType[]>>;
+  mutateConversation: () => void;
 };
 
-const MessagePageFooter: React.FC<MessagePageFooterProps> = ({ conversationId, receiver, setMessageList }) => {
+const MessagePageFooter: React.FC<MessagePageFooterProps> = ({
+  conversationId,
+  receiver,
+  setMessageList,
+  mutateConversation
+}) => {
   const socket = useSocket();
   const [message, setMessage] = useState<string>('');
   const { user } = useAppSelector((state) => state.user);
@@ -52,10 +58,8 @@ const MessagePageFooter: React.FC<MessagePageFooterProps> = ({ conversationId, r
           setIsLoading(false);
           setMessage('');
           setPreviewImage([]);
-          setMessageList((prev: any) => [
-            ...prev,
-            { sender: { _id: user?._id, username: user?.username, avatar: user?.avatar }, ...messageRes?.data }
-          ]);
+          mutateConversation();
+          setMessageList((prev: any) => [...prev, { ...messageRes?.data }]);
         } else {
           setIsLoading(false);
           notifyError(messageRes?.message || 'Error sending message');
@@ -130,8 +134,8 @@ const MessagePageFooter: React.FC<MessagePageFooterProps> = ({ conversationId, r
           </div>
         )}
       </div>
-
-      <div className="input-mode flex flex-1 items-center rounded-full py-2 pr-3">
+      {/* duration-200 focus:border-primary-color focus:bg-opacity-100 focus:shadow-2xl */}
+      <div className="input-mode flex flex-1 items-center rounded-full border-[1px] border-transparent py-2 pr-3">
         <input
           onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
           value={message}

@@ -7,7 +7,7 @@ import { ImageType } from '../../../../../types/common';
 import { CommentType } from '../../../../../types/PostType';
 import { notifyError, notifySuccess } from '../../../../../utils/helpers/notify';
 
-import CommentCardComponent from '../CommentCard.component';
+import CommentCardComponent from './components/CommentCard/CommentCard.component';
 import './ListComment.style.scss';
 import { useSocket } from '../../../../../context/SocketContext';
 import CommentTree from './components/CommentTree/CommentTree';
@@ -82,7 +82,7 @@ const ListCommentComponent: React.FC<ListCommentProps> = memo(({ postById, postI
         </div>
       )}
 
-      <CommentTree postId={postId} comments={comments?.data || []} mutate={mutate} />
+      <CommentTree postById={postById} postId={postId} comments={comments?.data || []} mutate={mutate} />
     </div>
   );
 });

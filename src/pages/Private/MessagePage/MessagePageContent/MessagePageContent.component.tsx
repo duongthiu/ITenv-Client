@@ -10,7 +10,6 @@ import { QueryOptions, ResponsePagination } from '../../../../types/common';
 import { ConversationType, MessageType } from '../../../../types/ConversationType';
 import MessageItem from '../components/MessageItem/MessageItem';
 import MessagePageFooter from '../components/MessagePageFooter/MessagePageFooter.component';
-import { notifyInfo } from '../../../../utils/helpers/notify';
 type MessagePageContentProps = {
   conversation?: ConversationType;
   receiverId?: string;
@@ -50,8 +49,8 @@ const MessagePageContent: React.FC<MessagePageContentProps> = ({
     data: messageData,
     mutate: mutateMessage,
     isLoading: isLoadingMessage
-  } = useSWR(`messages/${conversation?._id}/${JSON.stringify(queryOptionMessage)}`, () =>
-    getMessageByConversationId(conversation?._id || '', queryOptionMessage)
+  } = useSWR(`messages/${activeConversationId}/${JSON.stringify(queryOptionMessage)}`, () =>
+    getMessageByConversationId(activeConversationId || '', queryOptionMessage)
   );
 
   const [messageList, setMessageList] = useState<MessageType[]>(messageData?.data || []);
@@ -65,6 +64,13 @@ const MessagePageContent: React.FC<MessagePageContentProps> = ({
   // // );
 
   const handleShowMember = () => {};
+  useEffect(() => {
+    setMessageList([]);
+    if (activeConversationId) {
+      mutateMessage();
+    }
+  }, [activeConversationId, mutateMessage]);
+  console.log(messageList);
 
   useEffect(() => {
     if (messageData?.data) {
@@ -75,27 +81,36 @@ const MessagePageContent: React.FC<MessagePageContentProps> = ({
   useEffect(() => {
     if (socket) {
       socket.on('message', (message: ResponsePagination<MessageType>) => {
-        console.log('message received', message?.data);
-        if (message && message.data) {
+        if (message?.data?.conversationId === activeConversationId) {
+          mutateConversation();
           setMessageList((prevList) => [...prevList, message.data!]);
           if (message.data.conversationId === activeConversationId) socket.emit('seen_message', message.data);
         }
+        // mutateMessage();
       });
       socket.on('seen_message', (messageInfo: MessageType) => {
-        console.log('seen_message received', messageInfo);
-        notifyInfo('Message has been seen');
+        // console.log('seen_message received', messageInfo);
+        // notifyInfo('Message has been seen');
+      });
+      socket.on('recall_message', (messageInfo: MessageType) => {
+        console.log(messageInfo);
+        setMessageList((prevMessages) =>
+          prevMessages.map((message) => (message._id === messageInfo._id ? { ...message, ...messageInfo } : message))
+        );
       });
     }
-
     return () => {
       socket?.off('message');
       socket?.off('seen_message');
+      socket?.off('recall_message');
     };
   }, [activeConversationId, socket]);
-
-  useEffect(() => {
-    mutateConversation();
-  }, [messageList, mutateConversation]);
+  const handleRecallMessageSocket = (message: MessageType) => {
+    if (socket) {
+      console.log(message);
+      socket.emit('recall_message', message);
+    }
+  };
 
   return (
     <div className="card m-5 mb-0 flex flex-1 flex-col rounded-2xl pb-2 shadow-xl duration-200">
@@ -143,10 +158,16 @@ const MessagePageContent: React.FC<MessagePageContentProps> = ({
       <Divider className="my-[8px]" />
       <div className="flex h-full flex-col-reverse gap-0 overflow-y-auto p-5">
         <div className="mt-auto flex flex-col gap-2">
-          {messageList?.map((message) => <MessageItem message={message} />)}
+          {messageList?.map((message) => (
+            <MessageItem handleRecallMessageSocket={handleRecallMessageSocket} message={message} />
+          ))}
         </div>
       </div>
-      <MessagePageFooter conversationId={conversation?._id} setMessageList={setMessageList} />
+      <MessagePageFooter
+        mutateConversation={mutateConversation}
+        conversationId={activeConversationId}
+        setMessageList={setMessageList}
+      />
     </div>
   );
 };

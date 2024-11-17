@@ -10,7 +10,7 @@ import NotFoundPage from './pages/ExceptionPage/NotFoundPage';
 import DiscussPage from './pages/Public/Discuss/DiscussPage';
 import { THEME } from './redux/app/app.slice';
 import { useAppSelector } from './redux/app/hook';
-import { AUTHEN_ROUTES, DISCUSS_ROUTES, PUBLIC_ROUTES, RouteType } from './routes/routes';
+import { ADMIN_ROUTES, AUTHEN_ROUTES, DISCUSS_ROUTES, PUBLIC_ROUTES, RouteType } from './routes/routes';
 // import { Helmet } from 'react-helmet';
 
 // const pathname = location.path
@@ -138,6 +138,12 @@ function App() {
               );
             })}
 
+            {ADMIN_ROUTES.map((route: RouteType) => {
+              let Layout: any = DefaultLayout;
+              if (route?.layout) Layout = route.layout;
+              else if (route.layout === null) Layout = Fragment;
+              return <Route path={route.path} element={route.element} />;
+            })}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Router>

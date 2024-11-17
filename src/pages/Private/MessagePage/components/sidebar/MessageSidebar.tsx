@@ -1,11 +1,14 @@
-import { Divider, List, Typography } from 'antd';
+import { Button, Divider, Empty, List, Tooltip, Typography } from 'antd';
 import { memo, useState } from 'react';
+import { BsPlus } from 'react-icons/bs';
+import { FaRegEdit } from 'react-icons/fa';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import messageLogo from '../../../../../assets/logo/messenger-icon.png';
 import MessageItem from '../../../../../components/commons/header/components/Message/MessageItem.component';
-import { cn } from '../../../../../utils/helpers/cn';
 import { ConversationType } from '../../../../../types/ConversationType';
 import { ResponsePagination } from '../../../../../types/common';
+import { cn } from '../../../../../utils/helpers/cn';
+import NewMessageModal from './NewMessageModal';
 type MessageSidebarProps = {
   conversations: ResponsePagination<ConversationType[]>;
   mutate: () => Promise<void>;
@@ -15,9 +18,19 @@ type MessageSidebarProps = {
 const MessageSidebar: React.FC<MessageSidebarProps> = memo(
   ({ conversations, mutate, activeConversationId, setActiveConversation }) => {
     const [collapsed, setCollapsed] = useState<boolean>(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleModalOpen = () => {
+      setIsModalOpen(true);
+    };
+
+    const handleModalClose = () => {
+      setIsModalOpen(false);
+    };
     const toggleCollapsed = () => {
       setCollapsed(!collapsed);
     };
+    const noConversations = !conversations?.data || conversations.data.length === 0;
     return (
       <div
         className={cn(
@@ -27,9 +40,14 @@ const MessageSidebar: React.FC<MessageSidebarProps> = memo(
       >
         <div className="mt-2 h-[50px]">
           {!collapsed ? (
-            <Typography.Title level={4} className="m-0 rounded-2xl p-3">
-              Messages
-            </Typography.Title>
+            <div className="flex justify-between pr-2">
+              <Typography.Title level={4} className="m-0 rounded-2xl p-3">
+                Messages
+              </Typography.Title>
+              <Button shape="circle" type="default" size="large" onClick={handleModalOpen}>
+                <FaRegEdit size={20} />
+              </Button>
+            </div>
           ) : (
             <div className="flex h-full w-full items-center justify-center">
               <img className="h-[36px] w-[36px] object-cover" src={messageLogo} />
@@ -39,17 +57,34 @@ const MessageSidebar: React.FC<MessageSidebarProps> = memo(
 
         <Divider className="my-[12px]" />
         <div className="h-full w-full overflow-auto">
-          <List
-            dataSource={conversations?.data || []}
-            renderItem={(conversation) => (
-              <MessageItem
-                activeConversationId={activeConversationId}
-                setActiveConversation={setActiveConversation}
-                key={conversation?._id}
-                conversation={conversation}
-              />
-            )}
-          />
+          {/* Show the list or a default empty state message */}
+          {noConversations ? (
+            <div className="flex h-full flex-col items-center justify-center text-gray-500">
+              <Tooltip title="Create a new conversation">
+                <Empty
+                  description={
+                    <Typography.Text>
+                      <Button shape="circle" type="primary" className="text-white" onClick={handleModalOpen}>
+                        <BsPlus size={25} />
+                      </Button>
+                    </Typography.Text>
+                  }
+                />
+              </Tooltip>
+            </div>
+          ) : (
+            <List
+              dataSource={conversations?.data || []}
+              renderItem={(conversation) => (
+                <MessageItem
+                  activeConversationId={activeConversationId}
+                  setActiveConversation={setActiveConversation}
+                  key={conversation?._id}
+                  conversation={conversation}
+                />
+              )}
+            />
+          )}
         </div>
         <div
           onClick={toggleCollapsed}
@@ -62,6 +97,7 @@ const MessageSidebar: React.FC<MessageSidebarProps> = memo(
             <IoIosArrowForward size={25} />
           </div>
         </div>
+        <NewMessageModal isModalOpen={isModalOpen} handleClose={handleModalClose} mutateConversation={mutate} />
       </div>
     );
   }

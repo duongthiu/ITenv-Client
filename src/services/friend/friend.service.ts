@@ -1,6 +1,6 @@
-import { get, post } from "../../apis";
-import { QueryOptions, ResponseAxios, ResponsePagination } from "../../types/common";
-import { FriendType } from "../../types/FriendType";
+import { get, post } from '../../apis';
+import { QueryOptions, ResponseAxios, ResponsePagination } from '../../types/common';
+import { FriendType } from '../../types/FriendType';
 
 export const createFriendRequest = async (data: { receiver: string }): Promise<ResponseAxios> => {
   const result = await post(import.meta.env.VITE_APP_API + 'friends', data);
@@ -15,8 +15,11 @@ export const rejectFriendRequest = async (data: { friendId: string }): Promise<R
   return result as ResponseAxios;
 };
 
-export const getFriendsByUserId = async (userId: string): Promise<ResponsePagination<FriendType[]>> => {
-  const result = await get(import.meta.env.VITE_APP_API + 'friends/' + userId);
+export const getFriendsByUserId = async (
+  userId: string,
+  queryOptions: QueryOptions
+): Promise<ResponsePagination<FriendType[]>> => {
+  const result = await get(import.meta.env.VITE_APP_API + 'friends/' + userId, { params: queryOptions });
   return result as ResponsePagination<FriendType[]>;
 };
 export const getFriendRequests = async (queryOptions: QueryOptions): Promise<ResponsePagination<FriendType[]>> => {

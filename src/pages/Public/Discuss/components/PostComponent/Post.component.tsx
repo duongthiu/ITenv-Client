@@ -1,7 +1,7 @@
-import { Avatar } from 'antd';
+import { Avatar, Tooltip } from 'antd';
 import { motion } from 'framer-motion';
 import React, { useMemo } from 'react';
-import { FaCaretDown, FaCaretUp, FaComment, FaEye } from 'react-icons/fa';
+import { FaCaretDown, FaCaretUp, FaCheck, FaComment, FaEye } from 'react-icons/fa';
 import { PostType } from '../../../../../types/PostType';
 import './Post.style.scss';
 import { AnonymousIcon } from '../../../../../utils/icons/Anonymous.icon';
@@ -36,10 +36,15 @@ const PostComponent: React.FC<PostComponentProps> = ({ post }) => {
   return (
     <motion.div
       key={post._id}
-      className="group mb-6 cursor-pointer border-b-[1px] p-3 duration-300 hover:translate-x-[20px]"
+      className="group mb-6 cursor-pointer border-b-[1px] p-3"
       onClick={() => navigate(paths.detailDiscuss2.replace(':id', post?._id))}
     >
-      <div className="flex items-center justify-between space-x-8">
+      <div className="flex items-center space-x-8">
+        {post?.resolve && (
+          <Tooltip className="mr-5" title="This post has been resolved" placement="top">
+            <FaCheck size={30} className="text-green-500" />
+          </Tooltip>
+        )}
         <div className="flex flex-col gap-5">
           <div className="flex items-center space-x-4">
             {post?.postedBy?.avatar ? (

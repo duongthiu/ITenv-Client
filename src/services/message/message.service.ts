@@ -16,3 +16,8 @@ export const sendMessage = async (data: FormData): Promise<ResponsePagination<Me
   const result = await post(import.meta.env.VITE_APP_API + 'messages', data);
   return result as ResponsePagination<MessageType>;
 };
+
+export const recallMessage = async (messageId: string): Promise<ResponsePagination<MessageType>> => { 
+  const result = await post(import.meta.env.VITE_APP_API + 'messages/recall/' + messageId, {});
+  return result as ResponsePagination<MessageType>;
+}

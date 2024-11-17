@@ -1,7 +1,6 @@
 export interface ResponseAxios {
   success: boolean;
   message: string;
-
 }
 
 export type ResponsePagination<T> = {

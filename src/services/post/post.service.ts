@@ -18,9 +18,9 @@ export const createPost = async (requestOption: PostTypeRequest): Promise<Respon
 
 export const getPostsWithCategoryId = async (
   categoryId: string,
-  query: string
+  queryOption: QueryOptions
 ): Promise<ResponsePagination<PostType[]>> => {
-  const data = await get(import.meta.env.VITE_APP_API + 'posts/category/' + categoryId + '/?' + query);
+  const data = await get(import.meta.env.VITE_APP_API + 'posts/category/' + categoryId, { params: queryOption });
   return data as unknown as ResponsePagination<PostType[]>;
 };
 
@@ -46,6 +46,10 @@ export const getCategory = async (): Promise<ResponsePagination<CategoryType[]>>
   return data as unknown as ResponsePagination<CategoryType[]>;
 };
 
+export const resolvePost = async (id: string): Promise<ResponseAxios> => {
+  const data = await post(import.meta.env.VITE_APP_API + 'posts/resolve/' + id, {});
+  return data as ResponseAxios;
+};
 // export const voteService = async (id: string, typeVote: TypeVoteEnum): Promise<ResponseAxios> => {
 //   const data = await post(import.meta.env.VITE_APP_API + 'posts/vote/' + id, { typeVote: typeVote });
 //   return data as ResponseAxios;

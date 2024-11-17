@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import CommentCardComponent from '../../../CommentCard.component';
+import CommentCardComponent from '../CommentCard/CommentCard.component';
 import { CommentType } from '../../../../../../../types/PostType';
 import './CommentTree.style.scss';
 import { KeyedMutator } from 'swr';
@@ -10,9 +10,10 @@ type CommentTreeProps = {
   postId: string;
   comments: CommentType[]; // Top-level comments with possible children
   mutate: KeyedMutator<ResponsePagination<CommentType[]>>;
+  postById: string;
 };
 
-const CommentTree: React.FC<CommentTreeProps> = ({ postId, comments, mutate }) => {
+const CommentTree: React.FC<CommentTreeProps> = ({ postById, postId, comments, mutate }) => {
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 
   // Toggle the expanded state for a comment
@@ -29,7 +30,7 @@ const CommentTree: React.FC<CommentTreeProps> = ({ postId, comments, mutate }) =
     <div className="flex flex-col gap-10">
       {comments?.map((comment: CommentType) => (
         <div key={comment._id}>
-          <CommentCardComponent comment={comment} postId={postId} mutate={mutate} />
+          <CommentCardComponent postById={postById} comment={comment} postId={postId} mutate={mutate} />
 
           {/* Show the toggle button if the comment has children */}
           {comment.children && comment.children.length > 0 && (

@@ -1,17 +1,17 @@
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
-import { Avatar, Divider, Skeleton, Tooltip } from 'antd';
+import { Avatar, Button, Divider, message, Popconfirm, Skeleton, Tooltip } from 'antd';
 import { motion } from 'framer-motion';
 import hljs from 'highlight.js';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CiBookmark, CiWarning } from 'react-icons/ci';
-import { FaArrowLeft } from 'react-icons/fa';
+import { FaArrowLeft, FaCheck } from 'react-icons/fa';
 import { VscShare } from 'react-icons/vsc';
 import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import PreviewTextEditorComponent from '../../../../components/TextEditor/components/PreviewTextEditor.component.tdc';
 import { useSocket } from '../../../../context/SocketContext';
 import { useAppSelector } from '../../../../redux/app/hook';
-import { getPostById, votePostById } from '../../../../services/post/post.service';
+import { getPostById, resolvePost, votePostById } from '../../../../services/post/post.service';
 import { NotificationTypeEnum } from '../../../../types/enum/notification.enum';
 import { TypeVoteEnum } from '../../../../types/enum/typeVote.enum';
 import { notifyError } from '../../../../utils/helpers/notify';
@@ -19,6 +19,7 @@ import useVoteStatus from '../../../../utils/hooks/useVoteStatus.hook';
 import LoadingPage from '../../../commons/LoadingPage';
 import ListCommentComponent from '../components/ListComment/ListComment.component';
 import { AnonymousIcon } from '../../../../utils/icons/Anonymous.icon';
+import Confetti from 'react-confetti';
 const DetailDiscussPage = () => {
   const { id } = useParams<{ id: string }>();
   const socket = useSocket();
@@ -27,6 +28,10 @@ const DetailDiscussPage = () => {
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.user);
   const { data: postData, isLoading, mutate } = useSWR(`detailpost/${id}`, () => getPostById(id!));
+  const [postState, setPostState] = useState(postData?.data);
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const [confettiActive, setConfettiActive] = useState(false);
   const { isVoted, isDownvoted } = useVoteStatus({
     vote: postData?.data?.vote || [],
     downVote: postData?.data?.downVote || []
@@ -36,7 +41,6 @@ const DetailDiscussPage = () => {
       hljs.highlightElement(block as HTMLElement);
     });
   }, [postData?.data?.content]);
-
   const handleVote = async (type: TypeVoteEnum) => {
     if (!user) {
       notifyError(`You don't have permission to vote. Please login to vote...`);
@@ -65,10 +69,35 @@ const DetailDiscussPage = () => {
     }
   };
 
+  const handleResolvePost = async () => {
+    try {
+      const response = await resolvePost(postData?.data?._id as string);
+      if (response.success) {
+        setConfettiActive(true);
+        messageApi.open({
+          type: 'success',
+          content: 'Congratulations! Your problem has been resolved.'
+        });
+        mutate();
+      } else {
+        notifyError(response.message);
+      }
+    } catch (error) {
+      notifyError((error as Error).message);
+    }
+  };
   // if (isLoading) return <p>Loading...</p>;
   // if (isError) return <p>Error loading the postData?.data.</p>;
   return (
     <div className="m-[10px] overflow-y-hidden rounded-lg shadow-md">
+      {contextHolder}
+      <Confetti
+        width={window.innerWidth}
+        height={window.innerHeight}
+        run={confettiActive}
+        numberOfPieces={300}
+        recycle={false}
+      />
       {isLoading && (
         <div className="skeleton-wrapper w-full p-10">
           <Skeleton active />
@@ -84,9 +113,31 @@ const DetailDiscussPage = () => {
               </Tooltip>
             </div>
             <Divider type="vertical" className="ml-0 h-full" />
-            <h1 className="text-[2.2rem] font-bold">{postData?.data?.title}</h1>
+            <div className="flex items-center gap-10">
+              <h1 className="text-[2.2rem] font-bold">{postData?.data?.title}</h1>
+              {postData?.data?.resolve && (
+                <Tooltip title="This post has been resolved" placement="right">
+                  <FaCheck size={25} className="text-green-500" />
+                </Tooltip>
+              )}
+            </div>
           </div>
           <div className="flex items-center gap-10 text-[1.4rem]">
+            {!postData?.data?.resolve &&
+              (user?._id === postData?.data?.postedBy?._id || user?._id === postData?.data?.postedBy) && (
+                <Popconfirm
+                  title="Your problem has been resolved, has't it?"
+                  onConfirm={handleResolvePost}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Tooltip title="Accept this post" placement="right">
+                    <Button shape="circle">
+                      <FaCheck />
+                    </Button>
+                  </Tooltip>
+                </Popconfirm>
+              )}
             <Tooltip title="Report">
               <button className="flex items-center hover:text-red-500">
                 <CiWarning size={25} />

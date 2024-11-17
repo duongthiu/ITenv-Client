@@ -35,7 +35,7 @@ const TextEditorComponent: React.FC<TextEditorProps> = ({
       const formData = new FormData();
       formData.append('image', blobInfo.blob(), blobInfo.filename());
       axios
-        .post(import.meta.env.VITE_APP_API + 'storage/upload/image', formData, {
+        .post(import.meta.env.VITE_APP_API + 'storages', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }

@@ -31,6 +31,8 @@ const LazyProblemListPage = LazyLoadComponent(() => import('../pages/Public/Prob
 const LazySearchPage = LazyLoadComponent(() => import('../pages/Public/SearchPage/SearchPage'))(true);
 const LazyEditProfile = LazyLoadComponent(() => import('../pages/Private/EditProfilePage/EditProfilePage.page'))(true);
 
+const LazyDashboardPage = LazyLoadComponent(() => import('../pages/Admin/Dashboard/Dashboard.page'))(true);
+
 export const PUBLIC_ROUTES: RouteType[] = [
   {
     path: paths.singleProblem,
@@ -192,5 +194,13 @@ export const AUTHEN_ROUTES: RouteType[] = [
     // useHeader: false,
     // useSidebar: false,
     // useFooter: false
+  }
+];
+
+export const ADMIN_ROUTES: RouteType[] = [
+  {
+    path: paths.adminDashboard,
+    layout: DefaultLayout,
+    element: <LazyDashboardPage />
   }
 ];

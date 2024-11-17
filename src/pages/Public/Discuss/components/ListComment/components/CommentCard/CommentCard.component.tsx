@@ -1,44 +1,58 @@
 import { CaretDownOutlined, CaretUpOutlined } from '@ant-design/icons';
-import { Avatar, Drawer, Tooltip } from 'antd';
+import { Avatar, Button, Drawer, message, Popconfirm, Tooltip } from 'antd';
 import React, { memo, useCallback, useState } from 'react';
-import { FaReply } from 'react-icons/fa';
+import { FaCheck, FaReply } from 'react-icons/fa';
+import { MdDelete, MdModeEdit } from 'react-icons/md';
 import { PiWarningFill } from 'react-icons/pi';
 import { KeyedMutator } from 'swr';
-import PreviewTextEditorComponent from '../../../../components/TextEditor/components/PreviewTextEditor.component.tdc';
-import TextEditorComponent from '../../../../components/TextEditor/TextEditor.component';
-import { useAppSelector } from '../../../../redux/app/hook';
-import { postComment, voteCommentById } from '../../../../services/comment/comment.service';
-import { ImageType, ResponsePagination } from '../../../../types/common';
-import { TypeVoteEnum } from '../../../../types/enum/typeVote.enum';
-import { CommentType } from '../../../../types/PostType';
-import { notifyError, notifySuccess } from '../../../../utils/helpers/notify';
-import useVoteStatus from '../../../../utils/hooks/useVoteStatus.hook';
-import { MdModeEdit } from 'react-icons/md';
-import { MdDelete } from 'react-icons/md';
-import { useSocket } from '../../../../context/SocketContext';
-import { NotificationTypeEnum } from '../../../../types/enum/notification.enum';
-import { NotificationRequestType } from '../../../../types/NotificationType';
+import PreviewTextEditorComponent from '../../../../../../../components/TextEditor/components/PreviewTextEditor.component.tdc';
+import TextEditorComponent from '../../../../../../../components/TextEditor/TextEditor.component';
+import { useSocket } from '../../../../../../../context/SocketContext';
+import { useAppSelector } from '../../../../../../../redux/app/hook';
+import {
+  deleteCommentById,
+  editCommentById,
+  postComment,
+  resolveCommentById,
+  voteCommentById
+} from '../../../../../../../services/comment/comment.service';
+import { ImageType, ResponsePagination } from '../../../../../../../types/common';
+import { NotificationTypeEnum } from '../../../../../../../types/enum/notification.enum';
+import { TypeVoteEnum } from '../../../../../../../types/enum/typeVote.enum';
+import { NotificationRequestType } from '../../../../../../../types/NotificationType';
+import { CommentType } from '../../../../../../../types/PostType';
+import { notifyError, notifySuccess } from '../../../../../../../utils/helpers/notify';
+import useVoteStatus from '../../../../../../../utils/hooks/useVoteStatus.hook';
+import DrawerEditComment from './DrawerComment.component';
+import FullCommentView from './FullCommentView.component';
+import Confetti from 'react-confetti';
 type CommentCartProps = {
   postId: string;
   comment: CommentType;
   mutate: KeyedMutator<ResponsePagination<CommentType[]>>;
+  postById: string;
 };
-const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId, mutate }) => {
+const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId, mutate, postById }) => {
   const socket = useSocket();
-
+  const { user } = useAppSelector((state) => state.user);
   const initContent = `<strong style="background-color: #d9e6f4; padding:4px; border-radius: 4px; margin-right:10px">@${comment.commentBy?.username} </strong><p></p>`;
   const [openDrawer, setOpenDrawer] = useState(false);
-  const [isFullComment, setIsFullComment] = useState(false);
   const [newComment, setNewComment] = useState(initContent);
   const [postImages, setPostImages] = useState<ImageType[]>([]);
   const [commentState, setCommentState] = useState(comment);
-  const { user } = useAppSelector((state) => state.user);
+  const [editComment, setEditComment] = useState(comment?.content);
+  const [openDedit, setOpenDedit] = useState(false);
+  const [confettiActive, setConfettiActive] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
   const { isVoted, isDownvoted } = useVoteStatus({
     vote: commentState?.vote || [],
     downVote: commentState?.downVote || []
   });
   const handleEditorChange = useCallback((content: any) => {
     setNewComment(content);
+  }, []);
+  const handleEditorChangeForEditing = useCallback((content: any) => {
+    setEditComment(content);
   }, []);
 
   const handleVote = async (type: TypeVoteEnum) => {
@@ -102,6 +116,52 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
       onClose();
     }
   };
+  const handleEditComment = async () => {
+    try {
+      const response = await editCommentById(comment?._id as string, editComment);
+      if (response.success) {
+        notifySuccess('Comment edited successfully');
+        setCommentState(response.data!);
+        onCloseEdit();
+      } else {
+        notifyError(response?.message || 'Something went wrong. Please try again...');
+        onCloseEdit();
+      }
+    } catch (error) {
+      notifyError((error as Error).message);
+      onCloseEdit();
+    }
+  };
+  const handleDeleteComment = async () => {
+    try {
+      const res = await deleteCommentById(comment?._id as string);
+      if (res.success) {
+        notifySuccess('Comment deleted successfully');
+        mutate();
+      } else {
+        notifyError(res.message);
+      }
+    } catch (error) {
+      notifyError((error as Error).message);
+    }
+  };
+  const handleResolve = async () => {
+    try {
+      const res = await resolveCommentById(comment?._id as string);
+      if (res.success) {
+        setConfettiActive(true);
+        messageApi.open({
+          type: 'success',
+          content: 'Congratulations! Your problem has been resolved.'
+        });
+        setCommentState({ ...commentState, resolve: true });
+      } else {
+        notifyError(res.message as string);
+      }
+    } catch (error) {
+      notifyError((error as Error).message);
+    }
+  };
   const showDrawer = () => {
     setOpenDrawer(true);
   };
@@ -109,9 +169,22 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
   const onClose = () => {
     setOpenDrawer(false);
   };
-
+  const onCloseEdit = () => {
+    setOpenDedit(false);
+  };
+  const onOpenEdit = () => {
+    setOpenDedit(true);
+  };
   return (
     <div className="mb-4 rounded-md">
+      {contextHolder}
+      <Confetti
+        width={window.innerWidth}
+        height={window.innerHeight}
+        run={confettiActive}
+        numberOfPieces={300}
+        recycle={false}
+      />
       <div className="flex flex-col gap-5">
         <div className="flex gap-5">
           <div className="flex flex-col gap-5 pr-14">
@@ -161,14 +234,21 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
 
                   {user?._id === commentState?.commentBy._id && (
                     <div className="flex items-center gap-8">
-                      <button className="flex items-center gap-2 duration-200 hover:text-blue-500" onClick={showDrawer}>
+                      <button className="flex items-center gap-2 duration-200 hover:text-blue-500" onClick={onOpenEdit}>
                         <MdModeEdit />
                         Edit
                       </button>
-                      <button className="flex items-center gap-2 duration-200 hover:text-error-color">
-                        <MdDelete />
-                        Delete
-                      </button>
+                      <Popconfirm
+                        title="Are you sure to delete this comment?"
+                        onConfirm={handleDeleteComment}
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        <button className="flex items-center gap-2 duration-200 hover:text-error-color">
+                          <MdDelete />
+                          Delete
+                        </button>
+                      </Popconfirm>
                     </div>
                   )}
                   <button className="flex items-center gap-2 duration-200 hover:text-warning-color">
@@ -177,6 +257,30 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
                   </button>
                 </div>
               </div>
+
+              {commentState?.resolve ? (
+                <Tooltip title="This comment has been resolved" placement="right">
+                  <FaCheck size={30} className="text-green-500" />
+                </Tooltip>
+              ) : (
+                postById === user?._id && (
+                  <Popconfirm
+                    title="Are you sure to accept this comment?"
+                    onConfirm={handleResolve}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <Tooltip
+                      title="Accept this comment. This comment helps you to solve your problem"
+                      placement="right"
+                    >
+                      <Button shape="circle" className="opacity-50">
+                        <FaCheck />
+                      </Button>
+                    </Tooltip>
+                  </Popconfirm>
+                )
+              )}
             </div>
           </div>
         </div>
@@ -188,40 +292,12 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
         onClose={onClose}
         open={openDrawer}
         key={comment._id}
+        size="large"
       >
-        <div className="flex flex-col gap-7">
-          {isFullComment ? (
-            <div className="flex flex-col gap-5">
-              <div className="flex-1">
-                <div className="mb-4">
-                  At {new Date(commentState?.createdAt || 0).toLocaleString()}{' '}
-                  <strong>{` @<${comment.commentBy?.username}>`}</strong> wrote :
-                </div>
-                <div className="sub-title ml-3 border-l-[1px] pl-2 font-semibold">
-                  <PreviewTextEditorComponent content={commentState?.content} fontSize={1.4} />
-                </div>
-              </div>{' '}
-              <Tooltip title="Hide">
-                <button
-                  className="w-fit rounded-md bg-[#e8eaed] px-3 py-0 font-bold text-black"
-                  onClick={() => setIsFullComment(false)}
-                >
-                  ...
-                </button>
-              </Tooltip>
-            </div>
-          ) : (
-            <Tooltip title="Show">
-              <button
-                className="w-fit rounded-md bg-[#e8eaed] px-3 py-0 font-bold text-black"
-                onClick={() => setIsFullComment(true)}
-              >
-                ...
-              </button>
-            </Tooltip>
-          )}
+        <div className="flex h-full flex-col gap-7">
+          <FullCommentView comment={comment} />
 
-          <div className="list-comment-editor-wrapper border shadow-md">
+          <div className="list-comment-editor-wrapper flex-1 border shadow-md">
             <TextEditorComponent
               buttonTitle="Post"
               keyEditor={`reply-comment ${comment?._id}`}
@@ -234,6 +310,14 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
           </div>
         </div>
       </Drawer>
+      <DrawerEditComment
+        newComment={editComment}
+        handleEditorChange={handleEditorChangeForEditing}
+        comment={comment}
+        buttonFunction={handleEditComment}
+        onClose={onCloseEdit}
+        openDrawer={openDedit}
+      />
     </div>
   );
 });

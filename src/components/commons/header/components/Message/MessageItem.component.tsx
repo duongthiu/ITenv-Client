@@ -46,15 +46,22 @@ const MessageItem: React.FC<MessageItemProps> = memo(
                 : conversation?.participants?.find((member) => member?._id !== user?._id)?.username}
             </Typography.Text>
             <div className="flex flex-auto gap-3">
-              <Typography.Text strong={!isSeenMessage} className="text-[1.2rem]">
-                {conversation?.lastMessage?.sender?._id === user?._id && 'You: '}{' '}
-                {conversation?.lastMessage?.hasText
-                  ? conversation?.lastMessage?.content?.substring(0, 50)
-                  : conversation?.lastMessage?.hasFile
-                    ? 'sent a image'
-                    : conversation?.isGroupChat &&
-                      `${conversation?.createdBy?.username?.slice(0, 10)} created this GroupChat`}
-              </Typography.Text>
+              {conversation?.lastMessage?.isRecalled ? (
+                <Typography.Text strong={!isSeenMessage} className="text-[1.2rem]">
+                  This message has been recalled
+                </Typography.Text>
+              ) : (
+                <Typography.Text strong={!isSeenMessage} className="text-[1.2rem]">
+                  {conversation?.lastMessage?.sender?._id === user?._id && 'You: '}{' '}
+                  {conversation?.lastMessage?.hasText
+                    ? conversation?.lastMessage?.content?.substring(0, 50)
+                    : conversation?.lastMessage?.hasFile
+                      ? 'sent a image'
+                      : conversation?.isGroupChat &&
+                        `${conversation?.createdBy?.username?.slice(0, 10)} created this GroupChat`}
+                </Typography.Text>
+              )}
+
               <Typography.Text strong={!isSeenMessage} className="flex-none text-[1.2rem] text-gray-400">
                 {timeAgo(conversation?.lastMessage?.createdAt || conversation?.createdAt || '')}
               </Typography.Text>

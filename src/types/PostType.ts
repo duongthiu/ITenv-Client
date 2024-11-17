@@ -14,6 +14,7 @@ export type PostType = {
   updatedAt: string;
   totalComment?: number;
   isAnonymous?: boolean;
+  resolve: boolean;
 };
 
 export type CommentType = {
@@ -27,4 +28,5 @@ export type CommentType = {
   updatedAt?: string;
   vote?: string[];
   downVote?: string[];
+  resolve: boolean;
 };
