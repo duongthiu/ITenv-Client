@@ -20,3 +20,16 @@
     overflow: hidden;
   }
 }
+.code-editor-wrapper {
+  .ant-select-selector {
+    border: none !important;
+  }
+  .ant-select-outlined {
+    border: none !important;
+  }
+
+  .rc-virtual-list-holder-inner {
+    display: grid !important;
+    grid-template-columns: auto auto auto !important;
+  }
+}

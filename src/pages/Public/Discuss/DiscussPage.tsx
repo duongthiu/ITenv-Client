@@ -44,12 +44,12 @@ const DiscussPage = () => {
 
   return (
     <div className="mx-auto p-4">
+      {isLoadingCate && <Skeleton.Node active />}
       <header className="">
         <div
           className={`grid w-full gap-x-5`}
           style={{ gridTemplateColumns: `repeat(${cates?.length || 1}, minmax(0, 1fr))` }}
         >
-          {isLoadingCate && <Skeleton.Node active />}
           {cates?.map((category) => (
             <div
               key={category._id}

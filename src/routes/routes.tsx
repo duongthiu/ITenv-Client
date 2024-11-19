@@ -37,11 +37,8 @@ export const PUBLIC_ROUTES: RouteType[] = [
   {
     path: paths.singleProblem,
     element: <LazyEditorPage />,
-    layout: DefaultLayout,
-    private: 'public',
-    useHeader: false,
-    useSidebar: false,
-    useFooter: false
+    layout: null,
+    private: 'public'
   },
   {
     path: paths.home,

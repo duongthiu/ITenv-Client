@@ -28,7 +28,6 @@ const NewMessageModal: React.FC<NewMessageModalProps> = ({
 }) => {
   const [selectedFriend, setSelectedFriend] = useState<string | null>(receiverId || null);
   const [selectedGroupFriends, setSelectedGroupFriends] = useState<string[]>([]);
-  const [messageContent, setMessageContent] = useState<string>('');
   const [groupName, setGroupName] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const { user: userSelector } = useAppSelector((state) => state.user);
@@ -48,19 +47,19 @@ const NewMessageModal: React.FC<NewMessageModalProps> = ({
     setSelectedGroupFriends(values);
   };
 
-  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessageContent(e.target.value);
-  };
+  // const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  //   setMessageContent(e.target.value);
+  // };
 
   const handleGroupNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGroupName(e.target.value);
   };
 
-  const handleSendMessage = () => {
-    console.log('Friend ID:', selectedFriend);
-    console.log('Message:', messageContent);
-    handleClose();
-  };
+  // const handleSendMessage = () => {
+  //   console.log('Friend ID:', selectedFriend);
+  //   console.log('Message:', messageContent);
+  //   handleClose();
+  // };
 
   const handleCreateGroup = async () => {
     try {

@@ -21,7 +21,6 @@ const ProblemListPage = () => {
   } = useSWR<ResponsePagination<ProblemType[]>>(`/api/problem?page=${currentPage}&limit=${pageSize}`, () =>
     getProblems(`page=${currentPage}&limit=${pageSize}`)
   );
-  console.log(problemList);
   if (error) {
     return (
       <div className="relative mb-4 rounded border border-red-400 bg-red-100 px-4 py-3 text-red-700" role="alert">
@@ -36,7 +35,6 @@ const ProblemListPage = () => {
   };
 
   const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
-    console.log(current, pageSize);
     setCurrentPage(current);
     setPageSize(pageSize);
   };
