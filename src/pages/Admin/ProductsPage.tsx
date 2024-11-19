@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { AlertTriangle, DollarSign, Package, TrendingUp } from "lucide-react";
 import SalesTrendChart from "../../components/CommonAdmin/products/SalesTrendChart";
-import CategoryDistributionChart from "../../components/Overview/CategoryDistributionChart";
+import CategoryDistributionChart from "../../components/OverviewAdmin/ActivityDistributionChart";
 import StatCard from "../../components/CommonAdmin/StatCard";
 import ProductsTable from "../../components/CommonAdmin/products/ProductsTable";
 import Header from "../../components/CommonAdmin/Header";

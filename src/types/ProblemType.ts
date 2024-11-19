@@ -22,3 +22,8 @@ export type Tags = {
   _id: string;
   name: string;
 };
+
+export type AverageProblemsResponse = {
+  average: number;
+  total: number;
+}

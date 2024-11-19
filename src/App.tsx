@@ -12,7 +12,6 @@ import { THEME } from './redux/app/app.slice';
 import { useAppSelector } from './redux/app/hook';
 import { ADMIN_ROUTES, AUTHEN_ROUTES, DISCUSS_ROUTES, PUBLIC_ROUTES, RouteType } from './routes/routes';
 // import { Helmet } from 'react-helmet';
-import { AUTHEN_ROUTES, DISCUSS_ROUTES, PUBLIC_ROUTES, RouteType } from './routes/routes';
 import OverviewPage from './pages/Admin/OverviewPage';
 import { Sidebar } from 'lucide-react';
 import AdminLayout from './layouts/layoutsAdmin/adminLayout';
@@ -153,8 +152,8 @@ function App() {
               else if (route.layout === null) Layout = Fragment;
               return <Route path={route.path} element={route.element} />;
             })}
-            <Route path="/overview" element={<AdminLayout><OverviewPage /></AdminLayout>} />
-            <Route path="/products" element={<AdminLayout><ProductsPage /></AdminLayout>} />
+            <Route path="/overviews" element={<AdminLayout><OverviewPage /></AdminLayout>} />
+            <Route path="/posts" element={<AdminLayout><ProductsPage /></AdminLayout>} />
             <Route path="/users" element={<AdminLayout><UsersPage /></AdminLayout>} />
             <Route path="/settings" element={<AdminLayout><SettingsPage /></AdminLayout>} />
 

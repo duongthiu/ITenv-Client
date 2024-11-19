@@ -1,6 +1,6 @@
 import { get } from '../../apis';
 import { CategoryType } from '../../types/CategoryType';
-import { ResponsePagination } from '../../types/common';
+import { ResponseAxios, ResponsePagination } from '../../types/common';
 import { ProblemType } from '../../types/ProblemType';
 
 export const getProblems = async (query: string): Promise<ResponsePagination<ProblemType[]>> => {
@@ -14,4 +14,9 @@ export const getSingleProblem = async (slug: string): Promise<ResponsePagination
 export const getProblemCategories = async (): Promise<ResponsePagination<CategoryType[]>> => {
   const data = await get(import.meta.env.VITE_APP_API + 'categories/problems');
   return data as unknown as ResponsePagination<CategoryType[]>;
+};
+
+export const getAverageProblemsPerUser = async (): Promise<ResponsePagination<null>> => {
+  const total = await get(import.meta.env.VITE_APP_API + 'problems/average/per-user');
+  return total as ResponsePagination<null>;
 };
