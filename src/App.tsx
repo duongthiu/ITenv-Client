@@ -12,6 +12,13 @@ import { THEME } from './redux/app/app.slice';
 import { useAppSelector } from './redux/app/hook';
 import { ADMIN_ROUTES, AUTHEN_ROUTES, DISCUSS_ROUTES, PUBLIC_ROUTES, RouteType } from './routes/routes';
 // import { Helmet } from 'react-helmet';
+import OverviewPage from './pages/Admin/OverviewPage';
+import { Sidebar } from 'lucide-react';
+import AdminLayout from './layouts/layoutsAdmin/adminLayout';
+import ProductsPage from './pages/Admin/ProductsPage';
+import UsersPage from './pages/Admin/UsersPage';
+import SettingsPage from './pages/Admin/SettingsPage';
+// impoxrt { Helmet } from 'react-helmet';
 
 // const pathname = location.path
 
@@ -59,6 +66,7 @@ function App() {
       </div> */}
       <main className="">
         <Router>
+
           <Routes>
             {PUBLIC_ROUTES.map((route: RouteType, index: number) => {
               let Layout: any = DefaultLayout;
@@ -144,7 +152,14 @@ function App() {
               else if (route.layout === null) Layout = Fragment;
               return <Route path={route.path} element={route.element} />;
             })}
+            <Route path="/overviews" element={<AdminLayout><OverviewPage /></AdminLayout>} />
+            <Route path="/posts" element={<AdminLayout><ProductsPage /></AdminLayout>} />
+            <Route path="/users" element={<AdminLayout><UsersPage /></AdminLayout>} />
+            <Route path="/settings" element={<AdminLayout><SettingsPage /></AdminLayout>} />
+
             <Route path="*" element={<NotFoundPage />} />
+
+
           </Routes>
         </Router>
       </main>

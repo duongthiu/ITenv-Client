@@ -32,3 +32,8 @@ export const getSubmissionDetail = async (submissionId: string): Promise<Respons
   const data = await get(`http://localhost:4000/api/problems/submission/${submissionId}`);
   return data as unknown as ResponsePagination<SubmissionDetailType>;
 };
+
+export const getAverageProblemsPerUser = async (): Promise<ResponsePagination<null>> => {
+  const total = await get(import.meta.env.VITE_APP_API + 'problems/average/per-user');
+  return total as ResponsePagination<null>;
+};

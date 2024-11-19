@@ -50,6 +50,12 @@ export const resolvePost = async (id: string): Promise<ResponseAxios> => {
   const data = await post(import.meta.env.VITE_APP_API + 'posts/resolve/' + id, {});
   return data as ResponseAxios;
 };
+
+export const getPostActivityDistribution = async (query: string): Promise<ResponsePagination<null>> => {
+  const data = await get(import.meta.env.VITE_APP_API + "activity/distribute?" + query);
+  return data as unknown as ResponsePagination<null>;
+};
+
 // export const voteService = async (id: string, typeVote: TypeVoteEnum): Promise<ResponseAxios> => {
 //   const data = await post(import.meta.env.VITE_APP_API + 'posts/vote/' + id, { typeVote: typeVote });
 //   return data as ResponseAxios;

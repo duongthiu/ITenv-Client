@@ -99,3 +99,8 @@ export type SubmissionDetailType = {
   testInfo: string | null;
   stdOutput: string | null;
 };
+
+export type AverageProblemsResponse = {
+  average: number;
+  total: number;
+}
