@@ -2,13 +2,19 @@
 import { Editor, Monaco } from '@monaco-editor/react';
 import { Divider, Select, Tabs } from 'antd';
 import { motion, useMotionValue } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { FaTerminal } from 'react-icons/fa';
 import { IoIosCheckboxOutline } from 'react-icons/io';
 import { IoCodeSlashOutline } from 'react-icons/io5';
 import { THEME } from '../../redux/app/app.slice';
 import { useAppSelector } from '../../redux/app/hook';
-import { InitialCode, ProblemType, SubmissionDetailType, SubmissionStatusType } from '../../types/ProblemType';
+import {
+  InitialCode,
+  ProblemType,
+  RunCodeResultType,
+  SubmissionDetailType,
+  SubmissionStatusType
+} from '../../types/ProblemType';
 import { cn } from '../../utils/helpers/cn';
 import './CodeEditor.style.scss';
 import Problem from './Problem';
@@ -22,7 +28,7 @@ interface CodeEditorProps {
   setInitCode: (initCode: InitialCode) => void;
   code: string;
   setCode: (code: string) => void;
-  submissionStatus?: SubmissionStatusType;
+  submissionStatus?: SubmissionStatusType | RunCodeResultType;
   detailSubmission?: SubmissionDetailType;
 }
 const getInputName = (content: string) => {
@@ -32,8 +38,6 @@ const getInputName = (content: string) => {
 
   // Remove any HTML tags to get the inner text
   const innerText = inputOutputString.replace(/<[^>]+>/g, '').trim();
-
-  console.log(innerText);
 
   const regex2 = /(\w+)\s*=/g; // Matches all input names before '='
   let match2;
@@ -63,6 +67,31 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   const outputHeight = useMotionValue(window.innerHeight - 680);
   const [isWidthDragging, setWidthDragging] = useState(false);
   const [isHeightDragging, setHeightDragging] = useState(false);
+
+  const parseTestcases = useMemo(
+    () => (testcase: string, inputNames: string[]) => {
+      inputNames = inputNames.length ? inputNames : [''];
+      const testcases = [];
+      const inputoutput = testcase.split('\n');
+
+      while (inputoutput.length > 0) {
+        const testcase: { name: string; value: string }[] = [];
+
+        inputNames.forEach((inputName) => {
+          testcase.push({ name: inputName, value: inputoutput[0] });
+          inputoutput.shift(); // removes the first element from inputoutput array
+        });
+
+        testcases.push(testcase);
+      }
+
+      return testcases;
+    },
+    []
+  );
+
+  const parsedTestcases = parseTestcases(problem?.exampleTestcases || '', getInputName(problem?.content || ''));
+
   useEffect(() => {
     if (submissionStatus) {
       setActiveOutputTab('testresult'); // Switch to Test Result tab
@@ -83,9 +112,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
         </div>
       ),
 
-      children: (
-        <TestCase inputNames={getInputName(problem?.content || '')} testcase={problem?.exampleTestcases || ''} />
-      )
+      children: <TestCase parsedTestcases={parsedTestcases} />
     },
     {
       key: 'testresult',
@@ -95,7 +122,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
           <span>Test Result</span>
         </div>
       ),
-      children: <TestResult submissionStatus={submissionStatus} />
+      children: <TestResult parsedTestcases={parsedTestcases} submissionStatus={submissionStatus} />
     }
   ];
   const ProblemTabs = [
@@ -118,7 +145,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
           <span>Compile</span>
         </div>
       ),
-      children: <CodeSubmission detailSubmission={detailSubmission} submissionStatus={submissionStatus} />
+      children: <CodeSubmission detailSubmission={detailSubmission} />
     }
   ];
   const handleMount = (editor: any) => {
@@ -201,24 +228,34 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
       >
         <div
           className={cn(
-            'card ml-2 max-w-full rounded-lg p-0 shadow-md',
+            'card ml-2 max-w-full rounded-lg p-0 p-1 shadow-md',
             mWidth.get() < 30 && 'flex flex-col items-center justify-center'
           )}
         >
-          <div className="flex items-center justify-between">
-            {mWidth.get() > 30 && (
-              <Select
-                className="w-fit min-w-[100px] border-none outline-none"
-                options={problem?.initialCode.map((code) => ({
-                  value: code.langSlug,
-                  label: code.lang
-                }))}
-                defaultValue={initCode?.langSlug}
-                onChange={handleChangeLanguage}
-              />
-            )}
-          </div>
-          <Divider className="my-[6px]" />
+          {mWidth.get() > 30 && (
+            <div>
+              <div className="flex w-full items-center gap-2 px-5 py-2">
+                <IoCodeSlashOutline size={20} className="text-green-500" />
+                <span className="text-[1.4rem] font-semibold">Code</span>
+              </div>
+            </div>
+          )}
+          {mWidth.get() > 30 && (
+            <div>
+              <div className="flex items-center justify-between">
+                <Select
+                  className="w-fit min-w-[100px] border-none outline-none"
+                  options={problem?.initialCode.map((code) => ({
+                    value: code.langSlug,
+                    label: code.lang
+                  }))}
+                  defaultValue={initCode?.langSlug}
+                  onChange={handleChangeLanguage}
+                />
+              </div>
+              <Divider className="my-[6px]" />
+            </div>
+          )}
 
           <motion.div className={cn('py-3')} style={{ height: mHeight, width: mWidth }}>
             {mWidth.get() > 30 ? (

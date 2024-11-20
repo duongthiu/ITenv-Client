@@ -149,9 +149,11 @@ function App() {
             {ADMIN_ROUTES.map((route: RouteType) => {
               let Layout: any = DefaultLayout;
               if (route?.layout) Layout = route.layout;
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               else if (route.layout === null) Layout = Fragment;
               return <Route path={route.path} element={route.element} />;
             })}
+            
             <Route path="/overviews" element={<AdminLayout><OverviewPage /></AdminLayout>} />
             <Route path="/posts" element={<AdminLayout><ProductsPage /></AdminLayout>} />
             <Route path="/users" element={<AdminLayout><UsersPage /></AdminLayout>} />

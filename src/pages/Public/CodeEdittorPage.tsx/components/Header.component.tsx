@@ -13,8 +13,15 @@ import { useState } from 'react';
 type EditorHeaderProps = {
   handleSubmitCode: () => Promise<void>;
   isSubmitLoading: boolean;
+  handleRunCode: () => Promise<void>;
+  isRunLoading: boolean;
 };
-const HeaderComponent: React.FC<EditorHeaderProps> = ({ handleSubmitCode, isSubmitLoading }) => {
+const HeaderComponent: React.FC<EditorHeaderProps> = ({
+  handleSubmitCode,
+  isSubmitLoading,
+  handleRunCode,
+  isRunLoading
+}) => {
   const navigate = useNavigate();
   const user = useAppSelector((state) => state.user);
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -39,9 +46,10 @@ const HeaderComponent: React.FC<EditorHeaderProps> = ({ handleSubmitCode, isSubm
       </div>
       <div className="flex items-center gap-1">
         <button
-          className={`flex cursor-pointer items-center gap-4 rounded-lg bg-gray-200 px-5 py-2 text-[1.4rem] font-semibold opacity-70 duration-500 hover:bg-gray-300 hover:opacity-100 ${isSubmitLoading && 'disabled'}`}
+          onClick={handleRunCode}
+          className={`flex cursor-pointer items-center gap-4 rounded-lg bg-gray-200 px-5 py-2 text-[1.4rem] font-semibold opacity-70 duration-500 hover:bg-gray-300 hover:opacity-100 ${isRunLoading && 'disabled'}`}
         >
-          <TbTriangle className="rotate-90" size={18} />
+          {isRunLoading ? <Spin /> : <TbTriangle className="rotate-90" size={18} />}
           Run
         </button>
         <button

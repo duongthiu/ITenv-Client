@@ -2,32 +2,10 @@ import { Tabs } from 'antd';
 import React from 'react';
 
 type TestCaseType = {
-  testcase: string;
-  inputNames: string[];
+  parsedTestcases: { name: string; value: string }[][];
 };
 
-const TestCase: React.FC<TestCaseType> = ({ testcase, inputNames }) => {
-  const parseTestcases = (testcase: string, inputNames: string[]) => {
-    inputNames = inputNames.length ? inputNames : [''];
-    const testcases = [];
-    const inputoutput = testcase.split('\n');
-
-    while (inputoutput.length > 0) {
-      const testcase: { name: string; value: string }[] = [];
-
-      inputNames.forEach((inputName) => {
-        testcase.push({ name: inputName, value: inputoutput[0] });
-        inputoutput.shift(); // removes the first element from inputoutput array
-      });
-
-      testcases.push(testcase);
-    }
-
-    return testcases;
-  };
-
-  const parsedTestcases = parseTestcases(testcase, inputNames);
-
+const TestCase: React.FC<TestCaseType> = ({ parsedTestcases }) => {
   return (
     <Tabs defaultActiveKey="0" type="card" className="w-full">
       {parsedTestcases.map((testcase, index) => (

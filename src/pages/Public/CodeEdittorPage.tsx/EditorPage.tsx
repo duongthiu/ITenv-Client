@@ -5,13 +5,14 @@ import CodeEditor from '../../../components/CodeEditor/CodeEditor';
 import {
   getSingleProblem,
   getSubmissionDetail,
+  runCode,
   submitCode,
   submitCodeQueryOptions
 } from '../../../services/problem/problem.service';
 import { cn } from '../../../utils/helpers/cn';
 import HeaderComponent from './components/Header.component';
 import { useEffect, useState } from 'react';
-import { InitialCode, SubmissionDetailType, SubmissionStatusType } from '../../../types/ProblemType';
+import { InitialCode, RunCodeResultType, SubmissionDetailType, SubmissionStatusType } from '../../../types/ProblemType';
 import { notifyError } from '../../../utils/helpers/notify';
 const EditorPage = () => {
   const { slug } = useParams();
@@ -19,7 +20,8 @@ const EditorPage = () => {
   const [initCode, setInitCode] = useState<InitialCode | null>(singleProblem?.data?.initialCode[0] || null);
   const [code, setCode] = useState<string>(singleProblem?.data?.initialCode[0].code || '');
   const [isSubmitLoading, setIsSubmitLoading] = useState<boolean>(false);
-  const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatusType>();
+  const [isRunCodeLoading, setIsRunCodeLoading] = useState<boolean>(false);
+  const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatusType | RunCodeResultType>();
   const [detailSubmission, setDetailSubmission] = useState<SubmissionDetailType>();
 
   useEffect(() => {
@@ -53,9 +55,32 @@ const EditorPage = () => {
       setIsSubmitLoading(false);
     }
   };
+  const handleRunCode = async () => {
+    setIsRunCodeLoading(true);
+    const submitCodeQueryOptions: submitCodeQueryOptions & { data_input: string } = {
+      lang: initCode!.langSlug!,
+      question_id: singleProblem!.data!.questionId,
+      typed_code: code,
+      data_input: singleProblem!.data!.exampleTestcases || ''
+    };
+    try {
+      const result = await runCode(slug!, submitCodeQueryOptions);
+      if (result.success) {
+        setSubmissionStatus(result.data!);
+      } else notifyError('Failed to submit code');
+      setIsRunCodeLoading(false);
+    } catch (error) {
+      setIsRunCodeLoading(false);
+    }
+  };
   return (
     <div className={cn('')}>
-      <HeaderComponent isSubmitLoading={isSubmitLoading} handleSubmitCode={handleSubmitCode} />
+      <HeaderComponent
+        isSubmitLoading={isSubmitLoading}
+        handleSubmitCode={handleSubmitCode}
+        isRunLoading={isRunCodeLoading}
+        handleRunCode={handleRunCode}
+      />
       <div className="h-full w-full p-3 pt-0">
         {isLoading ? (
           <Skeleton active />

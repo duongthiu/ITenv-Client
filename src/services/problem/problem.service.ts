@@ -1,7 +1,7 @@
 import { get, post } from '../../apis';
 import { CategoryType } from '../../types/CategoryType';
 import { ResponsePagination } from '../../types/common';
-import { ProblemType, SubmissionDetailType, SubmissionStatusType } from '../../types/ProblemType';
+import { ProblemType, RunCodeResultType, SubmissionDetailType, SubmissionStatusType } from '../../types/ProblemType';
 
 export const getProblems = async (query: string): Promise<ResponsePagination<ProblemType[]>> => {
   const data = await get(import.meta.env.VITE_APP_API + 'problems/?' + query);
@@ -20,16 +20,25 @@ export type submitCodeQueryOptions = {
   question_id: string;
   typed_code: string;
 };
+
+export const runCode = async (
+  slug: string,
+  requestOptions: submitCodeQueryOptions & { data_input: string }
+): Promise<ResponsePagination<RunCodeResultType>> => {
+  const data = await post(import.meta.env.VITE_APP_API + `problems/${slug}/run`, requestOptions);
+  return data as unknown as ResponsePagination<RunCodeResultType>;
+};
+
 export const submitCode = async (
   slug: string,
   requestOptions: submitCodeQueryOptions
 ): Promise<ResponsePagination<SubmissionStatusType>> => {
-  const data = await post('http://localhost:4000/api/' + `problems/${slug}/submit`, requestOptions);
+  const data = await post(import.meta.env.VITE_APP_API + `problems/${slug}/submit`, requestOptions);
   return data as unknown as ResponsePagination<SubmissionStatusType>;
 };
 
 export const getSubmissionDetail = async (submissionId: string): Promise<ResponsePagination<SubmissionDetailType>> => {
-  const data = await get(`http://localhost:4000/api/problems/submission/${submissionId}`);
+  const data = await get(import.meta.env.VITE_APP_API + `problems/submission/${submissionId}`);
   return data as unknown as ResponsePagination<SubmissionDetailType>;
 };
 
