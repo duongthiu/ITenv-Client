@@ -23,7 +23,6 @@ const EditorPage = () => {
   const [isRunCodeLoading, setIsRunCodeLoading] = useState<boolean>(false);
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatusType | RunCodeResultType>();
   const [detailSubmission, setDetailSubmission] = useState<SubmissionDetailType>();
-
   useEffect(() => {
     if (singleProblem?.data?.initialCode) {
       setInitCode(singleProblem?.data?.initialCode[0]);
@@ -46,7 +45,7 @@ const EditorPage = () => {
           setSubmissionStatus(result.data!);
         }
         const detailSubmission = await getSubmissionDetail(result?.data?.submission_id || '');
-        if (detailSubmission.success) {
+        if (detailSubmission?.success && !detailSubmission.data?.compileError) {
           setDetailSubmission(detailSubmission.data!);
         } else notifyError('Failed to get submission detail');
       } else notifyError('Failed to submit code');

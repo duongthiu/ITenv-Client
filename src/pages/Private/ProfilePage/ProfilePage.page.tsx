@@ -14,6 +14,7 @@ import ProfileFriendTab from './components/ProfileFriendTab/ProfileFriendTab.com
 import './components/ListPost/ListPost.style.scss';
 import { IoCodeSlashOutline } from 'react-icons/io5';
 import { paths } from '../../../routes/paths';
+import ListSubmission from './components/ListSubmissions/ListSubmission';
 const ProfilePage = () => {
   const { user: userSelector } = useAppSelector((state) => state.user);
   const { userId } = useParams();
@@ -39,7 +40,7 @@ const ProfilePage = () => {
     {
       key: '2',
       label: `Problems`,
-      children: 'tab 2',
+      children: <ListSubmission userId={userId || ''} />,
       icon: <IoCodeSlashOutline size={20} />
     }
   ];

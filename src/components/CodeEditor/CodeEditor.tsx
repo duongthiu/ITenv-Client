@@ -99,6 +99,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   }, [submissionStatus]);
   useEffect(() => {
     if (detailSubmission) {
+      console.log(detailSubmission);
       setActiveProblemTab('submission');
     }
   }, [detailSubmission]);
@@ -246,9 +247,10 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
                 <Select
                   className="w-fit min-w-[100px] border-none outline-none"
                   options={problem?.initialCode.map((code) => ({
-                    value: code.langSlug,
-                    label: code.lang
+                    value: code?.langSlug,
+                    label: code?.lang
                   }))}
+                  defaultActiveFirstOption={true} //
                   defaultValue={initCode?.langSlug}
                   onChange={handleChangeLanguage}
                 />

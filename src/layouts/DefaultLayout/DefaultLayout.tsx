@@ -28,7 +28,7 @@ const DefaultLayout: React.FC<PropsWithChildren<DefaultLayoutProps>> = ({
   };
 
   return (
-    <div className="flex justify-center overflow-x-hidden ">
+    <div className="flex justify-center overflow-x-hidden">
       {useHeader && <HeaderComponent />}
       <div
         className={cn(

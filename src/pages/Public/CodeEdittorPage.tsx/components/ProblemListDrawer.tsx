@@ -1,19 +1,24 @@
-import { List, Spin } from 'antd';
+import { Input, List, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import { getProblems } from '../../../../services/problem/problem.service';
 import { ResponsePagination } from '../../../../types/common';
 import { ProblemType } from '../../../../types/ProblemType';
+import { useState } from 'react';
+import { SearchProps } from 'antd/es/input';
 
 const ProblemListDrawer = () => {
+  const navigate = useNavigate();
+  const [queryOptions, setQueryOptions] = useState({ page: 1, pageSize: 50, search: '' });
+
   const {
     data: problemList,
     error,
     isLoading
-  } = useSWR<ResponsePagination<ProblemType[]>>(`/api/problem?page=${1}&limit=${30}`, () =>
-    getProblems(`page=${1}&limit=${30}`)
+  } = useSWR<ResponsePagination<ProblemType[]>>(`/api/problem/?${JSON.stringify(queryOptions)}`, () =>
+    getProblems(queryOptions)
   );
-  const navigate = useNavigate();
+  const onSearch: SearchProps['onSearch'] = (value) => setQueryOptions({ ...queryOptions, search: value });
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
       case 'Easy':
@@ -37,6 +42,14 @@ const ProblemListDrawer = () => {
         <div>Error loading problems.</div>
       ) : (
         <List
+          header={
+            <Input.Search
+              placeholder="Search problems"
+              allowClear
+              onSearch={onSearch}
+              className="input rounded-xl px-4 py-2 focus:outline-none focus:ring-2"
+            />
+          }
           itemLayout="horizontal"
           dataSource={problemList?.data || []}
           renderItem={(problem) => (

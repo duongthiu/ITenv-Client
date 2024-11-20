@@ -81,8 +81,8 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
     <div className="flex flex-col gap-4">
       <div className="flex gap-10"></div>
 
+      {isLoading && <Skeleton active className="h-full" />}
       <div className="flex gap-4">
-        {isLoading && <Skeleton active className="h-full" />}
         <main className={`flex h-fit flex-1 flex-col ${posts?.data?.length !== 0 && 'card'}`}>
           {/* <div className="flex gap-40">
             {childCategories && childCategories?.length > 0 && (

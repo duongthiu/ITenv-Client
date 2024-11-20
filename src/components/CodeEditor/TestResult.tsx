@@ -41,9 +41,11 @@ const TestResult: React.FC<TestResultProps> = ({ submissionStatus, parsedTestcas
             <div>
               <div className="mb-5 flex items-center gap-5">
                 <h2
-                  className={`text-[2rem] font-medium ${submissionStatus?.run_success ? 'text-green-500' : 'text-red-500'}`}
+                  className={`text-[2rem] font-medium ${submissionStatus?.run_success && submissionStatus?.total_correct === submissionStatus?.total_testcases ? 'text-green-500' : 'text-red-500'}`}
                 >
-                  {submissionStatus?.status_msg}
+                  {submissionStatus?.total_correct === submissionStatus?.total_testcases
+                    ? submissionStatus?.status_msg
+                    : 'Wrong Answer'}
                 </h2>
                 <span className="sub-title">Runtime: {submissionStatus?.status_runtime}</span>
               </div>
@@ -51,20 +53,10 @@ const TestResult: React.FC<TestResultProps> = ({ submissionStatus, parsedTestcas
                 {parsedTestcases.map((testcase, index) => (
                   <Tabs.TabPane tab={`Case ${index + 1}`} key={index.toString()}>
                     <div className="p-4">
-                      {testcase.map((singleCase, idx) => (
-                        <div key={idx} className="flex flex-col gap-4">
-                          {singleCase.name && <h4 className="sub-title mb-2">{singleCase.name} =</h4>}
-                          <pre
-                            className="overflow-auto rounded-xl bg-gray-300 p-3 text-black"
-                            style={{
-                              whiteSpace: 'pre-wrap',
-                              wordWrap: 'break-word'
-                            }}
-                          >
-                            {singleCase.value}
-                          </pre>
-                          <div className="flex flex-col">
-                            <h4 className="sub-title mb-2">Output =</h4>
+                      {testcase.map((singleCase, idx) => {
+                        return (
+                          <div key={idx} className="flex flex-col gap-4">
+                            {singleCase.name && <h4 className="sub-title mb-2">{singleCase.name} =</h4>}
                             <pre
                               className="overflow-auto rounded-xl bg-gray-300 p-3 text-black"
                               style={{
@@ -72,37 +64,49 @@ const TestResult: React.FC<TestResultProps> = ({ submissionStatus, parsedTestcas
                                 wordWrap: 'break-word'
                               }}
                             >
-                              {submissionStatus.code_answer[idx]}
+                              {singleCase.value}
                             </pre>
-                          </div>
-                          <div className="flex flex-col">
-                            <h4 className="sub-title mb-2">Expect =</h4>
-                            <pre
-                              className="overflow-auto rounded-xl bg-gray-300 p-3 text-black"
-                              style={{
-                                whiteSpace: 'pre-wrap',
-                                wordWrap: 'break-word'
-                              }}
-                            >
-                              {submissionStatus.expected_code_answer[idx]}
-                            </pre>
-                          </div>
-                          {submissionStatus?.std_output_list[idx] && (
                             <div className="flex flex-col">
-                              <h4 className="sub-title mb-2">Stdout =</h4>
+                              <h4 className="sub-title mb-2">Output =</h4>
                               <pre
-                                className="overflow-auto rounded-xl bg-gray-300 p-3 text-black"
+                                className={`min-h-[37px] overflow-auto rounded-xl bg-gray-300 p-3 text-black ${submissionStatus?.code_answer?.[index] !== submissionStatus?.expected_code_answer?.[index] && 'border border-red-500 bg-red-100 text-red-500'}`}
                                 style={{
                                   whiteSpace: 'pre-wrap',
                                   wordWrap: 'break-word'
                                 }}
                               >
-                                {submissionStatus.std_output_list[idx]}
+                                {submissionStatus?.code_answer?.[index]}
                               </pre>
                             </div>
-                          )}
-                        </div>
-                      ))}
+                            <div className="flex flex-col">
+                              <h4 className="sub-title mb-2">Expect =</h4>
+                              <pre
+                                className="min-h-[37px] overflow-auto rounded-xl bg-gray-300 p-3 text-black"
+                                style={{
+                                  whiteSpace: 'pre-wrap',
+                                  wordWrap: 'break-word'
+                                }}
+                              >
+                                {submissionStatus?.expected_code_answer?.[index]}
+                              </pre>
+                            </div>
+                            {submissionStatus?.std_output_list[index] && (
+                              <div className="flex flex-col">
+                                <h4 className="sub-title mb-2">Stdout =</h4>
+                                <pre
+                                  className="overflow-auto rounded-xl bg-gray-300 p-3 text-black"
+                                  style={{
+                                    whiteSpace: 'pre-wrap',
+                                    wordWrap: 'break-word'
+                                  }}
+                                >
+                                  {submissionStatus?.std_output_list?.[index]}
+                                </pre>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   </Tabs.TabPane>
                 ))}

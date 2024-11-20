@@ -1,25 +1,25 @@
 import { Divider, Input, Pagination, PaginationProps, Select, Skeleton, Typography } from 'antd';
+import { SearchProps } from 'antd/es/input';
 import { useState } from 'react';
-import { FaTimes } from 'react-icons/fa';
 import useSWR from 'swr';
+import TagMenu from '../../../components/post/TagMenu/TagMenu.component';
 import { getProblems } from '../../../services/problem/problem.service';
 import { ProblemType } from '../../../types/ProblemType';
 import { ResponsePagination } from '../../../types/common/response.type';
 import ContentCard from './components/ProblemCard';
-import { TagType } from '../../../types/TagType';
-import TagMenu from '../../../components/post/TagMenu/TagMenu.component';
 
 const ProblemListPage = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+
+  const [difficulty, setDifficulty] = useState<string | undefined>();
+  const [status, setStatus] = useState<string | undefined>();
+  const [queryOption, setQueryOption] = useState({ page: 1, pageSize: 10, search: '' });
   const {
     data: problemList,
     error,
     isLoading
-  } = useSWR<ResponsePagination<ProblemType[]>>(`/api/problem?page=${currentPage}&limit=${pageSize}`, () =>
-    getProblems(`page=${currentPage}&limit=${pageSize}`)
+  } = useSWR<ResponsePagination<ProblemType[]>>(`/api/problem?${JSON.stringify(queryOption)}`, () =>
+    getProblems(queryOption)
   );
   if (error) {
     return (
@@ -30,18 +30,13 @@ const ProblemListPage = () => {
     );
   }
 
-  const handleSearch = (e: any) => {
-    setSearchTerm(e.target.value);
-  };
-
   const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
-    setCurrentPage(current);
-    setPageSize(pageSize);
+    setQueryOption({ ...queryOption, pageSize });
   };
   const onPaginationChange = (page: number, pageSize: number) => {
-    setCurrentPage(page); // Update current page
-    setPageSize(pageSize); // Optionally update page size if needed
+    setQueryOption({ ...queryOption, page, pageSize });
   };
+
   // const filteredContent = (problemList?.data || []).filter((item) => {
   //   const matchesTags = selectedTags.length === 0 || selectedTags.every((tag) => item.tags.includes(tag));
   //   const matchesSearch =
@@ -50,10 +45,22 @@ const ProblemListPage = () => {
   //   return matchesTags && matchesSearch;
   // });
 
+  const difficultyOptions = [
+    { label: 'Easy', value: 'easy' },
+    { label: 'Medium', value: 'medium' },
+    { label: 'Hard', value: 'hard' }
+  ];
+
+  const statusOptions = [
+    { label: 'Solved', value: 'solved' },
+    { label: 'Unsolved', value: 'unsolved' },
+    { label: 'Attempted', value: 'attempted' }
+  ];
+
   const clearFilters = () => {
     setSelectedTags([]);
-    setSearchTerm('');
   };
+  const onSearch: SearchProps['onSearch'] = (value) => setQueryOption({ ...queryOption, search: value });
   return (
     <div className="flex h-full gap-5 py-5">
       <div className="flex h-full flex-1 flex-col px-4 pb-0">
@@ -71,17 +78,34 @@ const ProblemListPage = () => {
               <div className="">
                 {/* <h2 className="mb-4 text-[1.4rem] font-semibold">Solve problems here</h2> */}
 
-                <div className="flex items-center gap-5">
-                  <Select options={[{ value: 'sample', label: <span>sample</span> }]} />
-                  <Input
-                    type="text"
-                    placeholder="Search content..."
-                    value={searchTerm}
-                    onChange={handleSearch}
-                    className="input rounded-l-md border px-4 py-2 focus:outline-none focus:ring-2"
-                    aria-label="Search content"
+                <div className="flex items-center gap-10">
+                  <div className="flex items-center gap-3">
+                    <Select
+                      placeholder="Select Difficulty"
+                      className="w-[150px]"
+                      options={difficultyOptions}
+                      value={difficulty}
+                      onChange={(value) => setDifficulty(value)}
+                      allowClear
+                    />
+                    <Select
+                      placeholder="Select Status"
+                      className="w-[150px]"
+                      options={statusOptions}
+                      value={status}
+                      onChange={(value) => setStatus(value)}
+                      allowClear
+                    />
+                  </div>
+
+                  <Input.Search
+                    placeholder="Search problems"
+                    allowClear
+                    onSearch={onSearch}
+                    className="input max-w-[300px] rounded-xl px-4 py-2 focus:outline-none focus:ring-2"
                   />
-                  {(selectedTags.length > 0 || searchTerm) && (
+
+                  {/* {(selectedTags.length > 0 || searchTerm) && (
                     <button
                       onClick={clearFilters}
                       className="rounded-r-md bg-red-500 px-4 py-2 text-white transition-colors duration-200 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
@@ -89,7 +113,7 @@ const ProblemListPage = () => {
                     >
                       <FaTimes />
                     </button>
-                  )}
+                  )} */}
                 </div>
               </div>
               <Divider />
@@ -117,11 +141,11 @@ const ProblemListPage = () => {
         )}
         <div className="card my-5 flex h-[50px] w-full items-center justify-center">
           <Pagination
-            current={currentPage}
+            current={queryOption?.page}
             total={problemList?.total || 0}
             showSizeChanger
             onShowSizeChange={onShowSizeChange}
-            pageSize={pageSize}
+            pageSize={queryOption?.pageSize}
             onChange={onPaginationChange}
           />
         </div>
