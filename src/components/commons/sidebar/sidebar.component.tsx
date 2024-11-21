@@ -1,9 +1,9 @@
 import { Divider, Menu, Typography } from 'antd';
 
-import SIDEBAR_ITEMS from './sidebar.item';
 import './sidebar.style.scss';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { cn } from '../../../utils/helpers/cn';
+import { SIDEBAR_ITEMS } from './sidebar.item';
 
 type SidebarProps = {
   collapsed: boolean;

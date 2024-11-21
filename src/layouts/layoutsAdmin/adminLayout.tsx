@@ -1,22 +1,39 @@
 // AdminLayout.tsx (Tạo một layout dành riêng cho Admin)
 
-import React from 'react';
+import { Content } from 'antd/es/layout/layout';
+import React, { useState } from 'react';
 import Sidebar from '../../components/CommonAdmin/Sidebar';
+import HeaderComponent from '../../components/commons/header/header.component';
+import { cn } from '../../utils/helpers/cn';
 
 interface AdminLayoutProps {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
-    return (
-        <div className="flex">
-            {/* Sidebar sẽ hiển thị trong AdminLayout */}
-            <Sidebar />
-            <div className="flex-1">
-                {children}
-            </div>
-        </div>
-    );
+  const [collapsed, setCollapsed] = useState<boolean>(true);
+
+  return (
+    <div className="flex justify-center overflow-x-hidden">
+      {/* <HeaderComponent /> */}
+      <div className={cn('desktop:h-screen, flex', 'flex h-screen w-full justify-center')}>
+        <Content style={{ minHeight: 'calc(100vh - 120px)' }} className={cn('duration-200', 'flex')}>
+          <div
+            style={{
+              // zIndex: 1000,
+              height: 'calc(100vh - 60px)'
+            }}
+          >
+            <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
+          </div>
+
+          <div className={cn('w-full duration-200', !collapsed ? 'ml-[220px]' : 'ml-[80px]')}> {children}</div>
+        </Content>
+      </div>
+
+      {/* {useFooter && <FooterComponent />} */}
+    </div>
+  );
 };
 
 export default AdminLayout;

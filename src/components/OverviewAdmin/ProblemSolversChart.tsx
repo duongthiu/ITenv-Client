@@ -1,66 +1,56 @@
-import { motion } from "framer-motion";
-import {
-	BarChart,
-	Bar,
-	XAxis,
-	YAxis,
-	CartesianGrid,
-	Tooltip,
-	ResponsiveContainer,
-	Legend,
-	Cell,
-} from "recharts";
+import { motion } from 'framer-motion';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, Cell } from 'recharts';
 
 // Định nghĩa kiểu dữ liệu cho mỗi mục trong SALES_CHANNEL_DATA
 interface SalesChannelData {
-	name: string;
-	value: number;
+  name: string;
+  value: number;
 }
 
 // Dữ liệu cho SalesChannelChart
 const SALES_CHANNEL_DATA: SalesChannelData[] = [
-	{ name: "NgokThuong", value: 777 },
-	{ name: "DuongThieu", value: 800 },
-	{ name: "LuongBui", value: 564 },
-	{ name: "TanLam", value: 125 },
+  { name: 'NgokThuong', value: 777 },
+  { name: 'DuongThieu', value: 800 },
+  { name: 'LuongBui', value: 564 },
+  { name: 'TanLam', value: 125 }
 ];
 
-const COLORS = ["#6366F1", "#8B5CF6", "#EC4899", "#10B981", "#F59E0B"];
+const COLORS = ['#6366F1', '#8B5CF6', '#EC4899', '#10B981', '#F59E0B'];
 
 const ProblemSolversChart: React.FC = () => {
-	return (
-		<motion.div
-			className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 lg:col-span-2 border border-gray-700"
-			initial={{ opacity: 0, y: 20 }}
-			animate={{ opacity: 1, y: 0 }}
-			transition={{ delay: 0.4 }}
-		>
-			<h2 className="text-lg font-medium mb-4 text-gray-100">Top 4 Problem Solvers</h2>
+  return (
+    <motion.div
+      className="box lg:col-span-2 rounded-xl bg-opacity-50 p-6 shadow-lg backdrop-blur-md"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.4 }}
+    >
+      <h2 className="sub-title mb-4 text-[1.6rem] font-medium">Top 4 Problem Solvers</h2>
 
-			<div className="h-80">
-				<ResponsiveContainer>
-					<BarChart data={SALES_CHANNEL_DATA}>
-						<CartesianGrid strokeDasharray="3 3" stroke="#4B5563" />
-						<XAxis dataKey="name" stroke="#9CA3AF" />
-						<YAxis stroke="#9CA3AF" />
-						<Tooltip
-							contentStyle={{
-								backgroundColor: "rgba(31, 41, 55, 0.8)",
-								borderColor: "#4B5563",
-							}}
-							itemStyle={{ color: "#E5E7EB" }}
-						/>
-						<Legend />
-						<Bar dataKey="value" fill="#8884d8">
-							{SALES_CHANNEL_DATA.map((entry, index) => (
-								<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-							))}
-						</Bar>
-					</BarChart>
-				</ResponsiveContainer>
-			</div>
-		</motion.div>
-	);
+      <div className="h-80">
+        <ResponsiveContainer>
+          <BarChart data={SALES_CHANNEL_DATA}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#4B5563" />
+            <XAxis dataKey="name" stroke="#9CA3AF" />
+            <YAxis stroke="#9CA3AF" />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: 'rgba(31, 41, 55, 0.8)',
+                borderColor: '#4B5563'
+              }}
+              itemStyle={{ color: '#E5E7EB' }}
+            />
+            <Legend />
+            <Bar dataKey="value" fill="#8884d8">
+              {SALES_CHANNEL_DATA.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </motion.div>
+  );
 };
 
 export default ProblemSolversChart;

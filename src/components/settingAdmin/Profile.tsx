@@ -1,26 +1,26 @@
-import { User } from "lucide-react";
-import SettingSection from "./SettingSection";
+import { User } from 'lucide-react';
+import SettingSection from './SettingSection';
 
 const Profile = () => {
-	return (
-		<SettingSection icon={User} title={"Profile"}>
-			<div className='flex flex-col sm:flex-row items-center mb-6'>
-				<img
-					src='https://res-console.cloudinary.com/dcti265mg/thumbnails/v1/image/upload/v1731606986/dXNlcnMvaW1ncy94M2RpdnJzZmhpZWpzZDhhcXF1aA==/drilldown'
-					alt='Profile'
-					className='rounded-full w-20 h-20 object-cover mr-4'
-				/>
+  return (
+    <SettingSection icon={User} title={'Profile'}>
+      <div className="sm:flex-row mb-6 flex flex-col items-center">
+        <img
+          src="https://res-console.cloudinary.com/dcti265mg/thumbnails/v1/image/upload/v1731606986/dXNlcnMvaW1ncy94M2RpdnJzZmhpZWpzZDhhcXF1aA==/drilldown"
+          alt="Profile"
+          className="mr-4 h-20 w-20 rounded-full object-cover"
+        />
 
-				<div>
-					<h3 className='text-lg font-semibold text-gray-100'>ITenv</h3>
-					<p className='text-gray-400'>ITenv@gmail.com</p>
-				</div>
-			</div>
+        <div>
+          <h3 className="text-lg font-semibold text-gray-100">ITenv</h3>
+          <p className="text-gray-400">ITenv@gmail.com</p>
+        </div>
+      </div>
 
-			<button className='bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded transition duration-200 w-full sm:w-auto'>
-				Edit Profile
-			</button>
-		</SettingSection>
-	);
+      <button className="sm:w-auto w-full rounded bg-indigo-600 px-4 py-2 font-bold text-white transition duration-200 hover:bg-indigo-700">
+        Edit Profile
+      </button>
+    </SettingSection>
+  );
 };
 export default Profile;

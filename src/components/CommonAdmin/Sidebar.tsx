@@ -1,73 +1,58 @@
-import { BarChart2, DollarSign, Menu, Settings, ShoppingBag, ShoppingCart, TrendingUp, Users } from "lucide-react";
-import { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion"; // Đảm bảo bạn đã import motion
-import { Link } from "react-router-dom";
+import { Divider, Menu, Typography } from 'antd';
+import { useNavigate, useLocation } from 'react-router-dom'; // Import useLocation
+import { ADMIN_SIDEBAR } from '../commons/sidebar/sidebar.item';
+import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
+import { cn } from '../../utils/helpers/cn';
+import '../../components/commons/sidebar/sidebar.style.scss';
+import logo from '../../assets/logo/logo.png';
 
-// Định nghĩa kiểu cho các item trong Sidebar
-interface SidebarItem {
-	name: string;
-	icon: React.ElementType; // Thể hiện là một component icon
-	color: string;
-	href: string;
-}
+type SidebarProps = {
+  collapsed: boolean;
+  setCollapsed: (collapsed: boolean) => void;
+};
 
-// Dữ liệu các item trong sidebar
-const SIDEBAR_ITEMS: SidebarItem[] = [
-	{
-		name: "Overview",
-		icon: BarChart2,
-		color: "#6366f1",
-		href: "/overviews",
-	},
-	{ name: "Users", icon: Users, color: "#EC4899", href: "/users" },
-	{ name: "Posts", icon: ShoppingBag, color: "#8B5CF6", href: "/posts" },
-	{ name: "Sales", icon: DollarSign, color: "#10B981", href: "/sales" },
-	{ name: "Orders", icon: ShoppingCart, color: "#F59E0B", href: "/orders" },
-	{ name: "Analytics", icon: TrendingUp, color: "#3B82F6", href: "/analytics" },
-	{ name: "Settings", icon: Settings, color: "#6EE7B7", href: "/settings" },
-];
+const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
+  const navigate = useNavigate(); // Initialize navigate
+  const location = useLocation(); // Get current location
 
-// Định nghĩa kiểu cho props và state của Sidebar component
-const Sidebar: React.FC = () => {
-	const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+  // Get the current pathname to set as the selected key
+  const currentPath = location.pathname;
 
-	return (
-		<div
-			className={`relative z-10 transition-all duration-300 ease-in-out flex-shrink-0 ${isSidebarOpen ? "w-64" : "w-20"}`}
-		>
-			<div className='h-full bg-gray-800 bg-opacity-50 backdrop-blur-md p-4 flex flex-col border-r border-gray-700'>
-				<button
-					onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-					className='p-2 rounded-full hover:bg-gray-700 transition-colors max-w-fit'
-				>
-					<Menu size={24} />
-				</button>
-
-				<nav className='mt-8 flex-grow'>
-					{SIDEBAR_ITEMS.map((item) => (
-						<Link key={item.href} to={item.href}>
-							<div className='flex items-center p-4 text-sm font-medium rounded-lg hover:bg-gray-700 transition-colors mb-2'>
-								<item.icon size={20} style={{ color: item.color, minWidth: "20px" }} />
-								<AnimatePresence>
-									{isSidebarOpen && (
-										<motion.span
-											className='ml-4 whitespace-nowrap'
-											initial={{ opacity: 0, width: 0 }}
-											animate={{ opacity: 1, width: "auto" }}
-											exit={{ opacity: 0, width: 0 }}
-											transition={{ duration: 0.2, delay: 0.3 }}
-										>
-											{item.name}
-										</motion.span>
-									)}
-								</AnimatePresence>
-							</div>
-						</Link>
-					))}
-				</nav>
-			</div>
-		</div>
-	);
+  return (
+    <div
+      className={cn(
+        'sidebar-wrapper z-100 fixed left-0 flex h-full flex-none flex-col rounded-2xl rounded-none shadow-xl duration-200',
+        !collapsed ? 'w-[220px]' : 'w-[80px]'
+      )}
+    >
+      <div className="box flex flex-col items-center justify-center gap-5 p-5 py-10">
+        <img src={logo} alt="Logo" className="h-[40px] w-[40px]" />
+        {!collapsed && <Typography className="font-mono text-[2rem] font-bold">ITENV</Typography>}
+      </div>
+      <div className="h-full w-full overflow-auto overflow-x-hidden">
+        <Menu
+          mode="inline"
+          selectedKeys={[currentPath]} // Set selected key based on the current URL
+          style={{ height: '100%', border: 'none', width: '100%' }}
+          items={ADMIN_SIDEBAR}
+          inlineCollapsed={collapsed}
+          onClick={({ key }) => navigate(key)} // Handle navigation on item click
+        />
+      </div>
+      <Divider className="w-[90%]" />
+      <Typography
+        onClick={() => setCollapsed(!collapsed)}
+        className="card flex h-[60px] min-h-[60px] w-full cursor-pointer items-center justify-center rounded-none border-none px-8"
+      >
+        <div className={`${collapsed && 'hidden'} `}>
+          <IoIosArrowBack size={25} />
+        </div>
+        <div className={`${!collapsed && 'hidden'}`}>
+          <IoIosArrowForward size={25} />
+        </div>
+      </Typography>
+    </div>
+  );
 };
 
 export default Sidebar;
