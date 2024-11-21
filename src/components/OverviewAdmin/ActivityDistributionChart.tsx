@@ -1,7 +1,10 @@
 import { motion } from 'framer-motion';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Select } from 'antd';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import useSWR from 'swr';
+import { QueryOptions } from '../../types/common';
+import { getPostActivityByMonth } from '../../services/post/post.admin.service';
 
 const { Option } = Select;
 
@@ -14,19 +17,35 @@ interface PostData {
 const COLORS = ['#6366F1', '#8B5CF6', '#EC4899', '#10B981', '#F59E0B'];
 
 const ActivityDistributionChart: React.FC = () => {
-  const [selectedMonth, setSelectedMonth] = useState<number>(1); // Default month is January
-  const [selectedYear, setSelectedYear] = useState<number>(2024); // Default year is 2024
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth() + 1; // getMonth() is zero-based, so add 1
+  const currentYear = currentDate.getFullYear();
+  const [selectedMonth, setSelectedMonth] = useState<number>(currentMonth);
+  const [selectedYear, setSelectedYear] = useState<number>(currentYear);
 
-  const months = Array.from({ length: 12 }, (_, index) => index + 1); // Generate months [1, 12]
-  const years = [2023, 2024, 2025]; // Years available for selection
+  // Query options for fetching data
+  const queryOptions: QueryOptions = {
+    month: selectedMonth,
+    year: selectedYear
+  };
 
-  const postData: PostData[] = [
-    { name: 'Post', value: 4500 },
-    { name: 'Comment', value: 3200 },
-    { name: 'Upvote', value: 2800 },
-    { name: 'Share', value: 2100 },
-    { name: 'Downvote', value: 1900 }
-  ];
+  // Fetch data based on queryOptions
+  const { data: postActivityDistribution, isValidating } = useSWR(
+    ['post-activity-distribution', queryOptions],
+    () => getPostActivityByMonth(queryOptions),
+    { revalidateOnFocus: false }
+  );
+
+  // Transform fetched data into chart-friendly format
+  const postData: PostData[] = postActivityDistribution?.data
+    ? [
+        { name: 'Posts', value: postActivityDistribution.data.totalPosts },
+        { name: 'Comments', value: postActivityDistribution.data.totalComments },
+        { name: 'Upvotes', value: postActivityDistribution.data.totalUpvotes },
+        { name: 'Downvotes', value: postActivityDistribution.data.totalDownvotes },
+        { name: 'Shares', value: postActivityDistribution.data.totalShares }
+      ]
+    : [];
 
   return (
     <motion.div
@@ -41,7 +60,7 @@ const ActivityDistributionChart: React.FC = () => {
       <div className="mb-4 flex gap-4">
         {/* Ant Design Select for Month */}
         <Select value={selectedMonth} onChange={(value) => setSelectedMonth(value)} className="w-[100px]">
-          {months.map((month) => (
+          {Array.from({ length: 12 }, (_, index) => index + 1).map((month) => (
             <Option key={month} value={month}>
               Tháng {month}
             </Option>
@@ -50,7 +69,7 @@ const ActivityDistributionChart: React.FC = () => {
 
         {/* Ant Design Select for Year */}
         <Select value={selectedYear} onChange={(value) => setSelectedYear(value)} className="w-[100px]">
-          {years.map((year) => (
+          {[2023, 2024, 2025].map((year) => (
             <Option key={year} value={year}>
               {year}
             </Option>
@@ -60,7 +79,7 @@ const ActivityDistributionChart: React.FC = () => {
 
       {/* Pie Chart Section */}
       <div className="h-80">
-        <ResponsiveContainer width="100%" height="104%">
+        <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={postData}
@@ -87,6 +106,9 @@ const ActivityDistributionChart: React.FC = () => {
           </PieChart>
         </ResponsiveContainer>
       </div>
+
+      {/* Loading Indicator */}
+      {isValidating && <div className="mt-4 text-center text-gray-500">Loading...</div>}
     </motion.div>
   );
 };

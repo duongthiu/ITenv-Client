@@ -46,7 +46,7 @@ export const getSubmissionByUserId = async (userId: string): Promise<ResponsePag
   const data = await get(import.meta.env.VITE_APP_API + `problems//user/submissions/${userId}`);
   return data as unknown as ResponsePagination<any>;
 };
-export const getAverageProblemsPerUser = async (): Promise<ResponsePagination<null>> => {
+export const getAverageProblemsPerUser = async (): Promise<ResponsePagination<any>> => {
   const total = await get(import.meta.env.VITE_APP_API + 'problems/average/per-user');
-  return total as ResponsePagination<null>;
+  return total as ResponsePagination<any>;
 };

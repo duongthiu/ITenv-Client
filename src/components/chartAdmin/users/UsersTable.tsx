@@ -1,81 +1,48 @@
-import { useState, ChangeEvent } from 'react';
+import { Empty, Input, Spin, Table, Tag } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
-import { Table, Tag, Input } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import { ChangeEvent, useState } from 'react';
+import useSWR from 'swr';
+import { getAllUser, UserPageType } from '../../../services/user/user.admin.service';
+import { formatDate } from '../../../utils/helpers/formatDate';
 
-// Define the types for the user data
-interface User {
-  id: number;
+// Define the types for the user data (adjust as needed)
+type User = {
+  _id: string;
   name: string;
   email: string;
   role: string;
   status: string;
   lastOnline: Date;
-}
-
-const userData: User[] = [
-  {
-    id: 1,
-    name: 'John Doe',
-    email: 'john@example.com',
-    role: 'Customer',
-    status: 'Active',
-    lastOnline: new Date('2024-11-07T04:11:04.862+00:00')
-  },
-  {
-    id: 2,
-    name: 'Jane Smith',
-    email: 'jane@example.com',
-    role: 'Admin',
-    status: 'Active',
-    lastOnline: new Date('2024-11-07T04:11:04.862+00:00')
-  },
-  {
-    id: 3,
-    name: 'Bob Johnson',
-    email: 'bob@example.com',
-    role: 'Customer',
-    status: 'Inactive',
-    lastOnline: new Date('2024-11-07T04:11:04.862+00:00')
-  },
-  {
-    id: 4,
-    name: 'Alice Brown',
-    email: 'alice@example.com',
-    role: 'Customer',
-    status: 'Active',
-    lastOnline: new Date('2024-11-07T04:11:04.862+00:00')
-  },
-  {
-    id: 5,
-    name: 'Charlie Wilson',
-    email: 'charlie@example.com',
-    role: 'Moderator',
-    status: 'Active',
-    lastOnline: new Date('2024-11-07T04:11:04.862+00:00')
-  }
-];
+};
 
 const UsersTable: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>(''); // Type searchTerm as string
-  const [filteredUsers, setFilteredUsers] = useState<User[]>(userData); // Type filteredUsers as User[]
+  const [queryOptions, setQueryOptions] = useState({ page: 1, pageSize: 10, search: '' });
 
-  // Handle the search input
+  // Use SWR to fetch data
+  const {
+    data: usersData,
+    isLoading: isLoadingUsers,
+    error: isErrorUsers
+  } = useSWR('users' + JSON.stringify(queryOptions), () => getAllUser(queryOptions));
+
+  // Handle the search input and update queryOptions
   const handleSearch = (e: ChangeEvent<HTMLInputElement>): void => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
-    const filtered = userData.filter(
-      (user) => user.name.toLowerCase().includes(term) || user.email.toLowerCase().includes(term)
-    );
-    setFilteredUsers(filtered);
+    setQueryOptions((prev) => ({
+      ...prev,
+      search: term
+    }));
   };
 
-  // Define columns for the Ant Design Table
-  const columns: ColumnsType<User> = [
+  // Columns for Ant Design Table
+  const columns: ColumnsType<UserPageType> = [
     {
       title: 'Name',
-      dataIndex: 'name',
+      dataIndex: ['user', 'username'], // Accessing nested user object
       key: 'name',
       render: (text) => <span className="sub-title">{text}</span>
     },
@@ -86,22 +53,32 @@ const UsersTable: React.FC = () => {
       render: (text) => <span className="sub-title">{text}</span>
     },
     {
+      title: 'Gender',
+      dataIndex: ['user', 'gender'],
+      key: 'gender',
+      render: (text) => (text ? <span className="sub-title">{text}</span> : <Tag color="green"></Tag>)
+    },
+    {
+      title: 'BirthDay',
+      dataIndex: ['user', 'dob'],
+      key: 'dob',
+      render: (text) => (text ? <span className="sub-title">{formatDate(text)}</span> : <Tag color="green"></Tag>)
+    },
+    {
       title: 'Role',
       dataIndex: 'role',
       key: 'role',
-      render: (role) => (
-        <Tag color={role === 'Admin' ? 'geekblue' : role === 'Moderator' ? 'purple' : 'green'}>{role}</Tag>
-      )
+      render: (role) => <Tag color={role === 'ADMIN' ? 'purple' : 'green'}>{role}</Tag>
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: (status) => <Tag color={status === 'Active' ? 'green' : 'red'}>{status}</Tag>
+      render: (status) => <Tag color={status ? 'green' : 'red'}>{status ? 'Online' : 'Offline'}</Tag>
     },
     {
       title: 'Last Online',
-      dataIndex: 'lastOnline',
+      dataIndex: ['user', 'lastOnline'], // Accessing nested user object
       key: 'lastOnline',
       render: (date) => <span>{new Date(date).toLocaleString()}</span>
     },
@@ -116,6 +93,8 @@ const UsersTable: React.FC = () => {
       )
     }
   ];
+
+  const filteredUsers = usersData?.data || [];
 
   return (
     <motion.div
@@ -137,7 +116,23 @@ const UsersTable: React.FC = () => {
           />
         </div>
       </div>
-      <Table columns={columns} dataSource={filteredUsers} rowKey="id" pagination={{ pageSize: 5 }} />
+
+      {/* Handle Loading, Error, and Empty States */}
+      {isLoadingUsers ? (
+        <div className="flex items-center justify-center py-8">
+          <Spin />
+        </div>
+      ) : isErrorUsers ? (
+        <div className="flex items-center justify-center py-8">
+          <span className="text-red-500">Failed to load users. Please try again later.</span>
+        </div>
+      ) : filteredUsers.length === 0 ? (
+        <div className="flex items-center justify-center py-8">
+          <Empty description="No users found" />
+        </div>
+      ) : (
+        <Table columns={columns} dataSource={filteredUsers} rowKey="_id" pagination={{ pageSize: 5 }} />
+      )}
     </motion.div>
   );
 };

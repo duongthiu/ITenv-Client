@@ -1,17 +1,21 @@
 import { motion } from 'framer-motion';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { getUserDemographics } from '../../../services/user/user.admin.service';
+import useSWR from 'swr';
 
 const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff8042', '#0088FE'];
 
-const userDemographicsData = [
-  { name: '18-24', value: 20 },
-  { name: '25-34', value: 30 },
-  { name: '35-44', value: 25 },
-  { name: '45-54', value: 15 },
-  { name: '55+', value: 10 }
-];
-
 const UserDemographicsChart = () => {
+  const { data: userDemographics } = useSWR('user-demographics', () => getUserDemographics());
+
+  // Transform the API response into the format needed for the Pie chart
+  const userDemographicsData = userDemographics
+    ? Object.entries(userDemographics.data).map(([ageRange, value]) => ({
+        name: ageRange,
+        value: value
+      }))
+    : [];
+
   return (
     <motion.div
       className="box lg:col-span-2 rounded-xl bg-opacity-50 p-6 shadow-lg backdrop-blur-md"

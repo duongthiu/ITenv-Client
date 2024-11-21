@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import LazyLoadComponent from '../components/commons/LazyComponent';
 import DefaultLayout from '../layouts/DefaultLayout/DefaultLayout';
+import AdminLayout from '../layouts/layoutsAdmin/adminLayout';
 import DiscussByCate from '../pages/Public/Discuss/DiscussByCate/DiscussByCate.page';
 import { paths } from './paths';
 export type RouteType = {
@@ -33,6 +34,10 @@ const LazyEditProfile = LazyLoadComponent(() => import('../pages/Private/EditPro
 
 const LazyDashboardPage = LazyLoadComponent(() => import('../pages/Admin/Dashboard/Dashboard.page'))(true);
 
+//admin Route
+const LazyOverviewPage = LazyLoadComponent(() => import('../pages/Admin/OverviewPage'))(true);
+const LazyUsersPage = LazyLoadComponent(() => import('../pages/Admin/UsersPage'))(true);
+const LazySettingsPage = LazyLoadComponent(() => import('../pages/Admin/SettingsPage'))(true);
 export const PUBLIC_ROUTES: RouteType[] = [
   {
     path: paths.singleProblem,
@@ -197,7 +202,14 @@ export const AUTHEN_ROUTES: RouteType[] = [
 export const ADMIN_ROUTES: RouteType[] = [
   {
     path: paths.adminDashboard,
-    layout: DefaultLayout,
+    layout: AdminLayout,
     element: <LazyDashboardPage />
-  }
+  },
+  {
+    path: paths.adminOverviews,
+    layout: AdminLayout,
+    element: <LazyOverviewPage />
+  },
+  { path: paths.adminUsers, layout: AdminLayout, element: <LazyUsersPage /> },
+  { path: paths.adminSettings, layout: AdminLayout, element: <LazySettingsPage /> }
 ];

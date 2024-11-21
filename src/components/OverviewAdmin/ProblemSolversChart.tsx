@@ -1,23 +1,27 @@
 import { motion } from 'framer-motion';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, Cell } from 'recharts';
+import { getTop10Solver } from '../../services/problem/problem.admin.service';
+import useSWR from 'swr';
 
-// Định nghĩa kiểu dữ liệu cho mỗi mục trong SALES_CHANNEL_DATA
-interface SalesChannelData {
+// Define the data type for top solvers
+interface SolverData {
   name: string;
-  value: number;
+  problems: number;
 }
-
-// Dữ liệu cho SalesChannelChart
-const SALES_CHANNEL_DATA: SalesChannelData[] = [
-  { name: 'NgokThuong', value: 777 },
-  { name: 'DuongThieu', value: 800 },
-  { name: 'LuongBui', value: 564 },
-  { name: 'TanLam', value: 125 }
-];
 
 const COLORS = ['#6366F1', '#8B5CF6', '#EC4899', '#10B981', '#F59E0B'];
 
 const ProblemSolversChart: React.FC = () => {
+  // Fetch top solvers data
+  const { data: top10Solver } = useSWR('top-10-solver', () => getTop10Solver());
+
+  // Map the API response to the format required by the chart
+  const formattedData: SolverData[] =
+    top10Solver?.data.map((solver: any) => ({
+      name: solver.username,
+      problems: solver.submitCount
+    })) || [];
+
   return (
     <motion.div
       className="box lg:col-span-2 rounded-xl bg-opacity-50 p-6 shadow-lg backdrop-blur-md"
@@ -25,11 +29,11 @@ const ProblemSolversChart: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4 }}
     >
-      <h2 className="sub-title mb-4 text-[1.6rem] font-medium">Top 4 Problem Solvers</h2>
+      <h2 className="sub-title mb-4 text-[1.6rem] font-medium">Top 10 Problem Solvers</h2>
 
       <div className="h-80">
         <ResponsiveContainer>
-          <BarChart data={SALES_CHANNEL_DATA}>
+          <BarChart data={formattedData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#4B5563" />
             <XAxis dataKey="name" stroke="#9CA3AF" />
             <YAxis stroke="#9CA3AF" />
@@ -41,8 +45,8 @@ const ProblemSolversChart: React.FC = () => {
               itemStyle={{ color: '#E5E7EB' }}
             />
             <Legend />
-            <Bar dataKey="value" fill="#8884d8">
-              {SALES_CHANNEL_DATA.map((entry, index) => (
+            <Bar dataKey="problems" fill="#8884d8">
+              {formattedData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Bar>

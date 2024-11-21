@@ -1,22 +1,14 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { motion } from 'framer-motion';
-
-// Define the type for the user growth data
-interface UserGrowthData {
-  month: string;
-  users: number;
-}
-
-const userGrowthData: UserGrowthData[] = [
-  { month: 'Jan', users: 1000 },
-  { month: 'Feb', users: 1500 },
-  { month: 'Mar', users: 2000 },
-  { month: 'Apr', users: 3000 },
-  { month: 'May', users: 4000 },
-  { month: 'Jun', users: 5000 }
-];
+import useSWR from 'swr';
+import { getUserGrowth } from '../../../services/user/user.admin.service';
 
 const UserGrowthChart: React.FC = () => {
+  const { data: userGrowth } = useSWR('user-growth', () => getUserGrowth());
+  const chartData = userGrowth?.data?.map((item: { month: number; total: number }) => ({
+    month: item.month, // This will be used for the X-Axis
+    users: item.total // This will be used for the Y-Axis
+  }));
   return (
     <motion.div
       className="box rounded-xl bg-opacity-50 p-6 shadow-lg backdrop-blur-md"
@@ -27,7 +19,7 @@ const UserGrowthChart: React.FC = () => {
       <h2 className="sub-title mb-4 text-[1.6rem] font-semibold">User Growth</h2>
       <div className="h-[320px]">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={userGrowthData}>
+          <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
             <XAxis dataKey="month" stroke="#9CA3AF" />
             <YAxis stroke="#9CA3AF" />

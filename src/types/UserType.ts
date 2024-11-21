@@ -22,5 +22,6 @@ export type UserType = {
   isBlocked: boolean;
   friendWithMe?: FriendType;
   createdAt?: Date;
+  
 };
 

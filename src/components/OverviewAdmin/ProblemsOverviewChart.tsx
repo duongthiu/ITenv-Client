@@ -1,30 +1,11 @@
 import { FC } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { motion } from 'framer-motion';
+import { getProblemEngagement } from '../../services/problem/problem.admin.service';
+import useSWR from 'swr';
 
-// Định nghĩa kiểu dữ liệu cho salesData
-interface SalesData {
-  name: string;
-  sales: number;
-}
-
-const salesData: SalesData[] = [
-  { name: 'Jul', sales: 4200 },
-  { name: 'Aug', sales: 3800 },
-  { name: 'Sep', sales: 5100 },
-  { name: 'Oct', sales: 4600 },
-  { name: 'Nov', sales: 5400 },
-  { name: 'Dec', sales: 7200 },
-  { name: 'Jan', sales: 6100 },
-  { name: 'Feb', sales: 5900 },
-  { name: 'Mar', sales: 6800 },
-  { name: 'Apr', sales: 6300 },
-  { name: 'May', sales: 7100 },
-  { name: 'Jun', sales: 7500 }
-];
-
-// Định nghĩa kiểu component
 const ProblemsOverviewChart: FC = () => {
+  const { data: problemEngagement } = useSWR('problem-engagement', () => getProblemEngagement());
   return (
     <motion.div
       className="box rounded-xl bg-opacity-50 p-6 shadow-lg backdrop-blur-md"
@@ -36,9 +17,9 @@ const ProblemsOverviewChart: FC = () => {
 
       <div className="h-80">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={salesData}>
+          <LineChart data={problemEngagement?.data}>
             <CartesianGrid strokeDasharray="3 3" stroke="#4B5563" />
-            <XAxis dataKey="name" stroke="#9ca3af" />
+            <XAxis dataKey="month" stroke="#9ca3af" />
             <YAxis stroke="#9ca3af" />
             <Tooltip
               contentStyle={{
@@ -49,7 +30,7 @@ const ProblemsOverviewChart: FC = () => {
             />
             <Line
               type="monotone"
-              dataKey="sales"
+              dataKey="total"
               stroke="#6366F1"
               strokeWidth={3}
               dot={{ fill: '#6366F1', strokeWidth: 2, r: 6 }}

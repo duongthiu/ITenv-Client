@@ -26,5 +26,11 @@ export const paths = {
   editProfileWithoutTab: '/edit-profile/',
 
   // admin
-  adminDashboard: '/admin/dashboard'
+  adminDashboard: '/admin/dashboard',
+  adminOverviews: '/admin/overviews',
+  adminPosts: '/admin/posts',
+  adminUsers: '/admin/users',
+  adminSettings: '/admin/settings',
+  adminProblems: '/admin/problems',
+  adminAnalistics: '/admin/analytics'
 };
