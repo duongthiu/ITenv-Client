@@ -13,6 +13,7 @@ import { useAppSelector } from './redux/app/hook';
 import { ADMIN_ROUTES, AUTHEN_ROUTES, DISCUSS_ROUTES, PUBLIC_ROUTES, RouteType } from './routes/routes';
 // import { Helmet } from 'react-helmet';
 import AdminLayout from './layouts/layoutsAdmin/adminLayout';
+import PostsPage from './pages/Admin/PostsPage';
 // impoxrt { Helmet } from 'react-helmet';
 
 // const pathname = location.path
@@ -148,7 +149,10 @@ function App() {
                 else if (route.layout === null) Layout = Fragment;
                 return <Route key={route.path} path={route.path} element={<Layout>{route.element}</Layout>}></Route>;
               })}
+            <Route path="/admin/posts" element={<AdminLayout><PostsPage /></AdminLayout>} />
+
             <Route path="*" element={<NotFoundPage />} />
+
           </Routes>
         </Router>
       </main>
