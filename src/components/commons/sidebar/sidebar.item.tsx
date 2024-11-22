@@ -43,6 +43,6 @@ export const ADMIN_SIDEBAR: MenuProps['items'] = [
   { label: 'Posts', icon: <FaEdit size={15} />, key: paths.adminPosts },
   { label: 'Problems', icon: <FaCode size={15} />, key: paths.adminProblems },
 
-  { label: 'Analytics', icon: <MdShowChart size={15} />, key: paths.adminAnalistics },
+  // { label: 'Analytics', icon: <MdShowChart size={15} />, key: paths.adminAnalistics },
   { label: 'Settings', icon: <IoIosSettings size={15} />, key: paths.adminSettings }
 ];

@@ -1,10 +1,15 @@
-import { Divider, Menu, Typography } from 'antd';
-import { useNavigate, useLocation } from 'react-router-dom'; // Import useLocation
+import { Button, Divider, Menu, Typography } from 'antd';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ADMIN_SIDEBAR } from '../commons/sidebar/sidebar.item';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import { cn } from '../../utils/helpers/cn';
 import '../../components/commons/sidebar/sidebar.style.scss';
 import logo from '../../assets/logo/logo.png';
+import { paths } from '../../routes/paths';
+import { CiLogout } from 'react-icons/ci';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../redux/user/user.slice';
+import { MdLogout } from 'react-icons/md';
 
 type SidebarProps = {
   collapsed: boolean;
@@ -12,39 +17,63 @@ type SidebarProps = {
 };
 
 const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
-  const navigate = useNavigate(); // Initialize navigate
-  const location = useLocation(); // Get current location
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
 
-  // Get the current pathname to set as the selected key
   const currentPath = location.pathname;
-  console.log(currentPath);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate(paths.login); // Redirect to login page after logout
+  };
+
   return (
     <div
       className={cn(
-        'sidebar-wrapper z-100 fixed left-0 flex h-full flex-none flex-col rounded-2xl rounded-none shadow-xl duration-200',
+        'sidebar-wrapper z-100 fixed left-0 flex h-full flex-none flex-col rounded-2xl shadow-xl duration-200',
         !collapsed ? 'w-[220px]' : 'w-[80px]'
       )}
     >
-      <div className="box flex flex-col items-center justify-center gap-5 p-5 py-10">
+      {/* Logo Section */}
+      <a href={paths.adminOverviews} className="box flex flex-col items-center justify-center gap-5 p-5 py-10">
         <img src={logo} alt="Logo" className="h-[40px] w-[40px]" />
         {!collapsed && <Typography className="font-mono text-[2rem] font-bold">ITENV</Typography>}
-      </div>
-      <div className="h-full w-full overflow-auto overflow-x-hidden">
+      </a>
+
+      {/* Menu Section */}
+      <div className="flex h-full w-full flex-col overflow-auto overflow-x-hidden">
         <Menu
           mode="inline"
-          selectedKeys={[currentPath]} // Set selected key based on the current URL
+          selectedKeys={[currentPath]}
           style={{ height: '100%', border: 'none', width: '100%' }}
           items={ADMIN_SIDEBAR}
           inlineCollapsed={collapsed}
-          onClick={({ key }) => navigate(key)} // Handle navigation on item click
+          onClick={({ key }) => navigate(key)}
         />
       </div>
+
+      {/* Logout Button */}
+      <div className="card flex items-center justify-center border-none p-4 shadow-none">
+        <Button
+          size="large"
+          type="text"
+          icon={<MdLogout size={20} />}
+          className="flex w-full items-center justify-center gap-2 py-4 font-semibold text-red-600"
+          onClick={handleLogout}
+        >
+          {!collapsed && <span>Logout</span>}
+        </Button>
+      </div>
+
       <Divider className="w-[90%]" />
+
+      {/* Collapse/Expand Button */}
       <Typography
         onClick={() => setCollapsed(!collapsed)}
         className="card flex h-[60px] min-h-[60px] w-full cursor-pointer items-center justify-center rounded-none border-none px-8"
       >
-        <div className={`${collapsed && 'hidden'} `}>
+        <div className={`${collapsed && 'hidden'}`}>
           <IoIosArrowBack size={25} />
         </div>
         <div className={`${!collapsed && 'hidden'}`}>
