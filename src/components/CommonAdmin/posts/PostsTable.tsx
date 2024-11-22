@@ -70,16 +70,16 @@ const PostsTable: React.FC = () => {
       render: (tags: { name: string }[]) => (
         <div className="flex flex-wrap">
           {tags?.map((tag) => (
-            <span key={tag.name} className="tag mb-2 mr-2 rounded px-2.5 py-0.5 text-[1rem] font-medium">
-              {tag.name}
+            <span key={tag?.name} className="tag mb-2 mr-2 rounded px-2.5 py-0.5 text-[1rem] font-medium">
+              {tag?.name}
             </span>
           ))}
         </div>
       )
     },
-    { title: 'Views', dataIndex: 'view', key: 'view', render: (view: string[]) => view.length },
-    { title: 'Vote', dataIndex: 'vote', key: 'vote', render: (vote: string[]) => vote.length },
-    { title: 'Down Vote', dataIndex: 'downVote', key: 'downvote', render: (downVote: string[]) => downVote.length },
+    { title: 'Views', dataIndex: 'view', key: 'view', render: (view: string[]) => view?.length },
+    { title: 'Vote', dataIndex: 'vote', key: 'vote', render: (vote: string[]) => vote?.length },
+    { title: 'Down Vote', dataIndex: 'downVote', key: 'downvote', render: (downVote: string[]) => downVote?.length },
     {
       title: 'Anonymous',
       dataIndex: 'isAnonymous',

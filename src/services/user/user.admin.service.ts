@@ -43,6 +43,6 @@ export const getTotalNewUsersInMonths = async (): Promise<ResponsePagination<num
   return data as unknown as ResponsePagination<number>;
 };
 export const editUserRole = async (userId: string, role: string): Promise<ResponsePagination<any>> => {
-  const data = await put(import.meta.env.VITE_APP_API + `users/${userId}/role`, { role: role });
+  const data = await put(import.meta.env.VITE_APP_API + `accounts/${userId}/role`, { role: role });
   return data as unknown as ResponsePagination<any>;
 };

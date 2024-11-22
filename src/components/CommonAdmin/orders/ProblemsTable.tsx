@@ -38,13 +38,13 @@ const ProblemsTable: React.FC = () => {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      render: (text: string) => <span className="text-gray-100">{text}</span>
+      render: (text: string) => <span className="sub-title text-[1.4rem]">{text}</span>
     },
     {
       title: 'Slug',
       dataIndex: 'slug',
       key: 'slug',
-      render: (text: string) => <span className="text-gray-100">{text}</span>
+      render: (text: string) => <span className="sub-title">{text}</span>
     },
     {
       title: 'Level',
@@ -70,7 +70,7 @@ const ProblemsTable: React.FC = () => {
       title: 'Posted At',
       dataIndex: 'postAt',
       key: 'postAt',
-      render: (text: Date) => <span className="text-gray-100">{new Date(text).toLocaleDateString()}</span>
+      render: (text: Date) => <span className="sub-title">{new Date(text).toLocaleDateString()}</span>
     },
     {
       title: 'Actions',
@@ -96,7 +96,7 @@ const ProblemsTable: React.FC = () => {
       transition={{ delay: 0.4 }}
     >
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-gray-100">Problem List</h2>
+        <h2 className="sub-title text-[1.6rem] font-semibold">Problem List</h2>
         <div className="relative">
           <Input
             type="text"

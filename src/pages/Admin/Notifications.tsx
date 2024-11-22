@@ -51,7 +51,7 @@ const Notifications = () => {
           <Form form={form} layout="vertical" onFinish={handleSubmit} className="space-y-4">
             {/* Title Input */}
             <Form.Item
-              label={<span className="text-white">Title</span>}
+              label={<span className="text-[1.6rem]">Title</span>}
               name="title"
               rules={[{ required: true, message: 'Please input the title!' }]}
             >
@@ -60,14 +60,14 @@ const Notifications = () => {
 
             {/* Content Input */}
             <Form.Item
-              label={<span className="text-white">Content</span>}
+              label={<span className="text-[1.6rem]">Content</span>}
               name="content"
               rules={[{ required: true, message: 'Please input the content!' }]}
             >
               <TextArea rows={4} placeholder="Enter notification content" />
             </Form.Item>
 
-            <Form.Item label={<span className="text-white">Recipients</span>} name="recipients">
+            <Form.Item label={<span className="text-[1.6rem]">Recipients</span>} name="recipients">
               <Select mode="multiple" placeholder="Select recipients">
                 {userData?.data?.map((user) => (
                   <Option key={user._id} value={user._id}>

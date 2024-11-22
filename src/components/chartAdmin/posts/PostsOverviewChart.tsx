@@ -15,10 +15,10 @@ const PostsOverviewChart: React.FC = () => {
       transition={{ delay: 0.2 }}
     >
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-gray-100">Posts Overview</h2>
+        <h2 className="sub-title text-[1.6rem] font-semibold">Posts Overview</h2>
       </div>
 
-      <div className="h-80 w-full">
+      <div className="h-full max-h-[300px] max-w-full">
         <ResponsiveContainer>
           <AreaChart data={data?.data}>
             <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
