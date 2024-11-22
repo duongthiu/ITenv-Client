@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, Cell } from 'recharts';
-import { getTop10Solver } from '../../services/problem/problem.admin.service';
+import { getTop10Solver } from '../../../services/problem/problem.admin.service';
 import useSWR from 'swr';
 
 // Define the data type for top solvers

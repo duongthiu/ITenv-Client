@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { motion } from 'framer-motion';
-import { getProblemEngagement } from '../../services/problem/problem.admin.service';
+import { getProblemEngagement } from '../../../services/problem/problem.admin.service';
 import useSWR from 'swr';
 
 const ProblemsOverviewChart: FC = () => {

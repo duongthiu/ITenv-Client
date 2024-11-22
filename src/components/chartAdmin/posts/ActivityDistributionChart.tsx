@@ -3,8 +3,8 @@ import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recha
 import { Select } from 'antd';
 import { useState, useEffect } from 'react';
 import useSWR from 'swr';
-import { QueryOptions } from '../../types/common';
-import { getPostActivityByMonth } from '../../services/post/post.admin.service';
+import { QueryOptions } from '../../../types/common';
+import { getPostActivityByMonth } from '../../../services/post/post.admin.service';
 
 const { Option } = Select;
 
@@ -39,12 +39,12 @@ const ActivityDistributionChart: React.FC = () => {
   // Transform fetched data into chart-friendly format
   const postData: PostData[] = postActivityDistribution?.data
     ? [
-        { name: 'Posts', value: postActivityDistribution.data.totalPosts },
-        { name: 'Comments', value: postActivityDistribution.data.totalComments },
-        { name: 'Upvotes', value: postActivityDistribution.data.totalUpvotes },
-        { name: 'Downvotes', value: postActivityDistribution.data.totalDownvotes },
-        { name: 'Shares', value: postActivityDistribution.data.totalShares }
-      ]
+      { name: 'Posts', value: postActivityDistribution.data.totalPosts },
+      { name: 'Comments', value: postActivityDistribution.data.totalComments },
+      { name: 'Upvotes', value: postActivityDistribution.data.totalUpvotes },
+      { name: 'Downvotes', value: postActivityDistribution.data.totalDownvotes },
+      { name: 'Shares', value: postActivityDistribution.data.totalShares }
+    ]
     : [];
 
   return (

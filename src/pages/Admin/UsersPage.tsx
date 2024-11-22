@@ -6,7 +6,7 @@ import StatCard from '../../components/CommonAdmin/StatCard';
 import UserActivityHeatmap from '../../components/chartAdmin/users/UserActivityHeatmap';
 import UserDemographicsChart from '../../components/chartAdmin/users/UserDemographicsChart';
 import UserGrowthChart from '../../components/chartAdmin/users/UserGrowthChart';
-import UsersTable from '../../components/chartAdmin/users/UsersTable';
+import UsersTable from '../../components/CommonAdmin/users/UsersTable';
 import {
   getTotalActiveUsers,
   getTotalChurnUsers,
