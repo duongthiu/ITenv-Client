@@ -14,6 +14,7 @@ import { ADMIN_ROUTES, AUTHEN_ROUTES, DISCUSS_ROUTES, PUBLIC_ROUTES, RouteType }
 // import { Helmet } from 'react-helmet';
 import AdminLayout from './layouts/layoutsAdmin/adminLayout';
 import PostsPage from './pages/Admin/PostsPage';
+import ProblemsPage from './pages/Admin/ProblemsPage';
 // impoxrt { Helmet } from 'react-helmet';
 
 // const pathname = location.path
@@ -150,6 +151,7 @@ function App() {
                 return <Route key={route.path} path={route.path} element={<Layout>{route.element}</Layout>}></Route>;
               })}
             <Route path="/admin/posts" element={<AdminLayout><PostsPage /></AdminLayout>} />
+            <Route path="/admin/problems" element={<AdminLayout><ProblemsPage /></AdminLayout>} />
 
             <Route path="*" element={<NotFoundPage />} />
 
