@@ -11,12 +11,13 @@ import { sendMessage } from '../../../../../services/message/message.service';
 import { MessageType, PreviewImage } from '../../../../../types/ConversationType';
 import { getBase64 } from '../../../../../utils/helpers/getBase64';
 import { notifyError } from '../../../../../utils/helpers/notify';
+import useSWR from 'swr';
 
 type MessagePageFooterProps = {
   conversationId?: string;
   receiver?: string;
   setMessageList: React.Dispatch<React.SetStateAction<MessageType[]>>;
-  mutateConversation: () => void;
+  mutateConversation: () => Promise<void>;
 };
 
 const MessagePageFooter: React.FC<MessagePageFooterProps> = ({
@@ -54,18 +55,19 @@ const MessagePageFooter: React.FC<MessagePageFooterProps> = ({
         formData.append('isSeenBy', JSON.stringify([user?._id]));
         const messageRes = await sendMessage(formData);
         if (messageRes?.success) {
+          console.log(messageRes);
           socket.emit('message', messageRes?.data);
           setIsLoading(false);
           setMessage('');
           setPreviewImage([]);
-          mutateConversation();
+          mutateConversation && mutateConversation();
           setMessageList((prev: any) => [...prev, { ...messageRes?.data }]);
         } else {
           setIsLoading(false);
-          notifyError(messageRes?.message || 'Error sending message');
         }
       }
     } catch (error) {
+      console.log(error);
       notifyError('Error sending message');
     }
   };

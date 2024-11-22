@@ -63,13 +63,11 @@ export const authenWithGithub = async (params: {
 export const authenWithGoogle = async (params: {
   accessToken: string;
 }): Promise<ResponsePagination<LoginInforResponseType>> => {
-  
-    const resp = await post<any, any>(
-      import.meta.env.VITE_APP_API + 'accounts/google-oauth', // Your backend API URL
-      params
-    );
-    return resp as unknown as ResponsePagination<LoginInforResponseType>;
-  
+  const resp = await post<any, any>(
+    import.meta.env.VITE_APP_API + 'accounts/google-oauth', // Your backend API URL
+    params
+  );
+  return resp as unknown as ResponsePagination<LoginInforResponseType>;
 };
 
 export const forgotPassword = async (email: string) => {
@@ -96,9 +94,9 @@ export const resetPassword = async (email: string) => {
   }
 };
 
-export const getAllAccount = async (): Promise<ResponsePagination<AccountType[]>> => {
+export const getAllAccount = async (): Promise<ResponsePagination<AccountType>> => {
   const result = await get(import.meta.env.VITE_APP_API + 'accounts');
-  return result as unknown as ResponsePagination<AccountType[]>;
+  return result as unknown as ResponsePagination<AccountType>;
 };
 
 export const refreshAccessToken = async (): Promise<ResponsePagination<string>> => {

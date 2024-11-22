@@ -54,7 +54,6 @@ const MessagePageContent: React.FC<MessagePageContentProps> = ({
   );
 
   const [messageList, setMessageList] = useState<MessageType[]>(messageData?.data || []);
-
   // const chatWith = conversation?.isGroupChat
   //   ? 'group'
   //   : conversation?.participants?.find((member) => member._id !== user?._id)?._id;

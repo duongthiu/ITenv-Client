@@ -46,7 +46,7 @@ const AccountSettings: React.FC = () => {
     console.log('Form values:', values);
   };
   const { data, isLoading } = useSWR('edit-account', getAllAccount);
-
+  console.log(data);
   return (
     <div className="basic-info-wrapper container mx-auto p-4">
       <h2 className="mb-4 text-[1.8rem] font-semibold">Account Settings</h2>
@@ -55,7 +55,7 @@ const AccountSettings: React.FC = () => {
       <div className="mb-6">
         <h3 className="mb-8 text-start text-[1.6rem] font-semibold">Account Information</h3>
         <Form form={form} layout="vertical" onFinish={onFinish}>
-          <Item name="email" label="Email" initialValue={data?.data?.[0]?.email}>
+          <Item name="email" label="Email" initialValue={data?.data?.email}>
             <Input disabled />
           </Item>
           <p className="text-start font-semibold">Password</p>

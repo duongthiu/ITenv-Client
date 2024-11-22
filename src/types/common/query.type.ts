@@ -4,6 +4,6 @@ export type QueryOptions = {
   sortOrder?: 'DESC' | 'ASC' | 'desc' | 'asc';
   sortField?: string;
   pageSize?: number;
-  month?
+  month?: number;
   year?: number;
 };

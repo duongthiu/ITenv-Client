@@ -1,4 +1,4 @@
-import { get } from '../../apis';
+import { get, put } from '../../apis';
 import { QueryOptions, ResponsePagination } from '../../types/common';
 import { UserType } from '../../types/UserType';
 
@@ -41,4 +41,8 @@ export const getUserDemographics = async (): Promise<ResponsePagination<any>> =>
 export const getTotalNewUsersInMonths = async (): Promise<ResponsePagination<number>> => {
   const data = await get(import.meta.env.VITE_APP_API + 'users/new/month');
   return data as unknown as ResponsePagination<number>;
+};
+export const editUserRole = async (userId: string, role: string): Promise<ResponsePagination<any>> => {
+  const data = await put(import.meta.env.VITE_APP_API + `users/${userId}/role`, { role: role });
+  return data as unknown as ResponsePagination<any>;
 };

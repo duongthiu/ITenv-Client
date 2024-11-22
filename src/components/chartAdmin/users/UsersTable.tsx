@@ -1,48 +1,78 @@
-import { Empty, Input, Spin, Table, Tag } from 'antd';
+import { Button, Empty, Input, Select, Spin, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import useSWR from 'swr';
-import { getAllUser, UserPageType } from '../../../services/user/user.admin.service';
+import { editUserRole, getAllUser, UserPageType } from '../../../services/user/user.admin.service'; // Add updateUserRole
 import { formatDate } from '../../../utils/helpers/formatDate';
+import { useDebounce } from '../../../utils/hooks/useDebounce.hook';
+import { notifySuccess } from '../../../utils/helpers/notify';
 
-// Define the types for the user data (adjust as needed)
-type User = {
-  _id: string;
-  name: string;
-  email: string;
-  role: string;
-  status: string;
-  lastOnline: Date;
-};
+const { Option } = Select;
 
 const UsersTable: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState<string>(''); // Type searchTerm as string
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [queryOptions, setQueryOptions] = useState({ page: 1, pageSize: 10, search: '' });
+  const searchDebounce = useDebounce(searchTerm, 1000);
 
-  // Use SWR to fetch data
+  const [editingRowId, setEditingRowId] = useState<string | null>(null); // Track editing row
+  const [selectedRole, setSelectedRole] = useState<string>(''); // Track selected role during edit
+
   const {
     data: usersData,
     isLoading: isLoadingUsers,
-    error: isErrorUsers
+    error: isErrorUsers,
+    mutate
   } = useSWR('users' + JSON.stringify(queryOptions), () => getAllUser(queryOptions));
 
-  // Handle the search input and update queryOptions
+  // Handle search input changes
   const handleSearch = (e: ChangeEvent<HTMLInputElement>): void => {
-    const term = e.target.value.toLowerCase();
-    setSearchTerm(term);
-    setQueryOptions((prev) => ({
-      ...prev,
-      search: term
-    }));
+    setSearchTerm(e.target.value.toLowerCase());
   };
 
-  // Columns for Ant Design Table
+  useEffect(() => {
+    setQueryOptions((prev) => ({
+      ...prev,
+      search: searchDebounce
+    }));
+  }, [searchDebounce]);
+
+  // Handle Edit button click
+  const handleEditClick = (record: UserPageType) => {
+    setEditingRowId(record._id);
+    setSelectedRole(record.user.role); // Set initial role for the dropdown
+  };
+  // Handle Confirm button click
+  const handleConfirmClick = async () => {
+    try {
+      if (editingRowId) {
+        console.log(editingRowId, selectedRole);
+        const result = await editUserRole(editingRowId, selectedRole);
+        if (result.success) {
+          notifySuccess('Role updated successfully');
+          mutate();
+        } else {
+          notifySuccess('Fail to update role');
+        }
+      }
+      setEditingRowId(null); // Exit editing mode
+    } catch (error) {
+      console.error('Failed to update role:', error);
+    }
+  };
+
+  // Handle Cancel button click
+  const handleCancelClick = () => {
+    setEditingRowId(null);
+    setSelectedRole(''); // Reset selected role
+  };
+
+  // Table Columns
   const columns: ColumnsType<UserPageType> = [
     {
       title: 'Name',
-      dataIndex: ['user', 'username'], // Accessing nested user object
+      dataIndex: ['user', 'username'],
       key: 'name',
       render: (text) => <span className="sub-title">{text}</span>
     },
@@ -68,7 +98,20 @@ const UsersTable: React.FC = () => {
       title: 'Role',
       dataIndex: 'role',
       key: 'role',
-      render: (role) => <Tag color={role === 'ADMIN' ? 'purple' : 'green'}>{role}</Tag>
+      render: (role, record) =>
+        editingRowId === record._id ? (
+          <Select
+            defaultValue={record.user.role}
+            value={selectedRole}
+            onChange={(value) => setSelectedRole(value)}
+            className="w-full"
+          >
+            <Option value="ADMIN">ADMIN</Option>
+            <Option value="USER">USER</Option>
+          </Select>
+        ) : (
+          <Tag color={role === 'ADMIN' ? 'purple' : 'green'}>{role}</Tag>
+        )
     },
     {
       title: 'Status',
@@ -78,19 +121,26 @@ const UsersTable: React.FC = () => {
     },
     {
       title: 'Last Online',
-      dataIndex: ['user', 'lastOnline'], // Accessing nested user object
+      dataIndex: ['user', 'lastOnline'],
       key: 'lastOnline',
       render: (date) => <span>{new Date(date).toLocaleString()}</span>
     },
     {
       title: 'Actions',
       key: 'actions',
-      render: (_, record) => (
-        <>
-          <button className="mr-2 text-indigo-400 hover:text-indigo-300">Edit</button>
-          <button className="text-red-400 hover:text-red-300">Delete</button>
-        </>
-      )
+      render: (_, record) =>
+        editingRowId === record._id ? (
+          <div className="flex items-center gap-2">
+            <Button type="primary" onClick={handleConfirmClick}>
+              Confirm
+            </Button>
+            <Button onClick={handleCancelClick}>Cancel</Button>
+          </div>
+        ) : (
+          <Button onClick={() => handleEditClick(record)} className="text-blue-500">
+            Edit
+          </Button>
+        )
     }
   ];
 
@@ -117,7 +167,6 @@ const UsersTable: React.FC = () => {
         </div>
       </div>
 
-      {/* Handle Loading, Error, and Empty States */}
       {isLoadingUsers ? (
         <div className="flex items-center justify-center py-8">
           <Spin />
