@@ -1,22 +1,22 @@
 import { Button, Divider, Drawer, Empty, Input, Pagination, PaginationProps, Segmented, Skeleton } from 'antd';
+import { motion } from 'framer-motion';
 import React, { memo, useEffect, useState } from 'react';
 import { FiSend } from 'react-icons/fi';
-import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import TagMenu from '../../../../../components/post/TagMenu/TagMenu.component';
 import { getPostsWithCategoryId } from '../../../../../services/post/post.service';
-import { CategoryType } from '../../../../../types/CategoryType';
-import PostComponent from '../PostComponent/Post.component';
-import CreatePostPage from '../../../../Private/CreatePostPage/CreatePostPage.page';
-import './ListPostWithCategory.style.scss';
 import { QueryOptions } from '../../../../../types/common';
 import { useDebounce } from '../../../../../utils/hooks/useDebounce.hook';
+import CreatePostPage from '../../../../Private/CreatePostPage/CreatePostPage.page';
+import PostComponent from '../PostComponent/Post.component';
+import './ListPostWithCategory.style.scss';
 type ListPostWithCategoryProps = {
   categoryId: string;
 };
 const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ categoryId }) => {
-  const navigate = useNavigate();
-  const { parentCateId } = useParams();
+  // const navigate = useNavigate();
+  // const { parentCateId } = useParams();
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -32,17 +32,13 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
     search: search
   });
   const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
-    setCurrentPage(current);
-    setPageSize(pageSize);
     setQueryOption({ ...queryOption, page: current });
   };
   const onPaginationChange = (page: number, pageSize: number) => {
-    setCurrentPage(page);
-    setPageSize(pageSize);
-    setQueryOption({ ...queryOption, pageSize: pageSize });
+    setQueryOption({ ...queryOption, page: page, pageSize: pageSize });
   };
 
-  const { data: posts, isLoading } = useSWR(`posts-${categoryId}-${JSON.stringify(queryOption)}`, () =>
+  const { data: posts, isLoading } = useSWR(`list-posts-${categoryId}-${JSON.stringify(queryOption)}`, () =>
     getPostsWithCategoryId(categoryId, queryOption)
   );
   const showDrawer = () => {
@@ -52,8 +48,6 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
   const onClose = () => {
     setOpenDrawer(false);
   };
-  const cates = useOutletContext<CategoryType[]>();
-  console.log(cates);
   // const childCategories = cates.map((cate) => (cate._id === parentCateId ? cate.children : [])).flat();
   const sortMenu = [
     {
@@ -69,6 +63,10 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
       key: 'VOTES'
     }
   ];
+  const animationVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
   const handleSortChange = (value: string) => {
     const selectedSortKey = sortMenu.find((menu) => menu.name === value)?.key || 'VIEWS'; // Default to 'VIEWS'
     setQueryOption((prev) => ({ ...prev, sortField: selectedSortKey }));
@@ -81,7 +79,6 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
     <div className="flex flex-col gap-4">
       <div className="flex gap-10"></div>
 
-      {isLoading && <Skeleton active className="h-full" />}
       <div className="flex gap-4">
         <main className={`flex h-fit flex-1 flex-col ${posts?.data?.length !== 0 && 'card'}`}>
           {/* <div className="flex gap-40">
@@ -128,21 +125,31 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
               <Empty className="" />
             </div>
           ) : (
-            <div className="">
-              <div className="flex-1">{posts?.data?.map((post) => <PostComponent key={post._id} post={post} />)} </div>
-
-              <div className="flex w-full items-center justify-center">
-                <Pagination
-                  current={currentPage}
-                  total={posts?.total || 0}
-                  showSizeChanger
-                  onShowSizeChange={onShowSizeChange}
-                  pageSize={pageSize}
-                  onChange={onPaginationChange}
-                />
-              </div>
-            </div>
+            <motion.div
+              className="flex-1"
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={animationVariants}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+            >
+              {isLoading ? (
+                <Skeleton active className="h-full" />
+              ) : (
+                posts?.data?.map((post) => <PostComponent key={post._id} post={post} />)
+              )}
+            </motion.div>
           )}
+          <div className="flex w-full items-center justify-center">
+            <Pagination
+              current={queryOption?.page}
+              total={posts?.total || 0}
+              showSizeChanger
+              onShowSizeChange={onShowSizeChange}
+              pageSize={queryOption?.pageSize}
+              onChange={onPaginationChange}
+            />
+          </div>
         </main>
         <div className="card h-[400px] w-[250px] px-[10px]">
           <TagMenu selectedTags={selectedTags} setSelectedTags={setSelectedTags} />

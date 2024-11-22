@@ -38,6 +38,9 @@ const LazyDashboardPage = LazyLoadComponent(() => import('../pages/Admin/Dashboa
 const LazyOverviewPage = LazyLoadComponent(() => import('../pages/Admin/OverviewPage'))(true);
 const LazyUsersPage = LazyLoadComponent(() => import('../pages/Admin/UsersPage'))(true);
 const LazySettingsPage = LazyLoadComponent(() => import('../pages/Admin/SettingsPage'))(true);
+const LazyPostsPage = LazyLoadComponent(() => import('../pages/Admin/PostsPage'))(true);
+const LazyProblemsPage = LazyLoadComponent(() => import('../pages/Admin/ProblemsPage'))(true);
+
 export const PUBLIC_ROUTES: RouteType[] = [
   {
     path: paths.singleProblem,
@@ -211,5 +214,7 @@ export const ADMIN_ROUTES: RouteType[] = [
     element: <LazyOverviewPage />
   },
   { path: paths.adminUsers, layout: AdminLayout, element: <LazyUsersPage /> },
-  { path: paths.adminSettings, layout: AdminLayout, element: <LazySettingsPage /> }
+  { path: paths.adminSettings, layout: AdminLayout, element: <LazySettingsPage /> },
+  { path: paths.adminPosts, layout: AdminLayout, element: <LazyPostsPage /> },
+  { path: paths.adminProblems, layout: AdminLayout, element: <LazyProblemsPage /> }
 ];

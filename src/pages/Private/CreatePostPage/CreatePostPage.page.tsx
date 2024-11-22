@@ -17,6 +17,7 @@ import './CreatePostPage.style.scss';
 import { Tab } from './Tabs';
 import { useBeforeUnload, useParams } from 'react-router-dom';
 import { deleteImages } from '../../../services/upload/upload.service';
+import { useAppSelector } from '../../../redux/app/hook';
 export interface Ingredient {
   label: string;
 }
@@ -24,7 +25,7 @@ export interface Ingredient {
 const initialTabs: Ingredient[] = [{ label: 'Text Editor' }, { label: 'Preview Text Editor' }];
 const CreatePostPage = () => {
   const { parentCateId } = useParams();
-
+  const { user, isLogged } = useAppSelector((state) => state.user);
   const [loading, setLoading] = useState(false);
   const [content, setContent] = useState('Write something');
   const [isAnonymous, setIsAnonymous] = useState(false);
@@ -32,6 +33,7 @@ const CreatePostPage = () => {
   const handleEditorChange = useCallback((content: any, editor: any) => {
     setContent(content);
   }, []);
+
   const contentDebounce = useDebounce(content, 300);
   const [title, setTitle] = useState('');
   const [tabs, setTabs] = useState(initialTabs);
@@ -46,6 +48,11 @@ const CreatePostPage = () => {
 
   const handleCreatePost = async () => {
     // post to the server
+    if (!isLogged && !user?._id) {
+      notifyError('Please login to use this feature');
+      return;
+    }
+
     try {
       setLoading(true);
       const deleteImage: { images: string[] } = { images: [] };

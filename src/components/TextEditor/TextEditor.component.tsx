@@ -7,6 +7,7 @@ import { useAppSelector } from '../../redux/app/hook';
 import { RootState } from '../../redux/store';
 import './TextEditor.style.scss';
 import { ImageType } from '../../types/common';
+import { notifyError } from '../../utils/helpers/notify';
 
 type TextEditorProps = {
   keyEditor: string;
@@ -29,7 +30,7 @@ const TextEditorComponent: React.FC<TextEditorProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState(true);
   const { theme } = useAppSelector((state: RootState) => state.app);
-
+  const { user, isLogged } = useAppSelector((state) => state.user);
   const handleImageUpload = async (blobInfo: any) => {
     return new Promise<string>((resolve, reject) => {
       const formData = new FormData();
@@ -49,7 +50,10 @@ const TextEditorComponent: React.FC<TextEditorProps> = ({
         });
     });
   };
-
+  const handleFunction = () => {
+    if (user?._id && isLogged && buttonFunction) buttonFunction(content);
+    else notifyError('Please login to use this feature');
+  };
   return (
     <div className="text-editor-wrapper h-full flex-1 rounded-sm p-0">
       {isLoading && (
@@ -102,7 +106,7 @@ const TextEditorComponent: React.FC<TextEditorProps> = ({
         {buttonTitle && (
           <div className="flex w-full items-center justify-end border-t-[1px] p-3">
             <button
-              onClick={() => buttonFunction && buttonFunction(content)}
+              onClick={handleFunction}
               className="mr-2 rounded-lg bg-primary-color px-6 py-2 text-[1.4rem] font-medium text-white duration-200 hover:bg-primary-color-hover focus:ring-4 focus:ring-blue-300"
             >
               {buttonTitle}

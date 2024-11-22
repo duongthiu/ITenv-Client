@@ -14,7 +14,7 @@ type ConversationProps = {
 
 const MessageComponent: React.FC<ConversationProps> = ({ conversations, mutate, totalNotSeen }) => {
   return (
-    <div className="w-[350px]">
+    <div className="w-[350px]" style={{ maxHeight: '500px', overflow: 'auto' }}>
       <List
         header={
           <div className="flex flex-col">

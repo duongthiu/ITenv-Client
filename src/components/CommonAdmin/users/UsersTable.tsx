@@ -38,17 +38,16 @@ const UsersTable: React.FC = () => {
     }));
   }, [searchDebounce]);
 
-  // Handle Edit button click
   const handleEditClick = (record: UserPageType) => {
-    setEditingRowId(record._id);
+    setEditingRowId(record.user?._id);
     setSelectedRole(record.user.role); // Set initial role for the dropdown
   };
   // Handle Confirm button click
-  const handleConfirmClick = async () => {
+  const handleConfirmClick = async (userId: string) => {
     try {
-      if (editingRowId) {
-        console.log(editingRowId, selectedRole);
-        const result = await editUserRole(editingRowId, selectedRole);
+      if (userId && editingRowId) {
+        console.log(userId, selectedRole);
+        const result = await editUserRole(userId, selectedRole);
         if (result.success) {
           notifySuccess('Role updated successfully');
           mutate();
@@ -99,7 +98,7 @@ const UsersTable: React.FC = () => {
       dataIndex: 'role',
       key: 'role',
       render: (role, record) =>
-        editingRowId === record._id ? (
+        editingRowId === record?.user?._id ? (
           <Select
             defaultValue={record.user.role}
             value={selectedRole}
@@ -129,9 +128,9 @@ const UsersTable: React.FC = () => {
       title: 'Actions',
       key: 'actions',
       render: (_, record) =>
-        editingRowId === record._id ? (
+        editingRowId === record?.user?._id ? (
           <div className="flex items-center gap-2">
-            <Button type="primary" onClick={handleConfirmClick}>
+            <Button type="primary" onClick={() => handleConfirmClick(record?.user?._id)}>
               Confirm
             </Button>
             <Button onClick={handleCancelClick}>Cancel</Button>

@@ -43,7 +43,7 @@ const ListPost: React.FC<ListPostProps> = ({ userId }) => {
           <div className="flex-1">
             {listPosts?.data?.map((post) => {
               if (post?.isAnonymous && !isOwnProfile) return null;
-              return <PostComponent key={post._id} post={post} />;
+              return <PostComponent  key={post._id} post={post} />;
             })}
           </div>
           {listPosts?.total ||

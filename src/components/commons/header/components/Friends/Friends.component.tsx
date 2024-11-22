@@ -13,7 +13,7 @@ type FriendsComponentProps = {
 const FriendsComponent: React.FC<FriendsComponentProps> = ({ friendRequestData, mutate, loadMoreFriendRequest }) => {
   const allRequests = friendRequestData?.data || [];
   return (
-    <div className="w-[350px]">
+    <div className="w-[350px]" style={{ maxHeight: '500px', overflow: 'auto' }}>
       <div className="flex gap-2 pb-0 text-[1.6rem] font-semibold">
         <div className="flex gap-2 p-[12px] pb-0 text-[1.6rem] font-semibold">
           Friend Requests

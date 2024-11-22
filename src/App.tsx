@@ -1,7 +1,7 @@
 import { ConfigProvider, theme as themeAntd } from 'antd';
 import { useEffect, useState } from 'react';
 // import { Helmet } from 'react-helmet';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { Fragment } from 'react/jsx-runtime';
 import DefaultLayout from './layouts/DefaultLayout/DefaultLayout';
 import AuthenticationPage from './pages/Authentication/Authentication.page';
@@ -13,8 +13,7 @@ import { useAppSelector } from './redux/app/hook';
 import { ADMIN_ROUTES, AUTHEN_ROUTES, DISCUSS_ROUTES, PUBLIC_ROUTES, RouteType } from './routes/routes';
 // import { Helmet } from 'react-helmet';
 import AdminLayout from './layouts/layoutsAdmin/adminLayout';
-import PostsPage from './pages/Admin/PostsPage';
-import ProblemsPage from './pages/Admin/ProblemsPage';
+import { paths } from './routes/paths';
 // impoxrt { Helmet } from 'react-helmet';
 
 // const pathname = location.path
@@ -24,13 +23,11 @@ function App() {
   const [pathname, setPathname] = useState(location?.pathname?.split('/')[1]);
   const theme = useAppSelector((state) => state.app.theme);
   const { isLogged, token, user } = useAppSelector((state) => state.user);
-  // console.log(user);
-  // useEffect(() => {
-  //   if (isLogged && token) {
-  //     dispatch(getUser());
-  //   }
-  // }, [isLogged, token, dispatch]);
-
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user?.role === 'ADMIN' && !pathname.includes('admin')) navigate(paths.adminOverviews);
+    if (user?.role !== 'ADMIN' && pathname.includes('admin')) navigate(paths.home);
+  }, [isLogged, token, user?.role]);
   useEffect(() => {
     setPathname(location?.pathname?.split('/')[1]);
   }, [location.pathname]);
@@ -62,20 +59,41 @@ function App() {
         <MessageBox />
       </div> */}
       <main className="">
-        <Router>
-          <Routes>
-            {PUBLIC_ROUTES.map((route: RouteType, index: number) => {
-              let Layout: any = DefaultLayout;
-              if (route?.layout) Layout = route.layout;
-              else if (route.layout === null) Layout = Fragment;
-              if (route.private === 'public')
+        <Routes>
+          {PUBLIC_ROUTES.map((route: RouteType, index: number) => {
+            let Layout: any = DefaultLayout;
+            if (route?.layout) Layout = route.layout;
+            else if (route.layout === null) Layout = Fragment;
+            if (route.private === 'public')
+              return (
+                <Route
+                  key={index}
+                  path={route.path}
+                  element={
+                    route.layout === null ? (
+                      <Fragment key={index}> {route.element}</Fragment>
+                    ) : (
+                      <Layout
+                        key={index}
+                        useHeader={route.useHeader}
+                        useSidebar={route.useSidebar}
+                        useFooter={route.useFooter}
+                      >
+                        {route.element}
+                      </Layout>
+                    )
+                  }
+                ></Route>
+              );
+            else {
+              if (isLogged && token) {
                 return (
                   <Route
                     key={index}
                     path={route.path}
                     element={
                       route.layout === null ? (
-                        <Fragment key={index}> {route.element}</Fragment>
+                        <Fragment> {route.element}</Fragment>
                       ) : (
                         <Layout
                           key={index}
@@ -89,74 +107,48 @@ function App() {
                     }
                   ></Route>
                 );
-              else {
-                if (isLogged && token) {
-                  return (
-                    <Route
-                      key={index}
-                      path={route.path}
-                      element={
-                        route.layout === null ? (
-                          <Fragment> {route.element}</Fragment>
-                        ) : (
-                          <Layout
-                            key={index}
-                            useHeader={route.useHeader}
-                            useSidebar={route.useSidebar}
-                            useFooter={route.useFooter}
-                          >
-                            {route.element}
-                          </Layout>
-                        )
-                      }
-                    ></Route>
-                  );
-                } else return <Route path="*" element={<NotAuthPage />} />;
-              }
-            })}
+              } else return <Route path="*" element={<NotAuthPage />} />;
+            }
+          })}
 
-            {DISCUSS_ROUTES.map((route: RouteType) => {
-              let Layout: any = DefaultLayout;
+          {DISCUSS_ROUTES.map((route: RouteType) => {
+            let Layout: any = DefaultLayout;
+            if (route?.layout) Layout = route.layout;
+            else if (route.layout === null) Layout = Fragment;
+            return (
+              <Route
+                key={route.path}
+                path={route.path}
+                element={
+                  <Layout>
+                    <DiscussPage />
+                  </Layout>
+                }
+              >
+                <Route path={route.path} element={route.element} />
+              </Route>
+            );
+          })}
+
+          {AUTHEN_ROUTES.map((route: RouteType) => {
+            return (
+              <Route key={route.path} path={route.path} element={<AuthenticationPage />}>
+                <Route path={route.path} element={route.element} />
+              </Route>
+            );
+          })}
+
+          {user?.role === 'ADMIN' &&
+            ADMIN_ROUTES.map((route: RouteType) => {
+              let Layout: any = AdminLayout;
               if (route?.layout) Layout = route.layout;
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               else if (route.layout === null) Layout = Fragment;
-              return (
-                <Route
-                  key={route.path}
-                  path={route.path}
-                  element={
-                    <Layout>
-                      <DiscussPage />
-                    </Layout>
-                  }
-                >
-                  <Route path={route.path} element={route.element} />
-                </Route>
-              );
+              return <Route key={route.path} path={route.path} element={<Layout>{route.element}</Layout>}></Route>;
             })}
 
-            {AUTHEN_ROUTES.map((route: RouteType) => {
-              return (
-                <Route key={route.path} path={route.path} element={<AuthenticationPage />}>
-                  <Route path={route.path} element={route.element} />
-                </Route>
-              );
-            })}
-
-            {user?.role === 'ADMIN' &&
-              ADMIN_ROUTES.map((route: RouteType) => {
-                let Layout: any = AdminLayout;
-                if (route?.layout) Layout = route.layout;
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                else if (route.layout === null) Layout = Fragment;
-                return <Route key={route.path} path={route.path} element={<Layout>{route.element}</Layout>}></Route>;
-              })}
-            <Route path="/admin/posts" element={<AdminLayout><PostsPage /></AdminLayout>} />
-            <Route path="/admin/problems" element={<AdminLayout><ProblemsPage /></AdminLayout>} />
-
-            <Route path="*" element={<NotFoundPage />} />
-
-          </Routes>
-        </Router>
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
       </main>
     </ConfigProvider>
   );

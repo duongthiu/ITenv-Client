@@ -81,17 +81,25 @@ export const forgotPassword = async (email: string) => {
     console.log(error);
   }
 };
-
-export const resetPassword = async (email: string) => {
+export const verifyOTP = async (email: string, otp: string) => {
   try {
     const resp = await post<any, any>(
-      import.meta.env.VITE_APP_API + 'accounts/reset-pass', // Your backend API URL
-      { email }
+      import.meta.env.VITE_APP_API + 'accounts/verify-otp', // Your backend API URL
+      { email, otp }
     );
     return resp;
   } catch (error) {
     console.log(error);
   }
+};
+
+export const resetPassword = async (email: string, password: string): Promise<ResponseAxios> => {
+    const resp = await post<any, any>(
+      import.meta.env.VITE_APP_API + 'accounts/reset-pass', 
+      { email, password }
+    );
+    return resp as unknown as ResponseAxios;
+  
 };
 
 export const getAllAccount = async (): Promise<ResponsePagination<AccountType>> => {

@@ -89,7 +89,25 @@ const BasicInfo: React.FC = () => {
           </Form.Item>
         </div>
 
-        <Form.Item label="Phone Number" name="phoneNumber">
+        <Form.Item
+          label="Phone Number"
+          name="phoneNumber"
+          rules={[
+            { required: true, message: 'Please input your phone number!' },
+            {
+              pattern: /^\d{10}$/,
+              message: 'Phone number must be 10 digits.'
+            },
+            {
+              validator: (_, value) => {
+                if (value && !/^\d+$/.test(value)) {
+                  return Promise.reject('Phone number can only contain numbers.');
+                }
+                return Promise.resolve();
+              }
+            }
+          ]}
+        >
           <Input placeholder="Enter your phone number" />
         </Form.Item>
 
