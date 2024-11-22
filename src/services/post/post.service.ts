@@ -1,4 +1,4 @@
-import { get, post } from '../../apis';
+import { get, post, remove } from '../../apis';
 import { CategoryType } from '../../types/CategoryType';
 import { QueryOptions, ResponseAxios, ResponsePagination } from '../../types/common';
 import { TypeVoteEnum } from '../../types/enum/typeVote.enum';
@@ -52,7 +52,7 @@ export const resolvePost = async (id: string): Promise<ResponseAxios> => {
 };
 
 export const getPostActivityDistribution = async (query: string): Promise<ResponsePagination<null>> => {
-  const data = await get(import.meta.env.VITE_APP_API + "activity/distribute?" + query);
+  const data = await get(import.meta.env.VITE_APP_API + 'activity/distribute?' + query);
   return data as unknown as ResponsePagination<null>;
 };
 
@@ -60,3 +60,7 @@ export const getPostActivityDistribution = async (query: string): Promise<Respon
 //   const data = await post(import.meta.env.VITE_APP_API + 'posts/vote/' + id, { typeVote: typeVote });
 //   return data as ResponseAxios;
 // };
+export const deletePostById = (id: string): Promise<ResponseAxios> => {
+  const data = remove(import.meta.env.VITE_APP_API + 'posts/' + id);
+  return data as Promise<ResponseAxios>;
+};

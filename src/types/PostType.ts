@@ -15,6 +15,7 @@ export type PostType = {
   totalComment?: number;
   isAnonymous?: boolean;
   resolve: boolean;
+  isDeleted?: boolean;
 };
 
 export type CommentType = {

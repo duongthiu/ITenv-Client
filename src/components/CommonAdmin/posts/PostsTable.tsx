@@ -1,158 +1,136 @@
-import React, { useState } from "react";
-import { Input, Table, Button } from "antd";
-import { motion } from "framer-motion";
-import { Edit, Search, Trash2 } from "lucide-react";
-
-// Define the Post type
-interface Post {
-  id: number;
-  Title: string;
-  PostedBy: string;
-  Tags: number;
-  Views: number;
-  Vote: number;
-  IsAnonymous: boolean;
-  Resolve: boolean;
-  Status: boolean;
-  CreatedAt: Date;
-  UpdatedAt: Date;
-}
-
-const POST_DATA: Post[] = [
-  {
-    id: 1,
-    Title: "How to learn React",
-    PostedBy: "John Doe",
-    Tags: 3,
-    Views: 120,
-    Vote: 15,
-    IsAnonymous: false,
-    Resolve: false,
-    Status: true,
-    CreatedAt: new Date("2024-01-01"),
-    UpdatedAt: new Date("2024-01-02"),
-  },
-  {
-    id: 2,
-    Title: "Understanding TypeScript",
-    PostedBy: "Jane Smith",
-    Tags: 2,
-    Views: 98,
-    Vote: 22,
-    IsAnonymous: false,
-    Resolve: true,
-    Status: false,
-    CreatedAt: new Date("2024-01-03"),
-    UpdatedAt: new Date("2024-01-04"),
-  },
-  {
-    id: 3,
-    Title: "Node.js Best Practices",
-    PostedBy: "Michael Brown",
-    Tags: 4,
-    Views: 150,
-    Vote: 30,
-    IsAnonymous: false,
-    Resolve: false,
-    Status: true,
-    CreatedAt: new Date("2024-01-05"),
-    UpdatedAt: new Date("2024-01-06"),
-  },
-];
+import { Button, Input, PaginationProps, Popconfirm, Table, Tag } from 'antd';
+import { motion } from 'framer-motion';
+import { Edit, Search, Trash2 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import useSWR from 'swr';
+import { getAllPosts } from '../../../services/post/post.admin.service';
+import { deletePostById } from '../../../services/post/post.service';
+import { QueryOptions } from '../../../types/common';
+import { PostType } from '../../../types/PostType';
+import { notifyError, notifySuccess } from '../../../utils/helpers/notify';
+import { useDebounce } from '../../../utils/hooks/useDebounce.hook';
 
 const PostsTable: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredPosts, setFilteredPosts] = useState<Post[]>(POST_DATA);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [queryOptions, setQueryOptions] = useState<QueryOptions>({
+    page: 1,
+    pageSize: 10,
+    search: ''
+  });
 
-  // Filter posts based on the search term
+  const searchDebounce = useDebounce(searchTerm, 500);
+
+  useEffect(() => {
+    setQueryOptions((prev) => ({
+      ...prev,
+      search: searchDebounce
+    }));
+  }, [searchDebounce]);
+
+  const { data, isLoading, mutate } = useSWR(`posts${JSON.stringify(queryOptions)}`, () => getAllPosts(queryOptions));
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const term = e.target.value.toLowerCase();
-    setSearchTerm(term);
-    const filtered = POST_DATA.filter(
-      (post) =>
-        post.Title.toLowerCase().includes(term) || post.PostedBy.toLowerCase().includes(term)
-    );
-    setFilteredPosts(filtered);
+    setSearchTerm(e.target.value);
+    setQueryOptions((prev: any) => ({ ...prev, page: 1 }));
+  };
+
+  const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
+    setQueryOptions({ ...queryOptions, page: current, pageSize });
+  };
+
+  const onPaginationChange = (page: number, pageSize: number) => {
+    setQueryOptions({ ...queryOptions, page, pageSize });
+  };
+
+  const handleDeletePost = async (post: PostType) => {
+    try {
+      const response = await deletePostById(post._id);
+      if (response.success) {
+        notifySuccess('Post deleted successfully!');
+        mutate();
+      } else notifyError('Failed to delete the post. Please try again later.');
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      notifyError('Failed to delete the post. Please try again later.');
+    }
   };
 
   const columns = [
+    { title: 'Title', dataIndex: 'title', key: 'title' },
     {
-      title: "Title",
-      dataIndex: "Title",
-      key: "Title",
+      title: 'Posted By',
+      dataIndex: 'postedBy',
+      key: 'postedBy',
+      render: (postedBy: { username: string }) => postedBy?.username || 'Anonymous'
     },
     {
-      title: "Posted By",
-      dataIndex: "PostedBy",
-      key: "PostedBy",
-    },
-    {
-      title: "Tags",
-      dataIndex: "Tags",
-      key: "Tags",
-    },
-    {
-      title: "Views",
-      dataIndex: "Views",
-      key: "Views",
-    },
-    {
-      title: "Vote",
-      dataIndex: "Vote",
-      key: "Vote",
-    },
-    {
-      title: "Is Anonymous",
-      dataIndex: "IsAnonymous",
-      key: "IsAnonymous",
-      render: (isAnonymous: boolean) => (isAnonymous ? "Yes" : "No"),
-    },
-    {
-      title: "Resolved",
-      dataIndex: "Resolve",
-      key: "Resolve",
-      render: (resolve: boolean) => (resolve ? "Yes" : "No"),
-    },
-    {
-      title: "Status",
-      dataIndex: "Status",
-      key: "Status",
-      render: (status: boolean) => (status ? "Active" : "Inactive"),
-    },
-    {
-      title: "Created At",
-      dataIndex: "CreatedAt",
-      key: "CreatedAt",
-      render: (date: Date) => new Date(date).toLocaleDateString(),
-    },
-    {
-      title: "Updated At",
-      dataIndex: "UpdatedAt",
-      key: "UpdatedAt",
-      render: (date: Date) => new Date(date).toLocaleDateString(),
-    },
-    {
-      title: "Actions",
-      key: "actions",
-      render: (_: any, record: Post) => (
-        <div className="flex items-center gap-2">
-          <Button
-            type="link"
-            icon={<Edit size={18} />}
-            className="text-indigo-400 hover:text-indigo-300"
-            aria-label="Edit post"
-          />
-          <Button
-            type="link"
-            icon={<Trash2 size={18} />}
-            className="text-red-400 hover:text-red-300"
-            aria-label="Delete post"
-          />
+      title: 'Tags',
+      dataIndex: 'tags',
+      key: 'tags',
+      render: (tags: { name: string }[]) => (
+        <div className="flex flex-wrap">
+          {tags?.map((tag) => (
+            <span key={tag.name} className="tag mb-2 mr-2 rounded px-2.5 py-0.5 text-[1rem] font-medium">
+              {tag.name}
+            </span>
+          ))}
         </div>
-      ),
+      )
     },
+    { title: 'Views', dataIndex: 'view', key: 'view', render: (view: string[]) => view.length },
+    { title: 'Vote', dataIndex: 'vote', key: 'vote', render: (vote: string[]) => vote.length },
+    { title: 'Down Vote', dataIndex: 'downVote', key: 'downvote', render: (downVote: string[]) => downVote.length },
+    {
+      title: 'Anonymous',
+      dataIndex: 'isAnonymous',
+      key: 'isAnonymous',
+      render: (isAnonymous: boolean) => (isAnonymous ? 'Yes' : 'No')
+    },
+    { title: 'Resolved', dataIndex: 'resolve', key: 'resolve', render: (resolve: boolean) => (resolve ? 'Yes' : 'No') },
+    {
+      title: 'Created At',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (date: string) => new Date(date).toLocaleDateString()
+    },
+    {
+      title: 'Updated At',
+      dataIndex: 'updatedAt',
+      key: 'updatedAt',
+      render: (date: string) => new Date(date).toLocaleDateString()
+    },
+    {
+      title: 'Status',
+      dataIndex: 'isDeleted',
+      key: 'isDeleted',
+      render: (isDeleted: boolean) => <Tag color={isDeleted ? 'red' : 'green'}>{isDeleted ? 'Deleted' : 'Active'}</Tag>
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      render: (_: any, record: PostType) => (
+        <div className="flex items-center gap-2">
+          {!record?.isDeleted ? (
+            <Popconfirm
+              title="Are you sure to delete this post?"
+              onConfirm={() => handleDeletePost(record)} // Pass record to delete function
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button
+                type="link"
+                icon={<Trash2 size={18} />}
+                className="text-red-400 hover:text-red-300"
+                aria-label="Delete post"
+              />
+            </Popconfirm>
+          ) : (
+            <Tag color={'green'}></Tag>
+          )}
+        </div>
+      )
+    }
   ];
-
 
   return (
     <motion.div
@@ -175,10 +153,18 @@ const PostsTable: React.FC = () => {
 
       <Table
         columns={columns}
-        dataSource={filteredPosts}
-        rowKey="id"
-        pagination={{ pageSize: 5 }}
+        dataSource={data?.data || []}
+        rowKey="_id"
         className="bg-opacity-50"
+        loading={isLoading}
+        pagination={{
+          current: queryOptions.page || 1,
+          total: data?.total || 0,
+          showSizeChanger: true,
+          pageSize: queryOptions.pageSize,
+          onChange: onPaginationChange,
+          onShowSizeChange: onShowSizeChange
+        }}
       />
     </motion.div>
   );

@@ -1,4 +1,4 @@
-import { Button, Empty, Input, Select, Spin, Table, Tag } from 'antd';
+import { Button, Empty, Input, PaginationProps, Select, Spin, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { motion } from 'framer-motion';
 import { Search } from 'lucide-react';
@@ -14,7 +14,7 @@ const { Option } = Select;
 const UsersTable: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [queryOptions, setQueryOptions] = useState({ page: 1, pageSize: 10, search: '' });
-  const searchDebounce = useDebounce(searchTerm, 1000);
+  const searchDebounce = useDebounce(searchTerm, 500);
 
   const [editingRowId, setEditingRowId] = useState<string | null>(null); // Track editing row
   const [selectedRole, setSelectedRole] = useState<string>(''); // Track selected role during edit
@@ -145,6 +145,13 @@ const UsersTable: React.FC = () => {
   ];
 
   const filteredUsers = usersData?.data || [];
+  const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
+    setQueryOptions({ ...queryOptions, page: current, pageSize });
+  };
+
+  const onPaginationChange = (page: number, pageSize: number) => {
+    setQueryOptions({ ...queryOptions, page, pageSize });
+  };
 
   return (
     <motion.div
@@ -180,7 +187,19 @@ const UsersTable: React.FC = () => {
           <Empty description="No users found" />
         </div>
       ) : (
-        <Table columns={columns} dataSource={filteredUsers} rowKey="_id" pagination={{ pageSize: 5 }} />
+        <Table
+          columns={columns}
+          dataSource={filteredUsers}
+          rowKey="_id"
+          pagination={{
+            current: queryOptions.page || 1,
+            total: usersData?.total || 0,
+            showSizeChanger: true,
+            pageSize: queryOptions.pageSize,
+            onChange: onPaginationChange,
+            onShowSizeChange: onShowSizeChange
+          }}
+        />
       )}
     </motion.div>
   );
