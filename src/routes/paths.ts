@@ -30,7 +30,7 @@ export const paths = {
   adminOverviews: '/admin/overviews',
   adminPosts: '/admin/posts',
   adminUsers: '/admin/users',
-  adminSettings: '/admin/settings',
+  adminSettings: '/admin/edit-profile/:tab',
   adminProblems: '/admin/problems',
   adminAnalistics: '/admin/analytics'
 };

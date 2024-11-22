@@ -14,3 +14,15 @@ export const getAllPosts = async (queryOptions: QueryOptions): Promise<ResponseP
   const data = await get(import.meta.env.VITE_APP_API + 'posts/all', { params: queryOptions });
   return data as unknown as ResponsePagination<PostType[]>;
 };
+export const getDailyPostTrend = async (): Promise<ResponsePagination<any>> => {
+  const data = await get(import.meta.env.VITE_APP_API + 'posts/chart/trend');
+  return data as unknown as ResponsePagination<any>;
+};
+export const getPostOverViews = async (): Promise<ResponsePagination<any>> => {
+  const data = await get(import.meta.env.VITE_APP_API + 'posts/overview');
+  return data as unknown as ResponsePagination<any>;
+};
+export const getTotalDataPost = async (): Promise<ResponsePagination<any>> => {
+  const data = await get(import.meta.env.VITE_APP_API + 'posts/data/page');
+  return data as unknown as ResponsePagination<any>;
+};

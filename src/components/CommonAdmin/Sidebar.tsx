@@ -17,7 +17,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
 
   // Get the current pathname to set as the selected key
   const currentPath = location.pathname;
-
+  console.log(currentPath);
   return (
     <div
       className={cn(

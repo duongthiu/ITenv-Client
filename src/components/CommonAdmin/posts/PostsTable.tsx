@@ -1,6 +1,6 @@
 import { Button, Input, PaginationProps, Popconfirm, Table, Tag } from 'antd';
 import { motion } from 'framer-motion';
-import { Edit, Search, Trash2 } from 'lucide-react';
+import { Search, Trash2 } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { getAllPosts } from '../../../services/post/post.admin.service';

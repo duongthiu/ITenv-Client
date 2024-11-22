@@ -1,0 +1,12 @@
+.bg-gradient-editprofile {
+  background: linear-gradient(-150deg, #222222 15%, #373737 70%, #3c4859 94%);
+}
+.basic-info-wrapper {
+  .ant-form-item-label {
+    padding-bottom: 6px !important;
+    font-weight: bold !important;
+  }
+  .ant-form-item-explain-error {
+    text-align: start !important;
+  }
+}
