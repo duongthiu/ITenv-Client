@@ -24,9 +24,9 @@ export const useFriendAction = (data: FriendActionProps) => {
               notificationType: NotificationTypeEnum.ACCEPT_FRIEND_REQUEST,
               relationshipId: relationshipId
             };
+            socket.emit('add_friend', res.data);
             socket.emit('notify', notificationPayload);
             setRelationshipState && setRelationshipState(UseFriendStatusTypeEnum.PENDING_SENDING);
-            mutate && mutate();
           }
         } else {
           notifyError('Failed to send friend request');
@@ -70,12 +70,12 @@ export const useFriendAction = (data: FriendActionProps) => {
       if (relationshipId) {
         const res = await acceptFriendRequest({ friendId: relationshipId });
         if (res.success) {
-          notifySuccess('Friend request sent successfully');
           if (socket) {
             const notificationPayload = {
               notificationType: NotificationTypeEnum.ACCEPT_FRIEND_REQUEST,
               relationshipId: relationshipId
             };
+            socket.emit('accept_friend', res.data);
             socket.emit('notify', notificationPayload);
             setRelationshipState && setRelationshipState(UseFriendStatusTypeEnum.FRIEND);
             mutate && mutate();

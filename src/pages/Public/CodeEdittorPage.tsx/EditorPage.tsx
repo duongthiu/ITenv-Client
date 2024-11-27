@@ -14,7 +14,9 @@ import HeaderComponent from './components/Header.component';
 import { useEffect, useState } from 'react';
 import { InitialCode, RunCodeResultType, SubmissionDetailType, SubmissionStatusType } from '../../../types/ProblemType';
 import { notifyError } from '../../../utils/helpers/notify';
+import { useAppSelector } from '../../../redux/app/hook';
 const EditorPage = () => {
+  const { user, isLogged } = useAppSelector((state) => state.user);
   const { slug } = useParams();
   const { data: singleProblem, isLoading } = useSWR('/api/problem/' + slug, () => getSingleProblem(slug || ''));
   const [initCode, setInitCode] = useState<InitialCode | null>(singleProblem?.data?.initialCode[0] || null);
@@ -30,8 +32,10 @@ const EditorPage = () => {
     }
   }, [singleProblem?.data?.initialCode]);
   const handleSubmitCode = async () => {
-    console.log(code);
-    console.log(initCode?.lang);
+    if (!user || !isLogged) {
+      notifyError('Please login to use this feature');
+      return;
+    }
     setIsSubmitLoading(true);
     const submitCodeQueryOptions: submitCodeQueryOptions = {
       lang: initCode!.langSlug!,
@@ -55,6 +59,10 @@ const EditorPage = () => {
     }
   };
   const handleRunCode = async () => {
+    if (!user || !isLogged) {
+      notifyError('Please login to use this feature');
+      return;
+    }
     setIsRunCodeLoading(true);
     const submitCodeQueryOptions: submitCodeQueryOptions & { data_input: string } = {
       lang: initCode!.langSlug!,

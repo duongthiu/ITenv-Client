@@ -56,7 +56,7 @@ const AccountSettings: React.FC = () => {
         <h3 className="mb-8 text-start text-[1.6rem] font-semibold">Account Information</h3>
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Item name="email" label="Email" initialValue={data?.data?.authenWith?.includes(0) && data?.data?.email}>
-            <Input disabled value={(data?.data?.authenWith?.includes(0) && data?.data?.email) || ''} />
+            <Input disabled value={data?.data?.authenWith?.includes(0) ? data?.data?.email : ''} />
           </Item>
           <p className="text-start font-semibold">Password</p>
 

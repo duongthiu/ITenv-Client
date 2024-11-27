@@ -6,6 +6,7 @@ type CodeSubmissionProps = {
   detailSubmission?: SubmissionDetailType;
 };
 const CodeSubmission: React.FC<CodeSubmissionProps> = ({ detailSubmission }) => {
+  console.log(detailSubmission)
   return (
     <div className="h-full w-full">
       {!detailSubmission ? (

@@ -2,6 +2,8 @@ import { Empty } from 'antd';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSocket } from '../../../context/SocketContext';
+import { useAppDispatch, useAppSelector } from '../../../redux/app/hook';
+import { setAtiveConversationId, setConversations, setSeenConversation } from '../../../redux/message/message.slice';
 import { paths } from '../../../routes/paths';
 import { getConversationsByUserId } from '../../../services/conversation/conversation.service';
 import { QueryOptions } from '../../../types/common';
@@ -11,13 +13,16 @@ import MessageSidebar from './components/sidebar/MessageSidebar';
 import MessagePageContent from './MessagePageContent/MessagePageContent.component';
 
 const MessagePage = () => {
-  const socket = useSocket();
+  const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.user);
   const [queryOptionConversation, setQueryOptionConversation] = useState<QueryOptions>({
     page: 1,
     pageSize: 20
   });
+  const socket = useSocket();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { activeConversationId } = useAppSelector((state) => state.conversation);
   const {
     data: conversationData,
     refresh: mutateConversation
@@ -27,40 +32,39 @@ const MessagePage = () => {
     queryOptionConversation,
     () => getConversationsByUserId(queryOptionConversation)
   );
-  const [activeConversationId, setActiveConversation] = useState<string>('');
 
   useEffect(() => {
     if (id) {
-      setActiveConversation(id);
+      dispatch(setAtiveConversationId(id));
     } else if (conversationData?.data?.length) {
       navigate(paths.messages.replace(':id', conversationData.data[0]._id!));
-
-      // setActiveConversation(conversationData.data[0]._id);
     }
-  }, [id, conversationData]);
+  }, [id, conversationData, navigate, dispatch]);
+
+  useEffect(() => {
+    if (conversationData) {
+      dispatch(setConversations(conversationData?.data));
+    }
+  }, [conversationData, dispatch]);
 
   useEffect(() => {
     if (activeConversationId && socket) {
-      console.log('set seen messageee', activeConversationId);
       socket.emit(
         'seen_message',
-        conversationData?.data?.find((conv) => conv._id === activeConversationId)?.lastMessage
+        conversationData?.data?.find((conv) => conv?._id === activeConversationId)?.lastMessage
       );
+      console.log('seennn');
+      dispatch(setSeenConversation({ conversationId: activeConversationId!, userId: user!._id! }));
     }
-  }, [activeConversationId, conversationData?.data, socket]);
+  }, [activeConversationId, conversationData?.data, dispatch, socket, user]);
+
   return (
     <div className="flex h-full">
-      <MessageSidebar
-        activeConversationId={activeConversationId}
-        setActiveConversation={setActiveConversation}
-        conversations={conversationData!}
-        mutate={mutateConversation}
-      />
-      {conversationData?.data?.find((conv) => conv._id === activeConversationId) ? (
+      <MessageSidebar />
+      {conversationData?.data?.find((conv) => conv?._id === activeConversationId) ? (
         <MessagePageContent
           activeConversationId={activeConversationId}
-          mutateConversation={mutateConversation}
-          conversation={conversationData?.data?.find((conv) => conv._id === activeConversationId)}
+          conversation={conversationData?.data?.find((conv) => conv?._id === activeConversationId)}
         />
       ) : (
         <div className="card m-5 mb-0 flex flex-1 flex-col rounded-2xl pb-2 shadow-xl duration-200">

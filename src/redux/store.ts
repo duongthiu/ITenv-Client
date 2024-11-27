@@ -3,6 +3,8 @@ import { appSlice } from './app/app.slice';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { userSlice } from './user/user.slice';
+import { messageSlice } from './message/message.slice';
+import { friendSlice } from './app/friend.slice';
 
 const appPersistConfig = {
   key: 'app',
@@ -19,7 +21,9 @@ const userPersistConfig = {
 // Combine reducers with persisted slices
 const rootReducer = combineReducers({
   app: persistReducer(appPersistConfig, appSlice.reducer),
-  user: persistReducer(userPersistConfig, userSlice.reducer)
+  user: persistReducer(userPersistConfig, userSlice.reducer),
+  conversation: messageSlice.reducer,
+  friend: friendSlice.reducer
 });
 
 const store = configureStore({

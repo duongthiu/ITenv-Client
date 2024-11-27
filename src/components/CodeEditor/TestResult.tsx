@@ -52,10 +52,10 @@ const TestResult: React.FC<TestResultProps> = ({ submissionStatus, parsedTestcas
               <Tabs defaultActiveKey="0" type="card" className="w-full">
                 {parsedTestcases.map((testcase, index) => (
                   <Tabs.TabPane tab={`Case ${index + 1}`} key={index.toString()}>
-                    <div className="p-4">
+                    <div className="flex flex-col gap-4 p-4">
                       {testcase.map((singleCase, idx) => {
                         return (
-                          <div key={idx} className="flex flex-col gap-4">
+                          <div key={idx} className="">
                             {singleCase.name && <h4 className="sub-title mb-2">{singleCase.name} =</h4>}
                             <pre
                               className="overflow-auto rounded-xl bg-gray-300 p-3 text-black"
@@ -66,47 +66,47 @@ const TestResult: React.FC<TestResultProps> = ({ submissionStatus, parsedTestcas
                             >
                               {singleCase.value}
                             </pre>
-                            <div className="flex flex-col">
-                              <h4 className="sub-title mb-2">Output =</h4>
-                              <pre
-                                className={`min-h-[37px] overflow-auto rounded-xl bg-gray-300 p-3 text-black ${submissionStatus?.code_answer?.[index] !== submissionStatus?.expected_code_answer?.[index] && 'border border-red-500 bg-red-100 text-red-500'}`}
-                                style={{
-                                  whiteSpace: 'pre-wrap',
-                                  wordWrap: 'break-word'
-                                }}
-                              >
-                                {submissionStatus?.code_answer?.[index]}
-                              </pre>
-                            </div>
-                            <div className="flex flex-col">
-                              <h4 className="sub-title mb-2">Expect =</h4>
-                              <pre
-                                className="min-h-[37px] overflow-auto rounded-xl bg-gray-300 p-3 text-black"
-                                style={{
-                                  whiteSpace: 'pre-wrap',
-                                  wordWrap: 'break-word'
-                                }}
-                              >
-                                {submissionStatus?.expected_code_answer?.[index]}
-                              </pre>
-                            </div>
-                            {submissionStatus?.std_output_list[index] && (
-                              <div className="flex flex-col">
-                                <h4 className="sub-title mb-2">Stdout =</h4>
-                                <pre
-                                  className="overflow-auto rounded-xl bg-gray-300 p-3 text-black"
-                                  style={{
-                                    whiteSpace: 'pre-wrap',
-                                    wordWrap: 'break-word'
-                                  }}
-                                >
-                                  {submissionStatus?.std_output_list?.[index]}
-                                </pre>
-                              </div>
-                            )}
                           </div>
                         );
                       })}
+                      <div className="flex flex-col">
+                        <h4 className="sub-title mb-2">Output =</h4>
+                        <pre
+                          className={`min-h-[37px] overflow-auto rounded-xl bg-gray-300 p-3 text-black ${submissionStatus?.code_answer?.[index] !== submissionStatus?.expected_code_answer?.[index] && 'border border-red-500 bg-red-100 text-red-500'}`}
+                          style={{
+                            whiteSpace: 'pre-wrap',
+                            wordWrap: 'break-word'
+                          }}
+                        >
+                          {submissionStatus?.code_answer?.[index]}
+                        </pre>
+                      </div>
+                      <div className="flex flex-col">
+                        <h4 className="sub-title mb-2">Expect =</h4>
+                        <pre
+                          className="min-h-[37px] overflow-auto rounded-xl bg-gray-300 p-3 text-black"
+                          style={{
+                            whiteSpace: 'pre-wrap',
+                            wordWrap: 'break-word'
+                          }}
+                        >
+                          {submissionStatus?.expected_code_answer?.[index]}
+                        </pre>
+                      </div>
+                      {submissionStatus?.std_output_list[index] && (
+                        <div className="flex flex-col">
+                          <h4 className="sub-title mb-2">Stdout =</h4>
+                          <pre
+                            className="overflow-auto rounded-xl bg-gray-300 p-3 text-black"
+                            style={{
+                              whiteSpace: 'pre-wrap',
+                              wordWrap: 'break-word'
+                            }}
+                          >
+                            {submissionStatus?.std_output_list?.[index]}
+                          </pre>
+                        </div>
+                      )}
                     </div>
                   </Tabs.TabPane>
                 ))}

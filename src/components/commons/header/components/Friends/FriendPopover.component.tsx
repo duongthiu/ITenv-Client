@@ -1,64 +1,50 @@
 import { useCallback, useEffect, useState } from 'react';
 import { HiOutlineUsers } from 'react-icons/hi2';
-import { FriendType } from '../../../../../types/FriendType';
+import useSWR from 'swr';
+import { setFriendRequests, setTotalFriendRequest } from '../../../../../redux/app/friend.slice';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/app/hook';
+import { getFriendRequests } from '../../../../../services/friend/friend.service';
+import { QueryOptions } from '../../../../../types/common';
 import { cn } from '../../../../../utils/helpers/cn';
-import { usePagination } from '../../../../../utils/hooks/usePagination.hook';
 import { ComponentPopover } from '../IconPopover.component';
 import FriendsComponent from './Friends.component';
-import { QueryOptions } from '../../../../../types/common';
-import { useSocket } from '../../../../../context/SocketContext';
-import { NotificationType } from '../../../../../types/NotificationType';
-import { useAppSelector } from '../../../../../redux/app/hook';
-import { notifyInfo } from '../../../../../utils/helpers/notify';
-import { getFriendRequests } from '../../../../../services/friend/friend.service';
 
 const FriendPopover = () => {
-  const socket = useSocket();
-  const { user } = useAppSelector((state) => state.user);
   const [friendsVisible, setFriendsVisible] = useState(false);
-
+  const dispatch = useAppDispatch();
+  const { friendRequests, total } = useAppSelector((state) => state.friend);
   const [queryOptionFriendRequest, setQueryOptionFriendRequest] = useState<QueryOptions>({
     page: 1,
     pageSize: 20
   });
   const {
     data: friendRequestData,
-    refresh: mutateFriendRequest,
+    mutate: mutateFriendRequest,
     isLoading: isLoadingFriendRequest
-  } = usePagination<FriendType[]>(`friend ${JSON.stringify(queryOptionFriendRequest)}`, queryOptionFriendRequest, () =>
-    getFriendRequests(queryOptionFriendRequest)
-  );
+  } = useSWR(`friend ${JSON.stringify(queryOptionFriendRequest)}`, () => getFriendRequests(queryOptionFriendRequest));
+
   const loadMoreFriendRequest = useCallback(() => {
     if (isLoadingFriendRequest) return;
     setTimeout(() => {
       setQueryOptionFriendRequest((prev: any) => ({ ...prev, pageSize: prev.pageSize! + 10 }));
     }, 1000);
   }, [isLoadingFriendRequest]);
-  let hasNotificationListener = false;
+
   useEffect(() => {
-    if (socket && !hasNotificationListener) {
-      hasNotificationListener = true;
-      socket.on('receive_notification_friend', (notification: NotificationType) => {
-        if (notification.receivers.includes(user?._id as string)) {
-          mutateFriendRequest();
-          notifyInfo(notification.content);
-        }
-      });
+    if (friendRequestData?.data) {
+      dispatch(setFriendRequests(friendRequestData?.data));
+      dispatch(setTotalFriendRequest(friendRequestData?.total));
     }
-    return () => {
-      if (socket) {
-        socket.off('receive_notification_friend');
-        hasNotificationListener = false;
-      }
-    };
-  }, [mutateFriendRequest, socket, user?._id]);
+  }, [dispatch, friendRequestData]);
+
   return (
     <ComponentPopover
       content={
         <FriendsComponent
-          friendRequestData={friendRequestData!}
+          friendRequestData={friendRequests!}
           mutate={mutateFriendRequest}
           loadMoreFriendRequest={loadMoreFriendRequest}
+          total={total}
         />
       }
       isOpen={friendsVisible}

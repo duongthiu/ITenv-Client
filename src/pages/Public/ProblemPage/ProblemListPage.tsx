@@ -1,6 +1,6 @@
 import { Divider, Empty, Input, Pagination, PaginationProps, Select, Skeleton, Typography } from 'antd';
 import { SearchProps } from 'antd/es/input';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import TagMenu from '../../../components/post/TagMenu/TagMenu.component';
 import { getProblems } from '../../../services/problem/problem.service';
@@ -11,12 +11,13 @@ import { motion } from 'framer-motion';
 import banner1 from '../../../assets/problem_banner/banner1.jpg';
 import banner2 from '../../../assets/problem_banner/banner2.jpg';
 import banner3 from '../../../assets/problem_banner/banner3.jpg';
+import { QueryOptions } from '../../../types/common';
 const ProblemListPage = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-
+  console.log(selectedTags);
   const [difficulty, setDifficulty] = useState<string | undefined>();
   const [status, setStatus] = useState<string | undefined>();
-  const [queryOption, setQueryOption] = useState({ page: 1, pageSize: 10, search: '' });
+  const [queryOption, setQueryOption] = useState<QueryOptions>({ page: 1, pageSize: 10, search: '' });
   const {
     data: problemList,
     error,
@@ -67,6 +68,12 @@ const ProblemListPage = () => {
     setSelectedTags([]);
   };
   const onSearch: SearchProps['onSearch'] = (value) => setQueryOption({ ...queryOption, search: value });
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    setQueryOption({ ...queryOption, tags: [...selectedTags] });
+  }, [selectedTags]);
+
   return (
     <div className="flex h-full gap-5 py-5">
       <div className="flex h-full flex-1 flex-col px-4 pb-0">

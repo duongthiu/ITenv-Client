@@ -18,7 +18,6 @@ const PersonCard: React.FC<PersonCardProps> = ({ user }) => {
   const isOwnProfile = useMemo(() => userSelector?._id === user?._id, [userSelector?._id, user?._id]);
 
   const relationship = useFriendStatus({ friendWithMe: user?.friendWithMe, currentUserId: userSelector?._id || '' });
-  console.log(user?.friendWithMe?.sendBy, userSelector?._id);
   return (
     <div key={user._id} className="card h-full overflow-hidden rounded-xl duration-300 hover:shadow-lg">
       <div className="flex flex-col gap-5 pb-6">
@@ -49,7 +48,7 @@ const PersonCard: React.FC<PersonCardProps> = ({ user }) => {
               </p>
             </div>
             {!isOwnProfile && (
-              <div className="z-20">
+              <div className="">
                 <StatusButton
                   relationship={relationship}
                   userId={user?._id}
