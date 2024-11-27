@@ -64,3 +64,13 @@ export const deletePostById = (id: string): Promise<ResponseAxios> => {
   const data = remove(import.meta.env.VITE_APP_API + 'posts/' + id);
   return data as Promise<ResponseAxios>;
 };
+
+export const getPostActivities = async (
+  userId: string,
+  queryOptions: QueryOptions
+): Promise<ResponsePagination<PostType[]>> => {
+  const data = await get(import.meta.env.VITE_APP_API + 'posts/post-activities/' + userId, {
+    params: queryOptions
+  });
+  return data as unknown as ResponsePagination<PostType[]>;
+};

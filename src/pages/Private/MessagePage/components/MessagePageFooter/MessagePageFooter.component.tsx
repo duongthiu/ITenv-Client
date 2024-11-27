@@ -6,26 +6,19 @@ import { IoMdSend } from 'react-icons/io';
 import { RiImageAddLine } from 'react-icons/ri';
 import InputWithEmoji from '../../../../../components/commons/InputWithEmoji/InputWithEmoji';
 import { useSocket } from '../../../../../context/SocketContext';
-import { useAppSelector } from '../../../../../redux/app/hook';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/app/hook';
+import { addMessageToMessageList } from '../../../../../redux/message/message.slice';
 import { sendMessage } from '../../../../../services/message/message.service';
-import { MessageType, PreviewImage } from '../../../../../types/ConversationType';
+import { PreviewImage } from '../../../../../types/ConversationType';
 import { getBase64 } from '../../../../../utils/helpers/getBase64';
 import { notifyError } from '../../../../../utils/helpers/notify';
-import useSWR from 'swr';
 
 type MessagePageFooterProps = {
   conversationId?: string;
   receiver?: string;
-  setMessageList: React.Dispatch<React.SetStateAction<MessageType[]>>;
-  mutateConversation: () => Promise<void>;
 };
 
-const MessagePageFooter: React.FC<MessagePageFooterProps> = ({
-  conversationId,
-  receiver,
-  setMessageList,
-  mutateConversation
-}) => {
+const MessagePageFooter: React.FC<MessagePageFooterProps> = ({ conversationId, receiver }) => {
   const socket = useSocket();
   const [message, setMessage] = useState<string>('');
   const { user } = useAppSelector((state) => state.user);
@@ -33,6 +26,7 @@ const MessagePageFooter: React.FC<MessagePageFooterProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [files, setFiles] = useState<FileList>();
+  const dispatch = useAppDispatch();
   const onEmojiClick = (emojiObject: any) => {
     setMessage((prev) => prev + emojiObject.emoji);
   };
@@ -60,8 +54,8 @@ const MessagePageFooter: React.FC<MessagePageFooterProps> = ({
           setIsLoading(false);
           setMessage('');
           setPreviewImage([]);
-          mutateConversation && mutateConversation();
-          setMessageList((prev: any) => [...prev, { ...messageRes?.data }]);
+          // mutateConversation && mutateConversation();
+          dispatch(addMessageToMessageList(messageRes!.data!));
         } else {
           setIsLoading(false);
         }

@@ -20,6 +20,7 @@ export const ComponentPopover: React.FC<ComponentPopoverProps> = ({
   total = 0
 }) => (
   <Popover
+    
     rootClassName="popover-wrapper"
     placement={placement || 'bottom'}
     content={content}
@@ -30,6 +31,7 @@ export const ComponentPopover: React.FC<ComponentPopoverProps> = ({
     autoAdjustOverflow={false}
     open={isOpen}
     onOpenChange={(visible) => setOpen(visible)}
+    
   >
     <Badge count={total}>{icon}</Badge>
   </Popover>

@@ -1,57 +1,40 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { QueryOptions, ResponsePagination } from '../../../../../types/common';
+import { memo, useEffect, useMemo, useState } from 'react';
+import { PiMessengerLogo } from 'react-icons/pi';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/app/hook';
+import { setConversations } from '../../../../../redux/message/message.slice';
+import { getConversationsByUserId } from '../../../../../services/conversation/conversation.service';
+import { QueryOptions } from '../../../../../types/common';
+import { ConversationType } from '../../../../../types/ConversationType';
+import { cn } from '../../../../../utils/helpers/cn';
 import { usePagination } from '../../../../../utils/hooks/usePagination.hook';
-import { ConversationType, MessageType } from '../../../../../types/ConversationType';
 import { ComponentPopover } from '../IconPopover.component';
 import MessageComponent from './Message.component';
-import { PiMessengerLogo } from 'react-icons/pi';
-import { cn } from '../../../../../utils/helpers/cn';
-import { getConversationsByUserId } from '../../../../../services/conversation/conversation.service';
-import { useSocket } from '../../../../../context/SocketContext';
-import { useAppSelector } from '../../../../../redux/app/hook';
 
-const MessagePopover = () => {
-  const socket = useSocket();
+const MessagePopover = memo(() => {
   const { user } = useAppSelector((state) => state.user);
+  const { conversations } = useAppSelector((state) => state.conversation);
   const [messagesVisible, setMessagesVisible] = useState(false);
-  const [totalSeenMessages, setTotalSeenMessages] = useState(0);
+  const dispatch = useAppDispatch();
   const [queryOptionConversation, setQueryOptionConversation] = useState<QueryOptions>({
     page: 1,
     pageSize: 20
   });
-  const {
-    data: conversationData,
-    refresh: mutateConversation,
-    isLoading: isLoadingConversation
-  } = usePagination<ConversationType[]>(
+  const { data: conversationData } = usePagination<ConversationType[]>(
     `conversation ${JSON.stringify(queryOptionConversation)}`,
     queryOptionConversation,
     () => getConversationsByUserId(queryOptionConversation)
   );
 
-  // let hasNotificationListener = false;
   useEffect(() => {
-    if (socket) {
-      socket.on('message', (message: ResponsePagination<MessageType>) => {
-        mutateConversation();
-      });
-    }
+    if (conversationData) dispatch(setConversations(conversationData?.data));
+  }, [conversationData, dispatch]);
 
-    return () => {
-      if (socket) {
-        socket.off('message');
-        // hasNotificationListener = false;
-      }
-    };
-  }, [socket]);
   const totalNotSeen = useMemo(() => {
-    return conversationData?.data?.filter((conv) => !conv.lastMessage?.isSeenBy?.includes(user?._id || '')).length;
-  }, [conversationData?.data, user?._id]);
+    return conversations?.filter((conv) => !conv.lastMessage?.isSeenBy?.includes(user?._id || '')).length;
+  }, [conversations, user?._id]);
   return (
     <ComponentPopover
-      content={
-        <MessageComponent totalNotSeen={totalNotSeen} conversations={conversationData!} mutate={mutateConversation} />
-      }
+      content={<MessageComponent totalNotSeen={totalNotSeen!} conversations={conversations!} />}
       isOpen={messagesVisible}
       setOpen={setMessagesVisible}
       total={totalNotSeen}
@@ -65,6 +48,6 @@ const MessagePopover = () => {
       placement="bottomRight"
     />
   );
-};
+});
 
 export default MessagePopover;

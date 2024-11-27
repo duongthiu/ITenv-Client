@@ -19,14 +19,12 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
   // const { parentCateId } = useParams();
   const [openDrawer, setOpenDrawer] = useState(false);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 500);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [queryOption, setQueryOption] = useState<QueryOptions>({
-    page: currentPage,
-    pageSize: pageSize,
+    page: 1,
+    pageSize: 10,
     sortField: 'VIEWS',
     sortOrder: 'DESC',
     search: search
@@ -74,6 +72,9 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
   useEffect(() => {
     setQueryOption((prev) => ({ ...prev, search: debouncedSearch }));
   }, [debouncedSearch]);
+  useEffect(() => {
+    setQueryOption({ ...queryOption, tags: [...selectedTags] });
+  }, [selectedTags]);
 
   return (
     <div className="flex flex-col gap-4">

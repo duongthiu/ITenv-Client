@@ -146,7 +146,7 @@ export const PUBLIC_ROUTES: RouteType[] = [
     path: paths.search,
     element: <LazySearchPage />,
     layout: DefaultLayout,
-    private: 'public',
+    private: 'auth',
     useHeader: true,
     useSidebar: true,
     useFooter: false

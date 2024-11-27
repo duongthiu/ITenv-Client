@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import useSWR from 'swr';
-import { Modal, Tabs, Select, Input, Button, Form, Spin } from 'antd';
+import { Modal, Tabs, Select, Input, Button, Form, Spin, Empty } from 'antd';
 import { QueryOptions, ResponsePagination } from '../../../../../types/common';
 import { FriendType } from '../../../../../types/FriendType';
 import { getFriendsByUserId } from '../../../../../services/friend/friend.service';
@@ -9,6 +9,8 @@ import { createGroupChat } from '../../../../../services/conversation/conversati
 import { notifyError, notifySuccess } from '../../../../../utils/helpers/notify';
 import MessagePageFooter from '../MessagePageFooter/MessagePageFooter.component';
 import { MessageType } from '../../../../../types/ConversationType';
+import { getMyConversationWithUser } from '../../../../../services/message/message.service';
+import MessageItem from '../MessageItem/MessageItem';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -31,8 +33,14 @@ const NewMessageModal: React.FC<NewMessageModalProps> = ({
   const [groupName, setGroupName] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const { user: userSelector } = useAppSelector((state) => state.user);
-  const [messageList, setMessageList] = useState<MessageType[]>([]);
   const [queryOptions, setQueryOptions] = useState<QueryOptions>({ page: 1, pageSize: 20 });
+
+  const { data: messagesData, isLoading } = useSWR(
+    receiverId ? `message-${receiverId}` : null,
+    () => getMyConversationWithUser(receiverId!, {}),
+    { revalidateOnFocus: false }
+  );
+
   // Use SWR to fetch friends
   const { data, error, isValidating } = useSWR<ResponsePagination<FriendType[]>>(
     ['friends', userSelector?._id, JSON.stringify(queryOptions)],
@@ -47,19 +55,9 @@ const NewMessageModal: React.FC<NewMessageModalProps> = ({
     setSelectedGroupFriends(values);
   };
 
-  // const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-  //   setMessageContent(e.target.value);
-  // };
-
   const handleGroupNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGroupName(e.target.value);
   };
-
-  // const handleSendMessage = () => {
-  //   console.log('Friend ID:', selectedFriend);
-  //   console.log('Message:', messageContent);
-  //   handleClose();
-  // };
 
   const handleCreateGroup = async () => {
     try {
@@ -79,7 +77,6 @@ const NewMessageModal: React.FC<NewMessageModalProps> = ({
   const filteredFriends = data?.data?.filter((friend) =>
     (friend.sendBy.username + friend.receiver.username).toLowerCase().includes(searchTerm.toLowerCase())
   );
-  console.log(selectedFriend);
   return (
     <Modal
       title="New Message"
@@ -120,12 +117,19 @@ const NewMessageModal: React.FC<NewMessageModalProps> = ({
                   })}
                 </Select>
               </Form.Item>
-              <div className="pt-40">
-                <MessagePageFooter
-                  receiver={selectedFriend!}
-                  mutateConversation={mutateConversation!}
-                  setMessageList={setMessageList}
-                />
+              <div className="flex h-[200px] flex-col-reverse gap-0 overflow-y-auto p-5">
+                <div className="mt-auto flex flex-col gap-2">
+                  {isLoading ? (
+                    <Spin size="default" />
+                  ) : messagesData?.data?.length ? (
+                    messagesData.data.map((message) => <MessageItem key={message._id} message={message} />)
+                  ) : (
+                    <Empty description="No messages yet" />
+                  )}
+                </div>
+              </div>
+              <div className="pt-5">
+                <MessagePageFooter receiver={selectedFriend!} />
               </div>
             </Form>
           </TabPane>

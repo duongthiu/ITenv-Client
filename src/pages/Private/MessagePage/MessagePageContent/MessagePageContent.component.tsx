@@ -1,50 +1,39 @@
-import { Avatar, Divider, Typography } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { Avatar, Divider, Modal, Skeleton, Typography } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import { GoDotFill } from 'react-icons/go';
 import { HiOutlineUserGroup } from 'react-icons/hi2';
+import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
-import { useSocket } from '../../../../context/SocketContext';
-import { useAppSelector } from '../../../../redux/app/hook';
+import { useAppDispatch, useAppSelector } from '../../../../redux/app/hook';
+import { setCurrentMessageList } from '../../../../redux/message/message.slice';
+import { paths } from '../../../../routes/paths';
 import { getMessageByConversationId } from '../../../../services/message/message.service';
-import { QueryOptions, ResponsePagination } from '../../../../types/common';
-import { ConversationType, MessageType } from '../../../../types/ConversationType';
+import { QueryOptions } from '../../../../types/common';
+import { ConversationType } from '../../../../types/ConversationType';
+import timeAgo from '../../../../utils/helpers/timeAgo';
 import MessageItem from '../components/MessageItem/MessageItem';
 import MessagePageFooter from '../components/MessagePageFooter/MessagePageFooter.component';
+
 type MessagePageContentProps = {
   conversation?: ConversationType;
   receiverId?: string;
-  mutateConversation: () => Promise<void>;
   activeConversationId: string;
 };
-const MessagePageContent: React.FC<MessagePageContentProps> = ({
-  conversation,
-  receiverId,
-  mutateConversation,
-  activeConversationId
-}) => {
+
+const MessagePageContent: React.FC<MessagePageContentProps> = ({ conversation, activeConversationId }) => {
   const { user } = useAppSelector((state) => state.user);
-  const socket = useSocket();
-  // const [conversationState, setConverSationState] = useState<ConversationType>(
-  //   conversation || {
-  //     isGroupChat: false,
-  //     _id: '',
-  //     lastMessage: null,
-  //     createdAt: new Date()
-  //   }
-  // );
+  const { currentMessageList } = useAppSelector((state) => state.conversation);
+  const [openMemberModal, setOpenMemberModal] = useState<boolean>(false);
+  const [isLoadmore, setIsLoadmore] = useState(false);
+  console.log(isLoadmore);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const [queryOptionMessage, setQueryOptionMessage] = useState<QueryOptions>({
     page: 1,
     pageSize: 20
   });
-  // const {
-  //   data: messageData,
-  //   refresh: mutateMessage,
-  //   isLoading: isLoadingMessage
-  // } = usePagination<MessageType[]>(
-  //   `messages/${conversation?._id}/${JSON.stringify(queryOptionMessage)}`,
-  //   queryOptionMessage,
-  //   () => getMessageByConversationId(conversation?._id || '', queryOptionMessage)
-  //   );
+
   const {
     data: messageData,
     mutate: mutateMessage,
@@ -53,18 +42,50 @@ const MessagePageContent: React.FC<MessagePageContentProps> = ({
     getMessageByConversationId(activeConversationId || '', queryOptionMessage)
   );
 
-  const [messageList, setMessageList] = useState<MessageType[]>(messageData?.data || []);
-  // const chatWith = conversation?.isGroupChat
-  //   ? 'group'
-  //   : conversation?.participants?.find((member) => member._id !== user?._id)?._id;
-  // // const { data: userData, isLoading: isLoadingUser } = useSWR(
-  // //   chatWith && chatWith !== 'group' ? `profile_${chatWith}` : null,
-  // //   () => (chatWith ? getUserById(chatWith) : null)
-  // // );
+  const observer = useRef<IntersectionObserver | null>(null);
 
-  const handleShowMember = () => {};
+  const loadMoreMessages = () => {
+    setIsLoadmore(true);
+    if (messageData?.data && messageData?.data.length > 0) {
+      setTimeout(() => {
+        setQueryOptionMessage((prev) => ({
+          ...prev,
+          pageSize: (prev?.pageSize || 0) + 20
+        }));
+        setIsLoadmore(false);
+      }, 1000);
+    }
+  };
+
+  // IntersectionObserver callback
+  const intersectionCallback = ([entry]: IntersectionObserverEntry[]) => {
+    if (entry.isIntersecting && !isLoadingMessage && (queryOptionMessage?.pageSize || 0) < (messageData?.total || 0)) {
+      loadMoreMessages();
+    }
+  };
+
+  // Set up IntersectionObserver when component mounts
   useEffect(() => {
-    setMessageList([]);
+    observer.current = new IntersectionObserver(intersectionCallback, {
+      root: null, // Use the viewport as the root
+      rootMargin: '0px',
+      threshold: 1.0 // Trigger when the sentinel is fully in view
+    });
+
+    const sentinel = document.getElementById('sentinel');
+    if (sentinel) {
+      observer.current.observe(sentinel);
+    }
+
+    return () => {
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+    };
+  }, [messageData?.data, isLoadingMessage]);
+
+  useEffect(() => {
+    dispatch(setCurrentMessageList([]));
     if (activeConversationId) {
       mutateMessage();
     }
@@ -72,47 +93,44 @@ const MessagePageContent: React.FC<MessagePageContentProps> = ({
 
   useEffect(() => {
     if (messageData?.data) {
-      setMessageList(messageData?.data);
+      dispatch(setCurrentMessageList(messageData?.data));
     }
   }, [messageData?.data]);
 
-  useEffect(() => {
-    if (socket) {
-      socket.on('message', (message: ResponsePagination<MessageType>) => {
-        if (message?.data?.conversationId === activeConversationId) {
-          mutateConversation();
-          setMessageList((prevList) => [...prevList, message.data!]);
-          if (message.data.conversationId === activeConversationId) socket.emit('seen_message', message.data);
-        }
-        // mutateMessage();
-      });
-      socket.on('seen_message', (messageInfo: MessageType) => {
-        // console.log('seen_message received', messageInfo);
-        // notifyInfo('Message has been seen');
-      });
-      socket.on('recall_message', (messageInfo: MessageType) => {
-        setMessageList((prevMessages) =>
-          prevMessages.map((message) => (message._id === messageInfo._id ? { ...message, ...messageInfo } : message))
-        );
-      });
-    }
-    return () => {
-      socket?.off('message');
-      socket?.off('seen_message');
-      socket?.off('recall_message');
-    };
-  }, [activeConversationId, socket]);
-  const handleRecallMessageSocket = (message: MessageType) => {
-    if (socket) {
-      socket.emit('recall_message', message);
-    }
-  };
+  const conversationInfo = conversation?.participants?.find((member) => member?._id !== user?._id);
 
   return (
     <div className="card m-5 mb-0 flex flex-1 flex-col rounded-2xl pb-2 shadow-xl duration-200">
-      {/* <div className="h-full w-full items-center justify-center">
-        <Empty className="flex h-full flex-col items-center justify-center" />
-      </div> */}
+      {conversation?.isGroupChat && (
+        <Modal
+          title={<span className="text-[1.8rem]">Members</span>}
+          open={openMemberModal}
+          onCancel={() => setOpenMemberModal(false)}
+          footer={null}
+        >
+          <Divider className="my-4" />
+          <div className="flex flex-col gap-5">
+            {conversation?.participants?.map((member) => (
+              <div
+                key={member?._id}
+                className="flex cursor-pointer items-center gap-4"
+                onClick={() => navigate(paths.profile.replace(':userId', member?._id))}
+              >
+                <div className="relative">
+                  {member?.status && (
+                    <div className={`absolute -bottom-1 right-0 flex items-center text-green-500`}>
+                      <div className="h-4 w-4 rounded-full border-[1px] border-white bg-green-500"></div>
+                    </div>
+                  )}
+                  <Avatar size={42} icon={conversation?.isGroupChat && <HiOutlineUserGroup />} src={member.avatar} />
+                </div>
+                <Typography.Text>{member.username}</Typography.Text>
+              </div>
+            ))}
+          </div>
+        </Modal>
+      )}
+
       <div className="flex items-center justify-between p-3">
         <div className="flex items-center gap-5">
           <Avatar
@@ -130,20 +148,22 @@ const MessagePageContent: React.FC<MessagePageContentProps> = ({
                   ? conversation?.groupName
                   : conversation?.participants?.find((member) => member?._id !== user?._id)?.username}
               </Typography.Text>
-              {/* <div className="flex gap-3">
+              <div className="flex gap-3">
                 {conversation?.isGroupChat ? (
-                  <Typography.Link onClick={handleShowMember}>
+                  <Typography.Link className="text-[1.2rem]" onClick={() => setOpenMemberModal(true)}>
                     {conversation?.participants?.length} members
                   </Typography.Link>
                 ) : (
-                  <div className={`${userData?.data?.status && 'text-green-500'} flex items-center`}>
+                  <div className={`${conversationInfo?.status && 'text-green-500'} flex items-center`}>
                     <GoDotFill size={18} />
-                    <Typography.Text className={`inline tracking-tight ${userData?.data?.status && 'text-green-500'}`}>
-                      {userData?.data?.status ? 'Online' : 'Offline ' + timeAgo(userData?.data?.lastOnline || '')}
+                    <Typography.Text
+                      className={`inline text-[1.2rem] tracking-tight ${conversationInfo?.status && 'text-green-500'}`}
+                    >
+                      {conversationInfo?.status ? 'Online' : 'Offline ' + timeAgo(conversationInfo?.lastOnline || '')}
                     </Typography.Text>
                   </div>
                 )}
-              </div> */}
+              </div>
             </div>
           </div>
         </div>
@@ -154,16 +174,13 @@ const MessagePageContent: React.FC<MessagePageContentProps> = ({
       <Divider className="my-[8px]" />
       <div className="flex h-full flex-col-reverse gap-0 overflow-y-auto p-5">
         <div className="mt-auto flex flex-col gap-2">
-          {messageList?.map((message) => (
-            <MessageItem handleRecallMessageSocket={handleRecallMessageSocket} message={message} />
-          ))}
+          {currentMessageList?.map((message) => <MessageItem key={message._id} message={message} />)}
         </div>
+        {isLoadmore && <Skeleton avatar title className="my-3 w-full" />}
+        {/* Sentinel Element */}
+        <div id="sentinel" />
       </div>
-      <MessagePageFooter
-        mutateConversation={mutateConversation}
-        conversationId={activeConversationId}
-        setMessageList={setMessageList}
-      />
+      <MessagePageFooter conversationId={activeConversationId} />
     </div>
   );
 };

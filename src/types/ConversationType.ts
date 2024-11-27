@@ -2,8 +2,8 @@ import { UserType } from './UserType';
 
 export type ConversationType = {
   _id?: string;
-  createdBy: Pick<UserType, '_id' | 'username' | 'avatar'>;
-  participants: Pick<UserType, '_id' | 'username' | 'avatar'>[];
+  createdBy: Pick<UserType, '_id' | 'username' | 'avatar' | 'status' | 'lastOnline'>;
+  participants: Pick<UserType, '_id' | 'username' | 'avatar' | 'status' | 'lastOnline'>[];
   isGroupChat?: boolean;
   groupName?: string;
   isDeleted?: boolean;

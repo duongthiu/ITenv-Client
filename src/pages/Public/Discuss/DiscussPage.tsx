@@ -44,7 +44,13 @@ const DiscussPage = () => {
 
   return (
     <div className="mx-auto p-4">
-      {isLoadingCate && <Skeleton.Node active />}
+      {isLoadingCate && (
+        <div className="grid w-full grid-cols-3 gap-5">
+          {[1, 2, 3].map((_, index) => (
+            <Skeleton.Node className="w-full" key={index} active />
+          ))}
+        </div>
+      )}
       <header className="">
         <div
           className={`grid w-full gap-x-5`}
