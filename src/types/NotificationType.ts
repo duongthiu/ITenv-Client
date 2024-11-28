@@ -11,6 +11,7 @@ export type NotificationType = {
   notificationType?: NotificationTypeEnum;
   receivers: string[];
   postId?: string;
+  isGlobal?: boolean;
 };
 
 //vote downvote comment share repcomment vote_comment downvote_comment
@@ -23,5 +24,7 @@ export type NotificationRequestType = {
   postId?: string;
   content?: string;
   commentId?: string;
+  title?: string;
+  receiverId?: string[];
   // problemId?: string;
 };

@@ -14,10 +14,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <GoogleOAuthProvider clientId={import.meta.env.VITE_APP_CLIENT_ID}>
       <SocketProvider>
         <SWRConfig
-        // value={{
-        //   revalidateOnFocus: false,
-        //   revalidateOnReconnect: false
-        // }}
+        value={{
+          revalidateOnFocus: false,
+          revalidateOnReconnect: false
+        }}
         >
           <Router>
             <App />

@@ -8,12 +8,19 @@ import { notifyInfo } from '../../../../../utils/helpers/notify';
 import { usePagination } from '../../../../../utils/hooks/usePagination.hook';
 import { ComponentPopover } from '../IconPopover.component';
 import NotificationComponent from './Notification.component';
-import { useAppSelector } from '../../../../../redux/app/hook';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/app/hook';
 import { cn } from '../../../../../utils/helpers/cn';
+import {
+  addNotification,
+  setNotifications,
+  setTotalNotification
+} from '../../../../../redux/notification/notification.slice';
 
 const NotificationPopover = () => {
   const socket = useSocket();
+  const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
+  const { notifications, total } = useAppSelector((state) => state.notification);
   const [queryOptionNotification, setQueryOptionNotification] = useState<QueryOptions>({
     page: 1,
     pageSize: 20
@@ -27,7 +34,9 @@ const NotificationPopover = () => {
   } = usePagination<NotificationType[]>(
     `notification ${JSON.stringify(queryOptionNotification)}`,
     queryOptionNotification,
-    () => getNotifications(queryOptionNotification)
+    () => {
+      if (!notifications) return getNotifications(queryOptionNotification);
+    }
   );
   const loadMoreNotification = useCallback(() => {
     if (isLoadingNotifications) return;
@@ -35,23 +44,22 @@ const NotificationPopover = () => {
       setQueryOptionNotification((prev) => ({ ...prev, pageSize: prev.pageSize! + 10 }));
     }, 1000);
   }, [isLoadingNotifications]);
-  const allNotifications = notificationData?.data || [];
+
+  const allNotifications = notifications || [];
   const unreadNotifications = allNotifications?.filter((n: NotificationType) => !n.isSeen) || [];
   const unreadCount = unreadNotifications.length;
   let hasNotificationListener = false;
-
   useEffect(() => {
     if (socket && !hasNotificationListener) {
       hasNotificationListener = true;
-
       socket.on('receive_notification', (notification: NotificationType) => {
-        if (notification.receivers.includes(user?._id as string)) {
+        if (notification.receivers.includes(user?._id as string) || notification?.isGlobal) {
           mutateNotifications();
+          dispatch(addNotification(notification));
           notifyInfo(notification.content);
         }
       });
     }
-
     return () => {
       if (socket) {
         socket.off('receive_notification');
@@ -59,12 +67,18 @@ const NotificationPopover = () => {
       }
     };
   }, [mutateNotifications, socket, user?._id]);
+  useEffect(() => {
+    if (notificationData) {
+      dispatch(setNotifications(notificationData?.data || []));
+      dispatch(setTotalNotification(notificationData?.total || 0));
+    }
+  }, [notificationData, dispatch]);
   return (
     <ComponentPopover
       content={
         <NotificationComponent
-          notification={notificationData!}
-          mutate={mutateNotifications}
+          total={total}
+          notification={notifications!}
           loadMoreNotification={loadMoreNotification}
         />
       }

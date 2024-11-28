@@ -22,7 +22,7 @@ const MessagePage = () => {
   const socket = useSocket();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { activeConversationId } = useAppSelector((state) => state.conversation);
+  const { activeConversationId, conversations } = useAppSelector((state) => state.conversation);
   const {
     data: conversationData,
     refresh: mutateConversation
@@ -40,7 +40,6 @@ const MessagePage = () => {
       navigate(paths.messages.replace(':id', conversationData.data[0]._id!));
     }
   }, [id, conversationData, navigate, dispatch]);
-
   useEffect(() => {
     if (conversationData) {
       dispatch(setConversations(conversationData?.data));
@@ -53,18 +52,20 @@ const MessagePage = () => {
         'seen_message',
         conversationData?.data?.find((conv) => conv?._id === activeConversationId)?.lastMessage
       );
-      console.log('seennn');
       dispatch(setSeenConversation({ conversationId: activeConversationId!, userId: user!._id! }));
     }
   }, [activeConversationId, conversationData?.data, dispatch, socket, user]);
-
+  useEffect(() => {
+    setAtiveConversationId(id);
+  }, [id]);
+  console.log(conversations, id);
   return (
     <div className="flex h-full">
       <MessageSidebar />
-      {conversationData?.data?.find((conv) => conv?._id === activeConversationId) ? (
+      {conversations?.find((conv) => conv?._id === id) ? (
         <MessagePageContent
-          activeConversationId={activeConversationId}
-          conversation={conversationData?.data?.find((conv) => conv?._id === activeConversationId)}
+          activeConversationId={activeConversationId || ''}
+          conversation={conversations?.find((conv) => conv?._id === id)}
         />
       ) : (
         <div className="card m-5 mb-0 flex flex-1 flex-col rounded-2xl pb-2 shadow-xl duration-200">

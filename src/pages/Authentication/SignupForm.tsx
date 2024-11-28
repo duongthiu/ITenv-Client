@@ -58,11 +58,14 @@ const SignupForm = () => {
         onSuccessSubmit();
         setIsShowOtp(true);
         setIsLoading(false);
-      } else onFailSubmit();
-
+      } else {
+        onFailSubmit();
+        notifyError(response?.message);
+      }
       // navigate(paths.inforSignup);
     } catch (error) {
-      notifyError(error as string);
+      console.log(error);
+      notifyError((error as any).response?.data?.message);
       onFailSubmit();
     } finally {
       setIsLoading(false);

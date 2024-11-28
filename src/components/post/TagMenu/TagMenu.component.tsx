@@ -1,16 +1,22 @@
 import { Divider, Empty, Input, Skeleton } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TagType } from '../../../types/TagType';
 import { useDebounce } from '../../../utils/hooks/useDebounce.hook';
 import useSWR from 'swr';
 import { getTags } from '../../../services/tags/tag.service';
 import { notifyWarning } from '../../../utils/helpers/notify';
+import { useAppDispatch, useAppSelector } from '../../../redux/app/hook';
+import { setTags } from '../../../redux/tag/tag.slice';
 type TagMenuProps = {
   selectedTags: string[];
   setSelectedTags: React.Dispatch<React.SetStateAction<string[]>>;
 };
 const TagMenu: React.FC<TagMenuProps> = ({ selectedTags = [], setSelectedTags }) => {
-  const { data: tags, isLoading } = useSWR('/api/tag', () => getTags());
+  const dispatch = useAppDispatch();
+  const { tags: tagsSelector } = useAppSelector((state) => state.tag);
+  const { data: tags, isLoading } = useSWR('/api/tag', () => {
+    if (!tagsSelector) return getTags();
+  });
 
   const [searchTags, setSearchTags] = useState('');
   // const [selectedTags, setSelectedTags] = useState<string[]>([]);
@@ -27,6 +33,11 @@ const TagMenu: React.FC<TagMenuProps> = ({ selectedTags = [], setSelectedTags })
       return [...prevTags, tag];
     });
   };
+  useEffect(() => {
+    if (tags) {
+      dispatch(setTags(tags?.data || []));
+    }
+  });
   return (
     <div className={`mb-4 flex h-full w-full max-w-[400px] flex-col`}>
       <h2 className="text-[1.6rem] font-semibold">Tags</h2>
@@ -39,8 +50,8 @@ const TagMenu: React.FC<TagMenuProps> = ({ selectedTags = [], setSelectedTags })
       />
       <div className="flex flex-wrap gap-2 overflow-y-auto">
         {isLoading && <Skeleton />}
-        {tags?.data?.length === 0 && <Empty />}
-        {tags?.data
+        {tagsSelector?.length === 0 && <Empty />}
+        {tagsSelector
           ?.filter((tag) => tag.name.toLowerCase().includes(debounceSearchVariable.toLowerCase()))
           .map((tag: TagType) => (
             <button

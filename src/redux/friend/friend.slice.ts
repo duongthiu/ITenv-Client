@@ -2,11 +2,11 @@ import { createSlice } from '@reduxjs/toolkit';
 import { FriendType } from '../../types/FriendType';
 
 type InitialState = {
-  friendRequests: FriendType[];
+  friendRequests: FriendType[] | undefined;
   total: number;
 };
 const initialState: InitialState = {
-  friendRequests: [],
+  friendRequests: undefined,
   total: 0
 };
 
@@ -18,12 +18,12 @@ export const friendSlice = createSlice({
       state.friendRequests = action.payload;
     },
     addFriendRequest(state, action: { payload: FriendType }) {
-      state.friendRequests.push(action.payload);
+      state.friendRequests?.push(action.payload);
       state.total = state.total + 1;
     },
     removeFriendRequest(state, action: { payload: string }) {
-      state.friendRequests = state.friendRequests.filter((friend) => friend._id !== action.payload);
-      state.total = state.total - 1;
+      state.friendRequests = state?.friendRequests?.filter((friend) => friend._id !== action.payload);
+      state.total = state.total - 1 >= 0 ? state.total - 1 : 0;
     },
     setTotalFriendRequest(state, action) {
       state.total = action.payload;

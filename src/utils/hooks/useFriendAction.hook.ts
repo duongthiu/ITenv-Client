@@ -1,8 +1,11 @@
+import { useDispatch } from 'react-redux';
 import { useSocket } from '../../context/SocketContext';
 import { acceptFriendRequest, createFriendRequest, rejectFriendRequest } from '../../services/friend/friend.service';
 import { NotificationTypeEnum } from '../../types/enum/notification.enum';
 import { notifyError, notifySuccess } from '../helpers/notify';
 import { UseFriendStatusTypeEnum } from './useFriendStatus.hook';
+import { useAppDispatch } from '../../redux/app/hook';
+import { removeFriendRequest } from '../../redux/friend/friend.slice';
 type FriendActionProps = {
   userId: string;
   relationshipId: string;
@@ -11,6 +14,7 @@ type FriendActionProps = {
 };
 export const useFriendAction = (data: FriendActionProps) => {
   const socket = useSocket();
+  const dispatch = useAppDispatch();
   const { userId, relationshipId, setRelationshipState, mutate } = data;
   const handleAddFriend = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -50,10 +54,10 @@ export const useFriendAction = (data: FriendActionProps) => {
               notificationType: NotificationTypeEnum.REJECT_FRIEND_REQUEST,
               relationshipId: relationshipId
             };
-            console.log(notificationPayload);
+            dispatch(removeFriendRequest(relationshipId));
             socket.emit('notify', notificationPayload);
             setRelationshipState && setRelationshipState(UseFriendStatusTypeEnum.NOT_FRIEND);
-            mutate && mutate();
+            // mutate && mutate();
           }
         } else {
           notifyError('Failed to reject friend request');
@@ -77,6 +81,7 @@ export const useFriendAction = (data: FriendActionProps) => {
             };
             socket.emit('accept_friend', res.data);
             socket.emit('notify', notificationPayload);
+            dispatch(removeFriendRequest(relationshipId));
             setRelationshipState && setRelationshipState(UseFriendStatusTypeEnum.FRIEND);
             mutate && mutate();
           }

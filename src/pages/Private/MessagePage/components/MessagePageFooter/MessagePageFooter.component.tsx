@@ -9,9 +9,10 @@ import { useSocket } from '../../../../../context/SocketContext';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/app/hook';
 import { addMessageToMessageList } from '../../../../../redux/message/message.slice';
 import { sendMessage } from '../../../../../services/message/message.service';
-import { PreviewImage } from '../../../../../types/ConversationType';
+import { MessageType, PreviewImage } from '../../../../../types/ConversationType';
 import { getBase64 } from '../../../../../utils/helpers/getBase64';
 import { notifyError } from '../../../../../utils/helpers/notify';
+import { ResponsePagination } from '../../../../../types/common';
 
 type MessagePageFooterProps = {
   conversationId?: string;
@@ -47,7 +48,7 @@ const MessagePageFooter: React.FC<MessagePageFooterProps> = ({ conversationId, r
           });
         }
         formData.append('isSeenBy', JSON.stringify([user?._id]));
-        const messageRes = await sendMessage(formData);
+        const messageRes: ResponsePagination<MessageType> = await sendMessage(formData);
         if (messageRes?.success) {
           console.log(messageRes);
           socket.emit('message', messageRes?.data);

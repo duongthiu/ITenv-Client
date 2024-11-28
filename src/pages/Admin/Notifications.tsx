@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 import useSWR from 'swr';
 import { QueryOptions } from '../../types/common';
 import { getAllUser } from '../../services/user/user.admin.service';
+import { useSocket } from '../../context/SocketContext';
+import { NotificationRequestType } from '../../types/NotificationType';
+import { NotificationTypeEnum } from '../../types/enum/notification.enum';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -10,10 +13,17 @@ const { Option } = Select;
 // Example usage with mock data
 const Notifications = () => {
   const [form] = Form.useForm();
-
+  const socket = useSocket();
   const handleSubmit = (values: { title: string; content: string; recipients: string[] }) => {
-    console.log('Form Submitted: ', values);
-    // Handle the notification sending logic here (e.g., API call)
+    if (socket) {
+      const notificationPayload: NotificationRequestType = {
+        notificationType: NotificationTypeEnum.ADMIN_NOTIFICATION,
+        title: values.title,
+        content: values.content,
+        receiverId: values.recipients
+      };
+      socket.emit('notify', notificationPayload);
+    }
   };
 
   const [queryOptions, setQueryOptions] = useState<QueryOptions>({
@@ -69,6 +79,9 @@ const Notifications = () => {
 
             <Form.Item label={<span className="text-[1.6rem]">Recipients</span>} name="recipients">
               <Select mode="multiple" placeholder="Select recipients">
+                <Option key={'ALL'} value={'ALL'}>
+                  All
+                </Option>
                 {userData?.data?.map((user) => (
                   <Option key={user._id} value={user._id}>
                     {user.user?.username}

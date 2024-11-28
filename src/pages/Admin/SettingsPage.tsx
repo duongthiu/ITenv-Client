@@ -1,8 +1,8 @@
 import { Button, Tooltip } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { BsCheck } from 'react-icons/bs';
-import { CiCircleInfo, CiSettings } from 'react-icons/ci';
-import { FaBell, FaCamera, FaRegBell, FaSpinner } from 'react-icons/fa';
+import { FaCamera, FaRegBell, FaSpinner } from 'react-icons/fa';
+import { FiSettings } from 'react-icons/fi';
 import { IoClose, IoInformationCircleOutline } from 'react-icons/io5';
 import { RiLockPasswordLine } from 'react-icons/ri';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -17,7 +17,6 @@ import ChangePassword from '../Private/EditProfilePage/components/ChangePassword
 import AccountSettings from '../Private/EditProfilePage/components/EditAccount.component';
 import './EditProfilePage.style.scss';
 import Notifications from './Notifications';
-import { FiSettings } from 'react-icons/fi';
 
 // import ConnectedAccounts from '../../components/settingAdmin/ConnectedAccounts';
 // import DangerZone from '../../components/settingAdmin/DangerZone';

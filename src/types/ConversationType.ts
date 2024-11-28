@@ -25,5 +25,6 @@ export type MessageType = {
   isDeleted: boolean;
   parentMessage?: MessageType;
   createdAt?: Date;
+  conversation?: ConversationType;
 };
 export type PreviewImage = { name: string; path: string };

@@ -14,10 +14,10 @@ import banner3 from '../../../assets/problem_banner/banner3.jpg';
 import { QueryOptions } from '../../../types/common';
 const ProblemListPage = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  console.log(selectedTags);
+
   const [difficulty, setDifficulty] = useState<string | undefined>();
   const [status, setStatus] = useState<string | undefined>();
-  const [queryOption, setQueryOption] = useState<QueryOptions>({ page: 1, pageSize: 10, search: '' });
+  const [queryOption, setQueryOption] = useState<QueryOptions>({ page: 1, pageSize: 10, search: '', tags: [] });
   const {
     data: problemList,
     error,
@@ -185,7 +185,7 @@ const ProblemListPage = () => {
         </div>
       </div>
       <div className="card h-[500px] max-w-[300px] px-[10px]">
-        <TagMenu selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
+        <TagMenu selectedTags={queryOption.tags || []} setSelectedTags={setSelectedTags} />
       </div>
     </div>
   );

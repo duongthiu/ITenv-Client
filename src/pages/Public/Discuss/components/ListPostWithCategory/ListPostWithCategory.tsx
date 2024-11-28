@@ -27,7 +27,8 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
     pageSize: 10,
     sortField: 'VIEWS',
     sortOrder: 'DESC',
-    search: search
+    search: search,
+    tags: []
   });
   const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
     setQueryOption({ ...queryOption, page: current });
@@ -153,7 +154,7 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
           </div>
         </main>
         <div className="card h-[400px] w-[250px] px-[10px]">
-          <TagMenu selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
+          <TagMenu selectedTags={queryOption.tags || []} setSelectedTags={setSelectedTags} />
         </div>
       </div>
       <Drawer

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { HiOutlineUsers } from 'react-icons/hi2';
 import useSWR from 'swr';
-import { setFriendRequests, setTotalFriendRequest } from '../../../../../redux/app/friend.slice';
+import { setFriendRequests, setTotalFriendRequest } from '../../../../../redux/friend/friend.slice';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/app/hook';
 import { getFriendRequests } from '../../../../../services/friend/friend.service';
 import { QueryOptions } from '../../../../../types/common';
@@ -21,7 +21,9 @@ const FriendPopover = () => {
     data: friendRequestData,
     mutate: mutateFriendRequest,
     isLoading: isLoadingFriendRequest
-  } = useSWR(`friend ${JSON.stringify(queryOptionFriendRequest)}`, () => getFriendRequests(queryOptionFriendRequest));
+  } = useSWR(`friend ${JSON.stringify(queryOptionFriendRequest)}`, () => {
+    if (!friendRequests) return getFriendRequests(queryOptionFriendRequest);
+  });
 
   const loadMoreFriendRequest = useCallback(() => {
     if (isLoadingFriendRequest) return;
@@ -36,7 +38,6 @@ const FriendPopover = () => {
       dispatch(setTotalFriendRequest(friendRequestData?.total));
     }
   }, [dispatch, friendRequestData]);
-
   return (
     <ComponentPopover
       content={
@@ -57,7 +58,7 @@ const FriendPopover = () => {
         />
       }
       placement="bottomRight"
-      total={friendRequestData?.total || 0}
+      total={total}
     />
   );
 };

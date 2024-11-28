@@ -2,18 +2,17 @@ import { Badge, Empty, List, Skeleton, Tabs } from 'antd';
 import { memo } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { NotificationType } from '../../../../../types/NotificationType';
-import { ResponsePagination } from '../../../../../types/common';
 import './Notification.style.scss';
 import NotificationItem from './NotificationItem.component';
 
 type NotificationProps = {
-  notification: ResponsePagination<NotificationType[]>;
-  mutate: () => Promise<void>;
+  notification: NotificationType[];
   loadMoreNotification: () => void;
+  total: number;
 };
 
-const NotificationComponent: React.FC<NotificationProps> = memo(({ notification, mutate, loadMoreNotification }) => {
-  const allNotifications = notification?.data || [];
+const NotificationComponent: React.FC<NotificationProps> = memo(({ notification, loadMoreNotification, total }) => {
+  const allNotifications = notification || [];
   const unreadNotifications = allNotifications.filter((n) => !n.isSeen);
   const unreadCount = unreadNotifications.length;
 
@@ -21,7 +20,7 @@ const NotificationComponent: React.FC<NotificationProps> = memo(({ notification,
     <InfiniteScroll
       dataLength={notifications.length}
       next={loadMoreNotification}
-      hasMore={(notification?.data?.length || 0) < (notification?.total || 0)}
+      hasMore={(notification?.length || 0) < (total || 0)}
       loader={
         <div className="p-[12px]">
           <Skeleton avatar paragraph={{ rows: 1 }} active />
@@ -31,7 +30,7 @@ const NotificationComponent: React.FC<NotificationProps> = memo(({ notification,
     >
       <List
         dataSource={notifications}
-        renderItem={(notif) => <NotificationItem key={notif._id} notification={notif} mutate={mutate} />}
+        renderItem={(notif) => <NotificationItem key={notif._id} notification={notif} />}
         locale={{ emptyText: <Empty description="No notifications" /> }}
       />
     </InfiniteScroll>

@@ -22,7 +22,9 @@ const MessagePopover = memo(() => {
   const { data: conversationData } = usePagination<ConversationType[]>(
     `conversation ${JSON.stringify(queryOptionConversation)}`,
     queryOptionConversation,
-    () => getConversationsByUserId(queryOptionConversation)
+    () => {
+      if (!conversations) return getConversationsByUserId(queryOptionConversation);
+    }
   );
 
   useEffect(() => {

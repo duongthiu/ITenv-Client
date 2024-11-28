@@ -2,7 +2,7 @@ import { DefaultEventsMap } from '@socket.io/component-emitter';
 import { createContext, useContext, useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 import audio from '../assets/sound/iphone_notice.mp3';
-import { addFriendRequest, removeFriendRequest } from '../redux/app/friend.slice';
+import { addFriendRequest, removeFriendRequest } from '../redux/friend/friend.slice';
 import { useAppDispatch, useAppSelector } from '../redux/app/hook';
 import {
   addMessageToMessageList,

@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { GoDotFill } from 'react-icons/go';
 import { HiOutlineUserGroup } from 'react-icons/hi2';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { useAppDispatch, useAppSelector } from '../../../../redux/app/hook';
 import { setCurrentMessageList } from '../../../../redux/message/message.slice';
@@ -26,7 +26,6 @@ const MessagePageContent: React.FC<MessagePageContentProps> = ({ conversation, a
   const { currentMessageList } = useAppSelector((state) => state.conversation);
   const [openMemberModal, setOpenMemberModal] = useState<boolean>(false);
   const [isLoadmore, setIsLoadmore] = useState(false);
-  console.log(isLoadmore);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [queryOptionMessage, setQueryOptionMessage] = useState<QueryOptions>({
@@ -41,9 +40,7 @@ const MessagePageContent: React.FC<MessagePageContentProps> = ({ conversation, a
   } = useSWR(`messages/${activeConversationId}/${JSON.stringify(queryOptionMessage)}`, () =>
     getMessageByConversationId(activeConversationId || '', queryOptionMessage)
   );
-
   const observer = useRef<IntersectionObserver | null>(null);
-
   const loadMoreMessages = () => {
     setIsLoadmore(true);
     if (messageData?.data && messageData?.data.length > 0) {
@@ -56,7 +53,6 @@ const MessagePageContent: React.FC<MessagePageContentProps> = ({ conversation, a
       }, 1000);
     }
   };
-
   // IntersectionObserver callback
   const intersectionCallback = ([entry]: IntersectionObserverEntry[]) => {
     if (entry.isIntersecting && !isLoadingMessage && (queryOptionMessage?.pageSize || 0) < (messageData?.total || 0)) {
