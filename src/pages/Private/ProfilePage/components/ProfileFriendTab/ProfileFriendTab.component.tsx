@@ -1,12 +1,13 @@
 import { Divider, Empty, Skeleton, Tooltip } from 'antd';
 import Link from 'antd/es/typography/Link';
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import useSWR from 'swr';
 import { UserType } from '../../../../../types/UserType';
 import { useNavigate } from 'react-router-dom';
 import { paths } from '../../../../../routes/paths';
 import ProfileSidebar from '../ProfilePageSidebar';
 import { getFriendsByUserId } from '../../../../../services/friend/friend.service';
+import { QueryOptions } from '../../../../../types/common';
 
 type ProfileFriendTabProps = {
   userId: string;
@@ -15,8 +16,13 @@ type ProfileFriendTabProps = {
 type FriendUserType = Pick<UserType, '_id' | 'username' | 'avatar'>;
 
 const ProfileFriendTab: React.FC<ProfileFriendTabProps> = memo(({ userId }) => {
-  
-  const { data: friendData, isLoading } = useSWR(`getFriendsByUserId-${userId}`, () => getFriendsByUserId(userId));
+  const [queryOptions] = useState<QueryOptions>({
+    page: 1,
+    pageSize: 10
+  });
+  const { data: friendData, isLoading } = useSWR(`getFriendsByUserId-${userId}`, () =>
+    getFriendsByUserId(userId, queryOptions)
+  );
   const navigate = useNavigate();
   const FriendBlock: React.FC<{ user: FriendUserType }> = ({ user }) => {
     return (

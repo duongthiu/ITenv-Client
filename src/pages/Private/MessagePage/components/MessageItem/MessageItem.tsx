@@ -61,7 +61,9 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
   const { user: userSelector } = useAppSelector((state) => state.user);
   return (
     <div className="w-full">
-      {message?.sender?._id === userSelector?._id ? (
+      {message?.notificationMessage ? (
+        <div className="flex justify-center text-[1.2rem]">{message?.content}</div>
+      ) : message?.sender?._id === userSelector?._id ? (
         <div className="group flex items-center justify-end gap-5">
           {!message?.isRecalled && (
             <Popover className="px-3 py-1" placement="left" trigger="click" content={popoverContent}>

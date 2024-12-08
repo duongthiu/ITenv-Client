@@ -1,16 +1,17 @@
+import { Button, Empty, Form, Input, Modal, Select, Spin, Tabs } from 'antd';
 import React, { useState } from 'react';
 import useSWR from 'swr';
-import { Modal, Tabs, Select, Input, Button, Form, Spin, Empty } from 'antd';
+import { useSocket } from '../../../../../context/SocketContext';
+import { useAppDispatch, useAppSelector } from '../../../../../redux/app/hook';
+import { addConversation } from '../../../../../redux/message/message.slice';
+import { createGroupChat } from '../../../../../services/conversation/conversation.service';
+import { getFriendsByUserId } from '../../../../../services/friend/friend.service';
+import { getMyConversationWithUser } from '../../../../../services/message/message.service';
 import { QueryOptions, ResponsePagination } from '../../../../../types/common';
 import { FriendType } from '../../../../../types/FriendType';
-import { getFriendsByUserId } from '../../../../../services/friend/friend.service';
-import { useAppSelector } from '../../../../../redux/app/hook';
-import { createGroupChat } from '../../../../../services/conversation/conversation.service';
 import { notifyError, notifySuccess } from '../../../../../utils/helpers/notify';
-import MessagePageFooter from '../MessagePageFooter/MessagePageFooter.component';
-import { MessageType } from '../../../../../types/ConversationType';
-import { getMyConversationWithUser } from '../../../../../services/message/message.service';
 import MessageItem from '../MessageItem/MessageItem';
+import MessagePageFooter from '../MessagePageFooter/MessagePageFooter.component';
 
 const { Option } = Select;
 const { TabPane } = Tabs;
@@ -33,8 +34,9 @@ const NewMessageModal: React.FC<NewMessageModalProps> = ({
   const [groupName, setGroupName] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const { user: userSelector } = useAppSelector((state) => state.user);
-  const [queryOptions, setQueryOptions] = useState<QueryOptions>({ page: 1, pageSize: 20 });
-
+  const [queryOptions ] = useState<QueryOptions>({ page: 1, pageSize: 20 });
+  const dispatch = useAppDispatch();
+  const socket = useSocket();
   const { data: messagesData, isLoading } = useSWR(
     receiverId ? `message-${receiverId}` : null,
     () => getMyConversationWithUser(receiverId!, {}),
@@ -66,6 +68,11 @@ const NewMessageModal: React.FC<NewMessageModalProps> = ({
         notifySuccess('Group chat created successfully');
         mutateConversation && mutateConversation();
         handleClose();
+        dispatch(addConversation(response.data!));
+        if (socket) {
+          console.log('emit');
+          socket.emit('create_group', response.data!);
+        }
       }
     } catch (error) {
       notifyError(error as string);

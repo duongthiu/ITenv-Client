@@ -5,11 +5,13 @@ type InitialState = {
   conversations: ConversationType[] | undefined;
   activeConversationId: '';
   currentMessageList: MessageType[];
+  isOpenConversationInfo: boolean;
 };
 const initialState: InitialState = {
   conversations: undefined,
   activeConversationId: '',
-  currentMessageList: [] as MessageType[]
+  currentMessageList: [] as MessageType[],
+  isOpenConversationInfo: false
 };
 
 export const messageSlice = createSlice({
@@ -22,12 +24,30 @@ export const messageSlice = createSlice({
     setConversations: (state, action) => {
       state.conversations = action.payload;
     },
+    addConversation: (state, action: { payload: ConversationType }) => {
+      state.conversations?.unshift(action.payload);
+    },
+    updateConversationAction: (state, action: { payload: ConversationType }) => {
+      state.conversations = state.conversations?.filter((conv) => conv._id !== action.payload._id);
+
+      state.conversations?.unshift({ ...action.payload });
+
+      if (state.activeConversationId === action.payload._id && action.payload.lastMessage) {
+        state.currentMessageList.push(action.payload.lastMessage);
+      }
+    },
+    removeConversation: (state, action: { payload: string }) => {
+      state.conversations = state.conversations?.filter((conversation) => conversation._id !== action.payload);
+    },
     setCurrentMessageList: (state, action) => {
       state.currentMessageList = action.payload;
     },
     appendMessagesToList: (state, action) => {
       // Append new messages at the start of the current list (older messages first)
       state.currentMessageList = [...action.payload, ...state.currentMessageList];
+    },
+    toggleConversationInfo: (state) => {
+      state.isOpenConversationInfo = !state.isOpenConversationInfo;
     },
     addMessageToMessageList: (state, action: { payload: MessageType }) => {
       if (state.activeConversationId === action.payload.conversationId) {
@@ -54,6 +74,7 @@ export const messageSlice = createSlice({
         }
       }
     },
+
     setConversationLastMessage: (state, action: { payload: MessageType }) => {
       const conversation = state?.conversations?.find((conv) => conv._id === action.payload.conversationId);
       if (conversation) {
@@ -92,7 +113,11 @@ export const {
   setSeenConversation,
   appendMessagesToList,
   addMessageToMessageList,
-  recallMessageAction
+  recallMessageAction,
+  updateConversationAction,
+  addConversation,
+  removeConversation,
+  toggleConversationInfo
 } = messageSlice.actions;
 const reducer = messageSlice.reducer;
 export default reducer;

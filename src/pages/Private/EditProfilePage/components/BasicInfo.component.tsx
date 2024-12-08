@@ -41,6 +41,7 @@ const BasicInfo: React.FC = () => {
       });
 
       if (response && response.success) {
+        console.log(response.data);
         setIsLoading(false);
         notifySuccess('Profile updated successfully');
         dispatch(setUser(response.data));

@@ -1,4 +1,4 @@
-import { ConfigProvider, theme as themeAntd } from 'antd';
+import { ConfigProvider, Spin, theme as themeAntd } from 'antd';
 import { useEffect, useState } from 'react';
 // import { Helmet } from 'react-helmet';
 import { Route, Routes, useNavigate } from 'react-router-dom';
@@ -22,7 +22,7 @@ function App() {
   const location = window.location;
   const [pathname, setPathname] = useState(location?.pathname?.split('/')[1]);
   const theme = useAppSelector((state) => state.app.theme);
-  const { isLogged, token, user } = useAppSelector((state) => state.user);
+  const { isLogged, token, user, loading } = useAppSelector((state) => state.user);
   const navigate = useNavigate();
   useEffect(() => {
     if (user?.role === 'ADMIN' && !pathname.includes('admin')) navigate(paths.adminOverviews);
@@ -59,6 +59,11 @@ function App() {
         <MessageBox />
       </div> */}
       <main className="">
+        {loading && (
+          <div className="fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-[rgba(0,0,0,0.5)]">
+            <Spin className="z-100" size="large" />
+          </div>
+        )}
         <Routes>
           {PUBLIC_ROUTES.map((route: RouteType, index: number) => {
             let Layout: any = DefaultLayout;
@@ -78,6 +83,7 @@ function App() {
                         useHeader={route.useHeader}
                         useSidebar={route.useSidebar}
                         useFooter={route.useFooter}
+                        fullWidth={route.fullWidth}
                       >
                         {route.element}
                       </Layout>
@@ -100,6 +106,7 @@ function App() {
                           useHeader={route.useHeader}
                           useSidebar={route.useSidebar}
                           useFooter={route.useFooter}
+                          fullWidth={route.fullWidth}
                         >
                           {route.element}
                         </Layout>

@@ -42,6 +42,9 @@ export const userSlice = createSlice({
         localStorage.setItem('accessToken', action.payload);
       }
     },
+    setLoading: (state, action: PayloadAction<boolean>) => { 
+      state.loading = action.payload
+    },
     setLogin: (state, action: PayloadAction<boolean>) => {
       state.isLogged = action.payload;
     },
@@ -76,5 +79,5 @@ export const userSlice = createSlice({
   }
 });
 
-export const { setLogin, setToken, setUser, logout, setSocketConnection } = userSlice.actions;
+export const { setLogin, setToken, setUser, logout, setSocketConnection, setLoading } = userSlice.actions;
 export default userSlice.reducer;

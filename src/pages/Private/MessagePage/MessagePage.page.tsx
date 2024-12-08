@@ -1,5 +1,5 @@
 import { Empty } from 'antd';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSocket } from '../../../context/SocketContext';
 import { useAppDispatch, useAppSelector } from '../../../redux/app/hook';
@@ -11,18 +11,22 @@ import { ConversationType } from '../../../types/ConversationType';
 import { usePagination } from '../../../utils/hooks/usePagination.hook';
 import MessageSidebar from './components/sidebar/MessageSidebar';
 import MessagePageContent from './MessagePageContent/MessagePageContent.component';
+import MessageInformation from './components/MessageInformation/MessageInformation.component';
 
 const MessagePage = () => {
+  const socket = useSocket();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
+  const { isOpenConversationInfo } = useAppSelector((state) => state.conversation);
   const [queryOptionConversation, setQueryOptionConversation] = useState<QueryOptions>({
     page: 1,
     pageSize: 20
   });
-  const socket = useSocket();
+
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { activeConversationId, conversations } = useAppSelector((state) => state.conversation);
+
   const {
     data: conversationData,
     refresh: mutateConversation
@@ -58,20 +62,23 @@ const MessagePage = () => {
   useEffect(() => {
     setAtiveConversationId(id);
   }, [id]);
-  console.log(conversations, id);
+  const activeConversation = useMemo(() => conversations?.find((conv) => conv?._id === id), [conversations, id]);
+
   return (
     <div className="flex h-full">
       <MessageSidebar />
-      {conversations?.find((conv) => conv?._id === id) ? (
-        <MessagePageContent
-          activeConversationId={activeConversationId || ''}
-          conversation={conversations?.find((conv) => conv?._id === id)}
-        />
+      {activeConversation ? (
+        <MessagePageContent activeConversationId={activeConversationId || ''} conversation={activeConversation} />
       ) : (
         <div className="card m-5 mb-0 flex flex-1 flex-col rounded-2xl pb-2 shadow-xl duration-200">
           <div className="h-full w-full items-center justify-center">
             <Empty className="flex h-full flex-col items-center justify-center" description="No messages found" />
           </div>
+        </div>
+      )}
+      {activeConversation && (
+        <div className={`${isOpenConversationInfo ? 'mr-5 w-[350px]' : 'w-0'} mt-5 duration-200`}>
+          <MessageInformation conversation={activeConversation!} />
         </div>
       )}
     </div>

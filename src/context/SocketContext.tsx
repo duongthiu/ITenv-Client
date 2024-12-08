@@ -5,14 +5,17 @@ import audio from '../assets/sound/iphone_notice.mp3';
 import { addFriendRequest, removeFriendRequest } from '../redux/friend/friend.slice';
 import { useAppDispatch, useAppSelector } from '../redux/app/hook';
 import {
+  addConversation,
   addMessageToMessageList,
   recallMessageAction,
+  removeConversation,
+  updateConversationAction,
   setConversationLastMessage,
   setSeenConversation
 } from '../redux/message/message.slice';
 import { getUser } from '../redux/user/user.slice';
 import { ResponsePagination } from '../types/common';
-import { MessageType } from '../types/ConversationType';
+import { ConversationType, MessageType } from '../types/ConversationType';
 import { FriendType } from '../types/FriendType';
 import { notifyInfo } from '../utils/helpers/notify';
 
@@ -59,8 +62,32 @@ export const SocketProvider: React.FC<SocketContextProviderProps> = ({ children 
       });
 
       socket.current.on('recall_message', (messageInfo: MessageType) => {
-        console.log('recall_message', messageInfo);
         dispatch(recallMessageAction(messageInfo));
+      });
+      socket.current.on('create_group', (conversation: ConversationType) => {
+        dispatch(addConversation(conversation));
+      });
+      socket.current.on('remove_member', (data: { conversation: ConversationType; memberId: string }) => {
+        if (user?._id === data.memberId) {
+          dispatch(removeConversation(data.conversation._id!));
+        }
+        console.log(data);
+        dispatch(updateConversationAction(data.conversation));
+      });
+      socket.current.on('add_member', (data: { conversation: ConversationType; memberIds: string[] }) => {
+        if (!data || !data.conversation) return;
+        console.log(data?.conversation);
+        const isUserAdded = data.memberIds.includes(user!._id!);
+        const isUserParticipant = data.conversation.participants.some((participant) => participant._id === user!._id);
+
+        if (isUserAdded) {
+          dispatch(addConversation(data.conversation));
+        } else if (isUserParticipant) {
+          dispatch(updateConversationAction(data.conversation));
+        }
+      });
+      socket.current.on('update_conversation', (conversation: ConversationType) => {
+        dispatch(updateConversationAction(conversation));
       });
     }
     return () => {

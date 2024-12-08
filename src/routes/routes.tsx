@@ -10,6 +10,7 @@ export type RouteType = {
   useHeader?: boolean;
   useSidebar?: boolean;
   useFooter?: boolean;
+  fullWidth?: boolean;
   path: string;
   private?: 'public' | 'auth' | 'admin';
   children?: RouteType[];
@@ -101,7 +102,8 @@ export const PUBLIC_ROUTES: RouteType[] = [
     private: 'auth',
     useHeader: true,
     useSidebar: false,
-    useFooter: false
+    useFooter: false,
+    fullWidth: true
   },
   {
     path: paths.messageWithoutId,
@@ -110,7 +112,8 @@ export const PUBLIC_ROUTES: RouteType[] = [
     private: 'auth',
     useHeader: true,
     useSidebar: false,
-    useFooter: false
+    useFooter: false,
+    fullWidth: true
   },
   {
     path: paths.profile,

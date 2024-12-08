@@ -12,13 +12,15 @@ interface DefaultLayoutProps {
   useHeader?: boolean;
   useSidebar?: boolean;
   useFooter?: boolean;
+  fullWidth?: boolean;
 }
 
 const DefaultLayout: React.FC<PropsWithChildren<DefaultLayoutProps>> = ({
   children,
   useHeader = true,
   useSidebar = true,
-  useFooter = true
+  useFooter = true,
+  fullWidth = false
 }) => {
   // const { pathname } = useLocation();
   // console.log(pathname);
@@ -38,7 +40,10 @@ const DefaultLayout: React.FC<PropsWithChildren<DefaultLayoutProps>> = ({
           'flex h-screen w-full justify-center'
         )}
       >
-        <Content style={{ minHeight: 'calc(100vh - 120px)' }} className={cn('duration-200', 'flex max-w-[1440px]')}>
+        <Content
+          style={{ minHeight: 'calc(100vh - 120px)' }}
+          className={cn('duration-200', !fullWidth ? 'flex max-w-[1440px]' : 'flex')}
+        >
           {/* {useSidebar && (
             <div
               className="p-4"

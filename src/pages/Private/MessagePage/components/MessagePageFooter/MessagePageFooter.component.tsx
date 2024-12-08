@@ -62,8 +62,8 @@ const MessagePageFooter: React.FC<MessagePageFooterProps> = ({ conversationId, r
         }
       }
     } catch (error) {
-      console.log(error);
-      notifyError('Error sending message');
+      setIsLoading(false);
+      notifyError((error as any).response.data.message);
     }
   };
 

@@ -8,5 +8,6 @@ export enum NotificationTypeEnum {
   DOWNVOTE_COMMENT = 'downvote_comment',
   ACCEPT_FRIEND_REQUEST = 'accept_request',
   REJECT_FRIEND_REQUEST = 'reject_request',
-  ADMIN_NOTIFICATION = 'admin_notification'
+  ADMIN_NOTIFICATION = 'admin_notification',
+  OTHER_NOTIFICATION = 'other_notification'
 }

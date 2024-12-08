@@ -30,10 +30,12 @@ const MessageItem: React.FC<MessageItemProps> = memo(({ conversation }) => {
       <div className="relative flex-none">
         <Avatar
           size={42}
-          icon={conversation?.isGroupChat && <HiOutlineUserGroup />}
+          icon={conversation?.isGroupChat && !conversation?.groupAvatar && <HiOutlineUserGroup />}
           src={
-            !conversation?.isGroupChat &&
-            conversation?.participants?.find((member) => member?._id !== user?._id)?.avatar
+            conversation?.isGroupChat && conversation?.groupAvatar
+              ? conversation.groupAvatar
+              : !conversation?.isGroupChat &&
+                conversation?.participants?.find((member) => member?._id !== user?._id)?.avatar
           }
         />
         {conversation?.participants?.find((member) => member?._id !== user?._id)?.status && (
@@ -61,8 +63,7 @@ const MessageItem: React.FC<MessageItemProps> = memo(({ conversation }) => {
                   ? conversation?.lastMessage?.content?.substring(0, 50)
                   : conversation?.lastMessage?.hasFile
                     ? 'sent a image'
-                    : conversation?.isGroupChat &&
-                      `${conversation?.createdBy?.username?.slice(0, 10)} created this GroupChat`}
+                    : conversation?.lastMessage?.notificationMessage && `${conversation?.lastMessage?.content}`}
               </Typography.Text>
             )}
 

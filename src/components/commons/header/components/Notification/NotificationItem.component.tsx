@@ -27,10 +27,14 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification }) => 
         notification.notificationType === NotificationTypeEnum.REJECT_FRIEND_REQUEST
       )
         navigate(paths.profile.replace(':userId', notification?.receivers[0] || ''));
-      else if (notification.notificationType !== NotificationTypeEnum.ADMIN_NOTIFICATION)
+      else if (
+        notification.notificationType !== NotificationTypeEnum.ADMIN_NOTIFICATION &&
+        notification.notificationType !== NotificationTypeEnum.OTHER_NOTIFICATION
+      )
         navigate(paths.detailDiscuss2.replace(':id', notification?.postId || ''));
     }
   };
+  
   return (
     <div
       className={`link-hover flex h-full cursor-pointer items-start gap-5 p-[12px] duration-200 ${notification.isSeen ? 'opacity-50' : 'opacity-100'}`}

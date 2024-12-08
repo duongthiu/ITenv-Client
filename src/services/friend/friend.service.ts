@@ -22,6 +22,16 @@ export const getFriendsByUserId = async (
   const result = await get(import.meta.env.VITE_APP_API + 'friends/' + userId, { params: queryOptions });
   return result as ResponsePagination<FriendType[]>;
 };
+export const getFriendsOutSideGroupchat = async (
+  conversationId: string,
+  queryOptions: QueryOptions
+): Promise<ResponsePagination<FriendType[]>> => {
+  const result = await get(import.meta.env.VITE_APP_API + 'friends/outsiteGroup/' + conversationId, {
+    params: queryOptions
+  });
+  return result as ResponsePagination<FriendType[]>;
+};
+
 export const getFriendRequests = async (queryOptions: QueryOptions): Promise<ResponsePagination<FriendType[]>> => {
   const result = await get(import.meta.env.VITE_APP_API + 'friends/request', { params: queryOptions });
   return result as ResponsePagination<FriendType[]>;

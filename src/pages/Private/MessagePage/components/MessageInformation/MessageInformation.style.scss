@@ -1,0 +1,19 @@
+.message-info-wrapper {
+  .ant-menu-sub.ant-menu-inline {
+    background: none !important;
+  }
+  .ant-menu-item {
+    padding-left: 20px !important;
+  }
+  .ant-menu-submenu-title {
+    padding-left: 10px !important;
+  }
+  .ant-menu-submenu-selected {
+    background: none !important;
+    color: none !important;
+  }
+  .ant-menu-item-selected {
+    background: none !important;
+    color: none !important;
+  }
+}

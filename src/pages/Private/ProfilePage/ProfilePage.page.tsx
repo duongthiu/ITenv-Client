@@ -1,20 +1,20 @@
 import { Button, Image, Skeleton, Tabs } from 'antd';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { FaEdit } from 'react-icons/fa';
+import { IoCodeSlashOutline } from 'react-icons/io5';
 import { VscCommentDiscussion } from 'react-icons/vsc';
 import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { useAppSelector } from '../../../redux/app/hook';
+import { paths } from '../../../routes/paths';
 import { getUserById } from '../../../services/user/user.service';
 import useFriendStatus from '../../../utils/hooks/useFriendStatus.hook';
 import StatusButton from '../../Public/SearchPage/components/StatusButton';
 import ActivityTab from './components/ActivityTab/ActivityTab.component';
 import ListPost from './components/ListPost/ListPost.component';
-import ProfileFriendTab from './components/ProfileFriendTab/ProfileFriendTab.component';
 import './components/ListPost/ListPost.style.scss';
-import { IoCodeSlashOutline } from 'react-icons/io5';
-import { paths } from '../../../routes/paths';
 import ListSubmission from './components/ListSubmissions/ListSubmission';
+import ProfileFriendTab from './components/ProfileFriendTab/ProfileFriendTab.component';
 const ProfilePage = () => {
   const { user: userSelector } = useAppSelector((state) => state.user);
   const { userId } = useParams();
@@ -29,7 +29,7 @@ const ProfilePage = () => {
     friendWithMe: userData?.data?.friendWithMe,
     currentUserId: userSelector?._id || ''
   });
-  
+
   const TabItems = [
     {
       key: '1',
@@ -111,7 +111,6 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
-        
       </div>
     </div>
   );

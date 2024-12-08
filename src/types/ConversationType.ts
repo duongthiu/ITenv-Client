@@ -9,6 +9,8 @@ export type ConversationType = {
   isDeleted?: boolean;
   lastMessage?: MessageType;
   createdAt?: Date;
+  admin?: string;
+  groupAvatar?: string;
 };
 
 export type MessageType = {
@@ -26,5 +28,6 @@ export type MessageType = {
   parentMessage?: MessageType;
   createdAt?: Date;
   conversation?: ConversationType;
+  notificationMessage?: boolean;
 };
 export type PreviewImage = { name: string; path: string };
