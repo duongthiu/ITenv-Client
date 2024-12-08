@@ -75,10 +75,12 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
       <div className="flex items-center gap-5">
         <Avatar
           size={42}
-          icon={conversation?.isGroupChat && <HiOutlineUserGroup />}
+          icon={conversation?.isGroupChat && !conversation?.groupAvatar && <HiOutlineUserGroup />}
           src={
-            !conversation?.isGroupChat &&
-            conversation?.participants?.find((member) => member?._id !== user?._id)?.avatar
+            conversation?.isGroupChat && conversation?.groupAvatar
+              ? conversation.groupAvatar
+              : !conversation?.isGroupChat &&
+                conversation?.participants?.find((member) => member?._id !== user?._id)?.avatar
           }
         />
         <div className="content flex flex-2 items-center justify-between">
