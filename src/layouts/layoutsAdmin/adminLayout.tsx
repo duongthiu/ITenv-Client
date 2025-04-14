@@ -3,7 +3,6 @@
 import { Content } from 'antd/es/layout/layout';
 import React, { useState } from 'react';
 import Sidebar from '../../components/CommonAdmin/Sidebar';
-import HeaderComponent from '../../components/commons/header/header.component';
 import { cn } from '../../utils/helpers/cn';
 
 interface AdminLayoutProps {
@@ -27,7 +26,9 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
           </div>
 
-          <div className={cn('w-full duration-200', !collapsed ? 'ml-[220px]' : 'ml-[80px]')}> {children}</div>
+          <div className={cn('w-full duration-200', !collapsed ? 'ml-[220px]' : 'ml-[80px]')}>
+            <div className="pl-6"> {children}</div>
+          </div>
         </Content>
       </div>
 

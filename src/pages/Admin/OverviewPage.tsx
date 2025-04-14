@@ -6,7 +6,6 @@ import ProblemsOverviewChart from '../../components/chartAdmin/problems/Problems
 import ActivityDistributionChart from '../../components/chartAdmin/posts/ActivityDistributionChart.js';
 import ProblemSolversChart from '../../components/chartAdmin/problems/ProblemSolversChart.js';
 import { getAverageProblemsPerUser } from '../../services/problem/problem.service.js';
-import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import { getTotalPosts } from '../../services/post/post.admin.service.js';
 import { getTotalProblems } from '../../services/problem/problem.admin.service.js';

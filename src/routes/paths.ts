@@ -32,5 +32,6 @@ export const paths = {
   adminUsers: '/admin/users',
   adminSettings: '/admin/edit-profile/:tab',
   adminProblems: '/admin/problems',
-  adminAnalistics: '/admin/analytics'
+  adminAnalistics: '/admin/analytics',
+  adminCreateProblem: '/admin/problems/create'
 };

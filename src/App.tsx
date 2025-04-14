@@ -14,6 +14,7 @@ import { ADMIN_ROUTES, AUTHEN_ROUTES, DISCUSS_ROUTES, PUBLIC_ROUTES, RouteType }
 // import { Helmet } from 'react-helmet';
 import AdminLayout from './layouts/layoutsAdmin/adminLayout';
 import { paths } from './routes/paths';
+import ChatBox from './components/commons/ChatBox/ChatBox.component';
 // impoxrt { Helmet } from 'react-helmet';
 
 // const pathname = location.path
@@ -22,6 +23,7 @@ function App() {
   const location = window.location;
   const [pathname, setPathname] = useState(location?.pathname?.split('/')[1]);
   const theme = useAppSelector((state) => state.app.theme);
+  const isChatBoxVisible = useAppSelector((state) => state.app.isChatBoxVisible);
   const { isLogged, token, user, loading } = useAppSelector((state) => state.user);
   const navigate = useNavigate();
   useEffect(() => {
@@ -43,9 +45,9 @@ function App() {
         token: {
           colorPrimary: '#21a1d3',
           fontFamily: 'Inter, sans-serif',
-          colorBgBase: theme === THEME.DARK ? 'rgb(26, 27, 28)' : '#ffffff', // Background color
+          colorBgBase: theme === THEME.DARK ? 'black' : '#ffffff', // Background color
           colorTextBase: theme === THEME.DARK ? '#ffffff' : '#000000', // Text color
-          colorBgContainer: theme === THEME.DARK ? 'rgb(40, 40, 40)' : '#ffffff', // Card background
+          colorBgContainer: theme === THEME.DARK ? 'black' : 'hsl(0 0% 100%)', // Card background
           colorBorder: theme === THEME.DARK ? 'rgb(48, 48, 48)' : '#d9d9d9' // Border color,
         },
 
@@ -64,6 +66,7 @@ function App() {
             <Spin className="z-100" size="large" />
           </div>
         )}
+        {isLogged && token && isChatBoxVisible && <ChatBox />}
         <Routes>
           {PUBLIC_ROUTES.map((route: RouteType, index: number) => {
             let Layout: any = DefaultLayout;

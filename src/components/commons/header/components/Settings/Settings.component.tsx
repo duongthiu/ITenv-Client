@@ -1,15 +1,18 @@
 import { Avatar, Divider, List } from 'antd';
 
-import { CiLogout } from 'react-icons/ci';
-import { Link } from 'react-router-dom';
+import { CiLogout, CiSettings } from 'react-icons/ci';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../../../redux/app/hook';
 import { logout } from '../../../../../redux/user/user.slice';
-import DarkMode from './DarkmodeToggle/DarkMode';
 import { paths } from '../../../../../routes/paths';
+import { setTheme, THEME, toggleChatBox } from '../../../../../redux/app/app.slice';
+import { GoMoon } from 'react-icons/go';
+import { RiRobot2Line } from 'react-icons/ri';
 // const menuItems = [
 //   label: 'Profile',
 // ]
 type SettingMenuItemType = {
+  id: string;
   icon: JSX.Element;
   label: string;
   onClick?: () => void;
@@ -17,10 +20,51 @@ type SettingMenuItemType = {
 
 const SettingsComponent = () => {
   const { user } = useAppSelector((state) => state.user);
+  const { theme, isChatBoxVisible } = useAppSelector((state) => state.app);
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  const toggleTheme = () => {
+    dispatch(setTheme(theme === THEME.LIGHT ? THEME.DARK : THEME.LIGHT));
+  };
   const menuItems: SettingMenuItemType[] = [
     {
-      icon: <CiLogout />,
+      id: 'settings',
+      icon: <CiSettings size={20} />,
+      label: 'Settings',
+      onClick: () => {
+        navigate(paths.editProfile.replace(':tab', ''));
+      }
+    },
+    {
+      id: 'theme',
+      icon: <GoMoon size={20} />,
+      label: (
+        <div className="flex flex-1 justify-between">
+          <div>Dark Mode </div>
+          <div className="opacity-50">{theme === THEME.DARK ? 'On' : 'Off'}</div>
+        </div>
+      ) as any as string,
+      onClick: () => {
+        toggleTheme();
+      }
+    },
+    {
+      id: 'chat',
+      icon: <RiRobot2Line size={20} />,
+      label: (
+        <div className="flex flex-1 justify-between">
+          <div>Chat Assistant </div>
+          <div className="opacity-50">{isChatBoxVisible ? 'On' : 'Off'}</div>
+        </div>
+      ) as any as string,
+      onClick: () => {
+        dispatch(toggleChatBox());
+      }
+    },
+    {
+      id: 'logout',
+      icon: <CiLogout size={20} />,
       label: 'Logout',
       onClick: () => {
         dispatch(logout());
@@ -46,17 +90,13 @@ const SettingsComponent = () => {
             <Divider className="my-2" />
             {menuItems.map((item) => (
               <div
-                key={item.label}
+                key={item.id}
                 className="link-hover flex cursor-pointer items-center gap-5 rounded-lg px-2 py-3 text-[1.6rem] font-semibold duration-500"
                 onClick={item?.onClick}
               >
                 {item.icon} {item.label}
               </div>
             ))}
-            <div className="flex items-center gap-5 px-2 py-3">
-              <span className="text-[1.6rem] font-semibold">Theme</span>
-              <DarkMode />
-            </div>
           </div>
         }
       />

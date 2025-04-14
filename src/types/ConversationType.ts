@@ -18,6 +18,8 @@ export type MessageType = {
   conversationId: string;
   sender: Pick<UserType, '_id' | 'username' | 'avatar'>;
   isSeenBy: string[];
+  fileName?: string;
+  hasCodeFile: boolean;
   hasText: boolean;
   hasFile: boolean;
   content: string;

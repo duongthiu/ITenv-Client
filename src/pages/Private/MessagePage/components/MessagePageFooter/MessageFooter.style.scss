@@ -1,0 +1,10 @@
+.message-footer-wrapper {
+  .ant-mentions-focused:focus-within {
+    border: none !important;
+    box-shadow: none !important;
+  }
+  .ant-mentions-outlined:focus-within {
+    border: none !important;
+    box-shadow: none !important;
+  }
+}

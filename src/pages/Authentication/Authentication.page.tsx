@@ -2,7 +2,6 @@
 import { useGoogleLogin } from '@react-oauth/google';
 import { Typography } from 'antd';
 import { ChangeEvent, useEffect, useMemo, useState } from 'react';
-import { ReactFacebookLoginInfo } from 'react-facebook-login';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Alignment, Fit, Layout, RiveState, StateMachineInput, useRive, useStateMachineInput } from 'rive-react';
@@ -153,9 +152,9 @@ const AuthenticationPage = () => {
     onError: () => onFailSubmit()
   });
 
-  const responseFacebook = (response: ReactFacebookLoginInfo) => {
-    console.log(response);
-  };
+  // const responseFacebook = (response: ReactFacebookLoginInfo) => {
+  //   console.log(response);
+  // };
 
   useEffect(() => {
     const code = new URLSearchParams(window.location.search)?.get('code');
@@ -218,7 +217,7 @@ const AuthenticationPage = () => {
               <div className="flex items-center justify-center">
                 <div className="flex items-center gap-8">
                   <div className="cursor-pointer rounded-full bg-black p-2 opacity-55 duration-200 hover:bg-[#ea4335] hover:opacity-100">
-                    <FaGoogle onClick={LoginWithGoogle} size={18} className="text-white" />
+                    <FaGoogle onClick={() => LoginWithGoogle()} size={18} className="text-white" />
                   </div>
                   {/* <GoogleLogin
                       onSuccess={(credentialResponse) => {

@@ -5,23 +5,30 @@ export enum THEME {
   DARK = 'dark'
 }
 
-type InitialStateProps = {
+export interface AppState {
   theme: THEME;
+  isChatBoxVisible: boolean;
+}
+
+const initialState: AppState = {
+  theme: (localStorage.getItem('theme') as THEME) || THEME.LIGHT,
+  isChatBoxVisible: localStorage.getItem('isChatBoxVisible') === 'false' ? false : true
 };
 
-const initialState: InitialStateProps = {
-  theme: (localStorage.getItem('theme') as THEME) || THEME.LIGHT
-};
-export const appSlice = createSlice({
-  initialState: initialState,
+const appSlice = createSlice({
   name: 'app',
+  initialState,
   reducers: {
     setTheme: (state, action: PayloadAction<THEME>) => {
       state.theme = action.payload;
+      localStorage.setItem('theme', action.payload);
+    },
+    toggleChatBox: (state) => {
+      state.isChatBoxVisible = !state.isChatBoxVisible;
+      localStorage.setItem('isChatBoxVisible', String(state.isChatBoxVisible));
     }
   }
 });
 
-export const { setTheme } = appSlice.actions;
-const reducer = appSlice.reducer;
-export default reducer;
+export const { setTheme, toggleChatBox } = appSlice.actions;
+export default appSlice.reducer;

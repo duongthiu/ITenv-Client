@@ -53,13 +53,16 @@ body {
 }
 body.light-mode {
   transition-duration: 300ms;
-  background-color: #f0f0f0;
-  color: #333;
+  background-color: hsl(210 40% 96%);
+  color: hsl(229 84% 5%);
   transition: background-color 0.3s ease;
+  .bg-card {
+    background-color: hsl(0 0% 100%);
+  }
   .card {
-    background-color: #fff;
-    color: #333;
-    border: 1px solid #f5f5f5;
+    background-color: hsl(0 0% 100%);
+    color: hsl(229 84% 5%);
+    border: 1px solid hsla(229 84% 5% / 0.1);
     &.active {
       background: linear-gradient(-180deg, #bcc5ce 0%, #929ead 98%),
         radial-gradient(at top left, rgba(255, 255, 255, 0.3) 0%, rgba(0, 0, 0, 0.3) 100%);
@@ -133,8 +136,8 @@ body.light-mode {
 body.dark-mode {
   transition-duration: 300ms;
 
-  background-color: rgb(26, 27, 28);
-  color: white;
+  background-color: black;
+  color: hsl(210 40% 98%);
   .contribute-color {
     background-color: gray !important;
   }
@@ -155,10 +158,13 @@ body.dark-mode {
     background-color: rgb(48, 48, 48);
     color: white !important;
   }
+  .bg-card {
+    background-color: #18181b;
+  }
   .card {
-    background-color: rgb(40, 40, 40);
-    color: white;
-    border: 1px solid rgb(48, 48, 48);
+    background-color: #18181b;
+    color: hsl(210 40% 98%);
+    border: 1px solid hsla(210 40% 98% / 0.1);
     &.active {
       background: linear-gradient(to bottom, #323232 0%, #3f3f3f 40%, #1c1c1c 150%),
         linear-gradient(to top, rgba(255, 255, 255, 0.4) 0%, rgba(0, 0, 0, 0.25) 200%);
@@ -171,7 +177,7 @@ body.dark-mode {
   }
 
   .box {
-    background-color: rgb(40, 40, 40);
+    background-color: #18181b;
     color: white;
     border: 1px solid rgb(48, 48, 48);
   }
@@ -331,5 +337,41 @@ body.dark-mode {
 .avatar-wrapper {
   .ant-image-mask {
     border-radius: 100% !important;
+  }
+}
+
+// Add new CSS variables at the root level
+:root {
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(229 84% 5%);
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(229 84% 5%);
+}
+
+.dark {
+  --background: hsl(229 84% 5%);
+  --foreground: hsl(210 40% 98%);
+  --card: hsl(229 84% 5%);
+  --card-foreground: hsl(210 40% 98%);
+}
+
+// Add smooth transitions for theme changes
+* {
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+// Update tag styles to use new color system
+.tag {
+  &.light-mode {
+    background-color: hsla(229 84% 5% / 0.1) !important;
+    color: hsl(229 84% 5%) !important;
+  }
+
+  &.dark-mode {
+    background-color: hsla(210 40% 98% / 0.1) !important;
+    color: hsl(210 40% 98%) !important;
   }
 }

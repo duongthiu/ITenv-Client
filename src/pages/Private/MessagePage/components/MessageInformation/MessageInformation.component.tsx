@@ -1,4 +1,4 @@
-import { Avatar, Button, Menu, MenuProps, Modal, Input, Typography, Spin, Tooltip, Popconfirm } from 'antd';
+import { Avatar, Button, Menu, MenuProps, Modal, Input, Typography, Tooltip, Popconfirm } from 'antd';
 import { Edit, LinkIcon, UserIcon } from 'lucide-react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { BsCheck, BsInfoCircleFill } from 'react-icons/bs';
@@ -29,7 +29,11 @@ type MessageInformationProps = {
 };
 
 const MessageInformation: React.FC<MessageInformationProps> = ({ conversation }) => {
-  type MenuItem = Required<MenuProps>['items'][number];
+  type MenuItem = Required<MenuProps>['items'][number] & {
+    icon?: React.ReactNode;
+    onClick?: () => void;
+    label?: React.ReactNode;
+  };
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const socket = useSocket();
@@ -46,7 +50,7 @@ const MessageInformation: React.FC<MessageInformationProps> = ({ conversation })
     return conversation?.isGroupChat
       ? conversation?.groupAvatar || ''
       : conversation?.participants?.find((member) => member?._id !== user?._id)?.avatar || '';
-  }, [conversation._id, conversation?.groupAvatar]);
+  }, [conversation?.groupAvatar, conversation?.isGroupChat, conversation?.participants, user?._id]);
 
   const { loading } = useAppSelector((state) => state.user);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -63,13 +67,13 @@ const MessageInformation: React.FC<MessageInformationProps> = ({ conversation })
             type: 'label'
           }
         ]
-      },
-      {
-        key: 'media',
-        label: 'Media, files and links',
-        icon: <LinkIcon size={20} />,
-        children: []
       }
+      // {
+      //   key: 'media',
+      //   label: 'Media, files and links',
+      //   icon: <LinkIcon size={20} />,
+      //   children: []
+      // }
     ];
 
     if (conversation?.isGroupChat)
@@ -271,7 +275,7 @@ const MessageInformation: React.FC<MessageInformationProps> = ({ conversation })
           className="flex-1 border-none"
           defaultSelectedKeys={['1']}
           defaultOpenKeys={['sub1']}
-          rootClassName="message-info-wrapper"
+          rootClassName="message-info-wrapper bg-card"
           mode="inline"
           items={items}
         />

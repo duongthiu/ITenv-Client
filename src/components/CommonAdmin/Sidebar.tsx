@@ -6,7 +6,6 @@ import { cn } from '../../utils/helpers/cn';
 import '../../components/commons/sidebar/sidebar.style.scss';
 import logo from '../../assets/logo/logo.png';
 import { paths } from '../../routes/paths';
-import { CiLogout } from 'react-icons/ci';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../redux/user/user.slice';
 import { MdLogout } from 'react-icons/md';
@@ -31,13 +30,13 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
   return (
     <div
       className={cn(
-        'sidebar-wrapper z-100 fixed left-0 flex h-full flex-none flex-col rounded-2xl shadow-xl duration-200',
+        'card sidebar-wrapper z-100 fixed left-0 flex h-full flex-none flex-col p-0',
         !collapsed ? 'w-[220px]' : 'w-[80px]'
       )}
     >
       {/* Logo Section */}
-      <a href={paths.adminOverviews} className="box flex flex-col items-center justify-center gap-5 p-5 py-10">
-        <img src={logo} alt="Logo" className="h-[40px] w-[40px]" />
+      <a href={paths.adminOverviews} className="flex flex-col items-center justify-center gap-5 p-5 py-10">
+        <img src={logo} alt="Logo" className="aspect-square max-h-[40px] max-w-[40px]" />
         {!collapsed && <Typography className="font-mono text-[2rem] font-bold">ITENV</Typography>}
       </a>
 
@@ -49,6 +48,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
           style={{ height: '100%', border: 'none', width: '100%' }}
           items={ADMIN_SIDEBAR}
           inlineCollapsed={collapsed}
+          className="card p-0"
           onClick={({ key }) => navigate(key)}
         />
       </div>
@@ -71,7 +71,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
       {/* Collapse/Expand Button */}
       <Typography
         onClick={() => setCollapsed(!collapsed)}
-        className="card flex h-[60px] min-h-[60px] w-full cursor-pointer items-center justify-center rounded-none border-none px-8"
+        className="flex min-h-[60px] w-full cursor-pointer items-center justify-center rounded-none border-none px-8 pt-2"
       >
         <div className={`${collapsed && 'hidden'}`}>
           <IoIosArrowBack size={25} />

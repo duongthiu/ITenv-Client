@@ -1,7 +1,8 @@
-import { Input, Table } from 'antd';
+import { Button, Input, Table, Dropdown, Menu } from 'antd';
 import { motion } from 'framer-motion';
-import { Eye, Search } from 'lucide-react';
+import { Eye, MoreVertical, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import { getProblems } from '../../../services/problem/problem.service';
 import { QueryOptions } from '../../../types/common';
@@ -11,6 +12,7 @@ const ProblemsTable: React.FC = () => {
   const [queryOptions, setQueryOptions] = useState<QueryOptions>({ page: 1, pageSize: 10, search: '' });
   const [searchTerm, setSearchTerm] = useState('');
   const searchDebounce = useDebounce(searchTerm, 500);
+  const navigate = useNavigate();
   const { data: problemData, isLoading } = useSWR('problemData' + JSON.stringify(queryOptions), () =>
     getProblems(queryOptions)
   );
@@ -32,6 +34,15 @@ const ProblemsTable: React.FC = () => {
         return 'text-gray-500';
     }
   };
+
+  const handleMenuClick = (record: any, key: string) => {
+    if (key === 'view') {
+      navigate(`/admin/problems/${record.questionId}`);
+    } else if (key === 'edit') {
+      navigate(`/admin/problems/${record.questionId}/edit`);
+    }
+  };
+
   // Define columns for Ant Design Table
   const columns = [
     {
@@ -75,10 +86,22 @@ const ProblemsTable: React.FC = () => {
     {
       title: 'Actions',
       key: 'actions',
-      render: () => (
-        <button className="text-indigo-400 hover:text-indigo-300">
-          <Eye size={18} />
-        </button>
+      render: (_: unknown, record: any) => (
+        <Dropdown
+          overlay={
+            <Menu onClick={({ key }) => handleMenuClick(record, key)}>
+              <Menu.Item key="view" icon={<Eye size={16} />}>
+                View
+              </Menu.Item>
+              <Menu.Item key="edit" icon={<Eye size={16} />}>
+                Edit
+              </Menu.Item>
+            </Menu>
+          }
+          trigger={['click']}
+        >
+          <Button type="text" icon={<MoreVertical size={18} />} />
+        </Dropdown>
       )
     }
   ];
@@ -96,17 +119,22 @@ const ProblemsTable: React.FC = () => {
       transition={{ delay: 0.4 }}
     >
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="sub-title text-[1.6rem] font-semibold">Problem List</h2>
-        <div className="relative">
-          <Input
-            type="text"
-            placeholder="Search posts..."
-            className="w-[300px] rounded-lg px-5 py-3 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={searchTerm}
-            onChange={handleSearch}
-            prefix={<Search className="text-gray-400" size={18} />}
-          />
+        <div className="flex items-center gap-[16px]">
+          <h2 className="sub-title text-[1.6rem] font-semibold">Problem List</h2>
+          <div className="relative">
+            <Input
+              type="text"
+              placeholder="Search posts..."
+              className="w-[300px] rounded-lg px-5 py-3 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={searchTerm}
+              onChange={handleSearch}
+              prefix={<Search className="text-gray-400" size={18} />}
+            />
+          </div>
         </div>
+        <Button type="primary" onClick={() => navigate('/admin/problems/create')}>
+          Add Problem
+        </Button>
       </div>
 
       <div className="overflow-x-auto">

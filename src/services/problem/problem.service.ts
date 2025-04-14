@@ -1,6 +1,7 @@
 import { get, post } from '../../apis';
 import { CategoryType } from '../../types/CategoryType';
 import { QueryOptions, ResponsePagination } from '../../types/common';
+import { EnumLevelProblem } from '../../types/enum/schemaProblem.enum';
 import { PostType } from '../../types/PostType';
 import { ProblemType, RunCodeResultType, SubmissionDetailType, SubmissionStatusType } from '../../types/ProblemType';
 
@@ -60,4 +61,40 @@ export const getProblemActivities = async (
     params: queryOptions
   });
   return data as unknown as ResponsePagination<PostType[]>;
+};
+
+export type CreateProblemRequest = {
+  title: string;
+  slug: string;
+  content: string;
+  level: EnumLevelProblem;
+  tags: string[];
+  hint: string[];
+  initialCode: {
+    lang: string;
+    langSlug: string;
+    code: string;
+  }[];
+  testCase: {
+    input: {
+      name: string;
+      value: string;
+    }[];
+    output: string[];
+    isHidden: boolean;
+  }[];
+  exampleTestcases: string;
+};
+
+export const createProblem = async (requestOptions: CreateProblemRequest): Promise<ResponsePagination<ProblemType>> => {
+  const data = await post(import.meta.env.VITE_APP_API + 'problems', requestOptions);
+  return data as unknown as ResponsePagination<ProblemType>;
+};
+
+export const getProblemById = async (id: string) => {
+  null;
+};
+
+export const updateProblem = async (id: string, data: CreateProblemRequest) => {
+  null;
 };

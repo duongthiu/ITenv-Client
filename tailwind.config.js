@@ -238,6 +238,22 @@ module.exports = {
           700: '#C4320A',
           800: '#9C2A10',
           900: '#7E2410'
+        },
+        background: {
+          light: 'hsl(0 0% 100%)',
+          dark: 'hsl(229 84% 5%)'
+        },
+        foreground: {
+          light: 'hsl(229 84% 5%)',
+          dark: 'hsl(210 40% 98%)'
+        },
+        card: {
+          light: 'hsl(0 0% 100%)',
+          dark: 'hsl(229 84% 5%)'
+        },
+        'card-foreground': {
+          light: 'hsl(229 84% 5%)',
+          dark: 'hsl(210 40% 98%)'
         }
       },
 

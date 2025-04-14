@@ -18,7 +18,7 @@ const MessagePage = () => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { isOpenConversationInfo } = useAppSelector((state) => state.conversation);
-  const [queryOptionConversation, setQueryOptionConversation] = useState<QueryOptions>({
+  const [queryOptionConversation] = useState<QueryOptions>({
     page: 1,
     pageSize: 20
   });
@@ -28,8 +28,7 @@ const MessagePage = () => {
   const { activeConversationId, conversations } = useAppSelector((state) => state.conversation);
 
   const {
-    data: conversationData,
-    refresh: mutateConversation
+    data: conversationData
     // isLoading: isLoadingConversation
   } = usePagination<ConversationType[]>(
     `conversation ${JSON.stringify(queryOptionConversation)}`,

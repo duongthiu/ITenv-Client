@@ -1,0 +1,29 @@
+.editor-wrapper {
+  .text-editor-wraper {
+    // background-color: white !important;
+    border: 1px solid #d9d9d9 !important;
+    border-radius: 10px;
+    z-index: 1000;
+    .tox-tinymce {
+      min-height: 200px !important;
+    }
+    .tox-statusbar {
+      // display: none !important;
+      .tox-statusbar__branding {
+        display: none !important;
+      }
+      .tox-statusbar__path-item {
+        display: none !important;
+      }
+    }
+  }
+  .tox-statusbar {
+    // display: none !important;
+    .tox-statusbar__branding {
+      display: none !important;
+    }
+    .tox-statusbar__path-item {
+      display: none !important;
+    }
+  }
+}

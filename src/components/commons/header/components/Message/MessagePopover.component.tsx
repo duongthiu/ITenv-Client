@@ -15,7 +15,7 @@ const MessagePopover = memo(() => {
   const { conversations } = useAppSelector((state) => state.conversation);
   const [messagesVisible, setMessagesVisible] = useState(false);
   const dispatch = useAppDispatch();
-  const [queryOptionConversation, setQueryOptionConversation] = useState<QueryOptions>({
+  const [queryOptionConversation] = useState<QueryOptions>({
     page: 1,
     pageSize: 20
   });

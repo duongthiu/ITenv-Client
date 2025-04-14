@@ -26,12 +26,17 @@ axiosInstance.interceptors.request.use(function (config: InternalAxiosRequestCon
 axiosInstance.interceptors.response.use(
   (response) => response.data,
   (error: { response: { status: number } }) => {
+    const persistKey = 'persist:user';
+    const persistedState = localStorage.getItem(persistKey);
+    const parsedState = JSON.parse(persistedState!);
     if (!error.response) {
+      parsedState.isLogged = false;
+      localStorage.setItem(persistKey, JSON.stringify(parsedState));
       return Promise.reject(error);
     }
     if (error.response.status === 401) {
-      const persistKey = 'persist:user';
-      const persistedState = localStorage.getItem(persistKey);
+      parsedState.isLogged = false;
+
       notify(
         'warning',
         'Thông báo đăng nhập',
@@ -42,22 +47,19 @@ axiosInstance.interceptors.response.use(
             const response = await refreshAccessToken();
             if (response?.success) {
               localStorage.setItem('accessToken', response.data!);
+              parsedState.isLogged = true;
               notifySuccess('Đã refresh phiên đăng nhập thành công! Trang web sẽ tự động reload sau 5s.');
               setTimeout(() => {
                 window.location.reload();
               }, 5000);
             } else {
-              const parsedState = JSON.parse(persistedState!);
-              parsedState.isLogged = false;
-              localStorage.setItem(persistKey, JSON.stringify(parsedState));
               notifyError('Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại!');
             }
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } catch (error: any) {
-            const parsedState = JSON.parse(persistedState!);
-            parsedState.isLogged = false;
-            localStorage.setItem(persistKey, JSON.stringify(parsedState));
             notifyError(error?.response?.data?.message || 'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại!');
+          } finally {
+            localStorage.setItem(persistKey, JSON.stringify(parsedState));
           }
         }
       );

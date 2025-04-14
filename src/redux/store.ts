@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import { appSlice } from './app/app.slice';
+import appSlice from './app/app.slice';
 import { friendSlice } from './friend/friend.slice';
 import { messageSlice } from './message/message.slice';
 import { notificationSlice } from './notification/notification.slice';
@@ -11,7 +11,7 @@ import { tagSlice } from './tag/tag.slice';
 const appPersistConfig = {
   key: 'app',
   storage,
-  whitelist: ['theme']
+  whitelist: ['theme', 'isChatBoxVisible']
 };
 
 const userPersistConfig = {
@@ -22,7 +22,7 @@ const userPersistConfig = {
 
 // Combine reducers with persisted slices
 const rootReducer = combineReducers({
-  app: persistReducer(appPersistConfig, appSlice.reducer),
+  app: persistReducer(appPersistConfig, appSlice),
   user: persistReducer(userPersistConfig, userSlice.reducer),
   conversation: messageSlice.reducer,
   notification: notificationSlice.reducer,

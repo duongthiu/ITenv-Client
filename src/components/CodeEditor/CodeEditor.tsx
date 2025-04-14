@@ -46,7 +46,7 @@ const getInputName = (content: string) => {
   while ((match2 = regex2.exec(innerText)) !== null) {
     inputNames.push(match2[1]); // Capture all input names
   }
-
+  console.log(inputNames);
   return inputNames;
 };
 const CodeEditor: React.FC<CodeEditorProps> = ({
@@ -73,7 +73,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
       inputNames = inputNames.length ? inputNames : [''];
       const testcases = [];
       const inputoutput = testcase.split('\n');
-
+      
       while (inputoutput.length > 0) {
         const testcase: { name: string; value: string }[] = [];
 
@@ -84,7 +84,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
 
         testcases.push(testcase);
       }
-
+      console.log(testcases);
       return testcases;
     },
     []
@@ -158,7 +158,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
     setCode(newValue);
   };
 
-  const handleDragHeight = (event: any, info: any) => {
+  const handleDragHeight = (_event: any, info: any) => {
     const newHeight = mHeight.get() + info.delta.y;
     if (newHeight > 0 && newHeight < (window.innerHeight * 75) / 100) {
       mHeight.set(newHeight);
@@ -166,7 +166,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
     }
   };
 
-  const handleDragWidth = (event: any, info: any) => {
+  const handleDragWidth = (_event: any, info: any) => {
     const newWidth = mWidth.get() - info.delta.x;
     if (newWidth > 20 && newWidth < (window.innerWidth * 94) / 100) {
       mWidth.set(newWidth);
@@ -229,7 +229,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
       >
         <div
           className={cn(
-            'card ml-2 max-w-full rounded-lg p-0 p-1 shadow-md',
+            'card ml-2 max-w-full rounded-lg p-1 shadow-md',
             mWidth.get() < 30 && 'flex flex-col items-center justify-center'
           )}
         >

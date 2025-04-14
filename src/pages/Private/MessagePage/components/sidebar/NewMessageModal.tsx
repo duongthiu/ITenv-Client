@@ -34,15 +34,12 @@ const NewMessageModal: React.FC<NewMessageModalProps> = ({
   const [groupName, setGroupName] = useState<string>('');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const { user: userSelector } = useAppSelector((state) => state.user);
-  const [queryOptions ] = useState<QueryOptions>({ page: 1, pageSize: 20 });
+  const [queryOptions] = useState<QueryOptions>({ page: 1, pageSize: 20 });
   const dispatch = useAppDispatch();
   const socket = useSocket();
-  const { data: messagesData, isLoading } = useSWR(
-    receiverId ? `message-${receiverId}` : null,
-    () => getMyConversationWithUser(receiverId!, {}),
-    { revalidateOnFocus: false }
+  const { data: messagesData, isLoading } = useSWR(selectedFriend ? `message-${selectedFriend}` : null, () =>
+    getMyConversationWithUser(selectedFriend!, {})
   );
-
   // Use SWR to fetch friends
   const { data, error, isValidating } = useSWR<ResponsePagination<FriendType[]>>(
     ['friends', userSelector?._id, JSON.stringify(queryOptions)],
@@ -82,7 +79,7 @@ const NewMessageModal: React.FC<NewMessageModalProps> = ({
   };
 
   const filteredFriends = data?.data?.filter((friend) =>
-    (friend.sendBy.username + friend.receiver.username).toLowerCase().includes(searchTerm.toLowerCase())
+    (friend?.sendBy?.username + friend?.receiver?.username).toLowerCase().includes(searchTerm.toLowerCase())
   );
   return (
     <Modal
@@ -112,12 +109,12 @@ const NewMessageModal: React.FC<NewMessageModalProps> = ({
                   disabled={!!receiverId}
                 >
                   {filteredFriends?.map((friend) => {
-                    const user = friend.sendBy._id === userSelector?._id ? friend.receiver : friend.sendBy;
+                    const user = friend?.sendBy?._id === userSelector?._id ? friend.receiver : friend.sendBy;
                     return (
-                      <Option key={user._id} value={user._id}>
+                      <Option key={user?._id} value={user?._id}>
                         <div className="flex items-center gap-2">
-                          <img src={user.avatar} alt={user.username} className="h-6 w-6 rounded-full object-cover" />
-                          <span>{user.username}</span>
+                          <img src={user?.avatar} alt={user?.username} className="h-6 w-6 rounded-full object-cover" />
+                          <span>{user?.username}</span>
                         </div>
                       </Option>
                     );
@@ -129,7 +126,7 @@ const NewMessageModal: React.FC<NewMessageModalProps> = ({
                   {isLoading ? (
                     <Spin size="default" />
                   ) : messagesData?.data?.length ? (
-                    messagesData.data.map((message) => <MessageItem key={message._id} message={message} />)
+                    messagesData.data.map((message) => <MessageItem key={message?._id} message={message} />)
                   ) : (
                     <Empty description="No messages yet" />
                   )}
@@ -158,12 +155,16 @@ const NewMessageModal: React.FC<NewMessageModalProps> = ({
                     allowClear
                   >
                     {filteredFriends?.map((friend) => {
-                      const user = friend.sendBy._id === userSelector?._id ? friend.receiver : friend.sendBy;
+                      const user = friend?.sendBy?._id === userSelector?._id ? friend.receiver : friend.sendBy;
                       return (
-                        <Option key={user._id} value={user._id}>
+                        <Option key={user?._id} value={user?._id}>
                           <div className="flex items-center gap-2">
-                            <img src={user.avatar} alt={user.username} className="h-6 w-6 rounded-full object-cover" />
-                            <span>{user.username}</span>
+                            <img
+                              src={user?.avatar}
+                              alt={user?.username}
+                              className="h-6 w-6 rounded-full object-cover"
+                            />
+                            <span>{user?.username}</span>
                           </div>
                         </Option>
                       );

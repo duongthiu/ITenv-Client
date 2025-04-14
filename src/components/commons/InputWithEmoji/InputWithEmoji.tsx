@@ -12,7 +12,7 @@ const InputWithEmoji: React.FC<InputWithEmojiProps> = ({ onEmojiClick }) => {
   return (
     <div className="relative">
       <div ref={emojiPickerRef} className="emoji-wraper absolute bottom-0 translate-x-[-100%]">
-        <EmojiPicker onEmojiClick={onEmojiClick} theme={Theme.LIGHT} open={isOpenEmoji}  />
+        <EmojiPicker onEmojiClick={onEmojiClick} theme={Theme.LIGHT} open={isOpenEmoji} />
       </div>
       <BsFillEmojiSmileFill
         onClick={() => setIsOpenEmoji((prev) => !prev)}

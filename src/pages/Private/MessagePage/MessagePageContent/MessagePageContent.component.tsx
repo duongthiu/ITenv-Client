@@ -98,7 +98,7 @@ const MessagePageContent: React.FC<MessagePageContentProps> = ({ conversation, a
         {/* Sentinel Element */}
         <div id="sentinel" />
       </div>
-      <MessagePageFooter conversationId={activeConversationId} />
+      <MessagePageFooter conversationId={activeConversationId} members={conversation?.participants} />
     </div>
   );
 };

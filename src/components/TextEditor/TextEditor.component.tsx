@@ -39,7 +39,7 @@ const TextEditorComponent: React.FC<TextEditorProps> = ({
         .post(import.meta.env.VITE_APP_API + 'storages', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
-          }
+          } 
         })
         .then((response) => {
           resolve(response.data.data.url);

@@ -24,6 +24,7 @@ const SidebarComponent: React.FC<SidebarProps> = ({ collapsed, toggleCollapsed }
           defaultOpenKeys={['sub1']}
           style={{ height: '100%', border: 'none', width: '100%' }}
           items={SIDEBAR_ITEMS}
+          className="bg-card"
           inlineCollapsed={collapsed}
         />
       </div>

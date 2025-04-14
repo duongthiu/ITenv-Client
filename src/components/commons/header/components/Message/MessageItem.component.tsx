@@ -19,6 +19,35 @@ const MessageItem: React.FC<MessageItemProps> = memo(({ conversation }) => {
   const { user } = useAppSelector((state) => state.user);
   const navigate = useNavigate();
   const isSeenMessage = conversation?.lastMessage?.isSeenBy.find((seenBy) => seenBy === user?._id);
+
+  const getLastMessageText = () => {
+    const lastMessage = conversation?.lastMessage;
+    if (!lastMessage) return '';
+
+    if (lastMessage.isRecalled) {
+      return 'This message has been recalled';
+    }
+
+    const prefix = lastMessage.sender?._id === user?._id ? 'You: ' : '';
+
+    if (lastMessage.hasText) {
+      if (lastMessage.hasCodeFile) {
+        return `${prefix}sent a code: ${lastMessage.fileName || 'Untitled Code'}`;
+      }
+      return `${prefix}${lastMessage.content?.substring(0, 50)}`;
+    }
+
+    if (lastMessage.hasFile) {
+      return `${prefix}sent an image`;
+    }
+
+    if (lastMessage.notificationMessage) {
+      return lastMessage.content;
+    }
+
+    return '';
+  };
+
   return (
     <div
       className={`link-hover group container relative mb-2 flex cursor-pointer items-center gap-5 rounded-lg p-[12px] duration-200 ${location.pathname.includes('messages') && activeConversationId === conversation?._id && 'active-link'}`}
@@ -52,20 +81,9 @@ const MessageItem: React.FC<MessageItemProps> = memo(({ conversation }) => {
               : conversation?.participants?.find((member) => member?._id !== user?._id)?.username}
           </Typography.Text>
           <div className="flex flex-auto gap-3">
-            {conversation?.lastMessage?.isRecalled ? (
-              <Typography.Text strong={!isSeenMessage} className="text-[1.2rem]">
-                This message has been recalled
-              </Typography.Text>
-            ) : (
-              <Typography.Text strong={!isSeenMessage} className="text-[1.2rem]">
-                {conversation?.lastMessage?.sender?._id === user?._id && 'You: '}{' '}
-                {conversation?.lastMessage?.hasText
-                  ? conversation?.lastMessage?.content?.substring(0, 50)
-                  : conversation?.lastMessage?.hasFile
-                    ? 'sent a image'
-                    : conversation?.lastMessage?.notificationMessage && `${conversation?.lastMessage?.content}`}
-              </Typography.Text>
-            )}
+            <Typography.Text strong={!isSeenMessage} className="text-[1.2rem]">
+              {getLastMessageText()}
+            </Typography.Text>
 
             <Typography.Text strong={!isSeenMessage} className="flex-none text-[1.2rem] text-gray-400">
               {timeAgo(conversation?.lastMessage?.createdAt || conversation?.createdAt || '')}

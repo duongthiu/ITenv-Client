@@ -1,5 +1,5 @@
 import { Button, Popover } from 'antd';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import SettingsComponent from './Settings.component';
 
