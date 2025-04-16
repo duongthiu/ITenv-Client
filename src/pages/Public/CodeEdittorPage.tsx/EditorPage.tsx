@@ -26,6 +26,7 @@ const EditorPage = () => {
   const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatusType | RunCodeResultType>();
   const [detailSubmission, setDetailSubmission] = useState<SubmissionDetailType>();
   useEffect(() => {
+    console.log(singleProblem);
     if (singleProblem?.data?.initialCode) {
       setInitCode(singleProblem?.data?.initialCode[0]);
       setCode(singleProblem?.data?.initialCode[0].code);
@@ -39,7 +40,6 @@ const EditorPage = () => {
     setIsSubmitLoading(true);
     const submitCodeQueryOptions: submitCodeQueryOptions = {
       lang: initCode!.langSlug!,
-      question_id: singleProblem!.data!.questionId,
       typed_code: code
     };
     try {
@@ -64,11 +64,9 @@ const EditorPage = () => {
       return;
     }
     setIsRunCodeLoading(true);
-    const submitCodeQueryOptions: submitCodeQueryOptions & { data_input: string } = {
+    const submitCodeQueryOptions: submitCodeQueryOptions = {
       lang: initCode!.langSlug!,
-      question_id: singleProblem!.data!.questionId,
-      typed_code: code,
-      data_input: singleProblem!.data!.exampleTestcases || ''
+      typed_code: code
     };
     try {
       const result = await runCode(slug!, submitCodeQueryOptions);
@@ -78,6 +76,7 @@ const EditorPage = () => {
       setIsRunCodeLoading(false);
     } catch (error) {
       setIsRunCodeLoading(false);
+      notifyError('Failed to run code');
     }
   };
   return (

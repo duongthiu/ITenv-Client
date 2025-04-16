@@ -35,7 +35,7 @@ const NotificationPopover = () => {
     `notification ${JSON.stringify(queryOptionNotification)}`,
     queryOptionNotification,
     () => {
-      if (!notifications) return getNotifications(queryOptionNotification);
+      return getNotifications(queryOptionNotification);
     }
   );
   const loadMoreNotification = useCallback(() => {

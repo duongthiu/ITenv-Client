@@ -19,13 +19,12 @@ export const getProblemCategories = async (): Promise<ResponsePagination<Categor
 };
 export type submitCodeQueryOptions = {
   lang: string;
-  question_id: string;
   typed_code: string;
 };
 
 export const runCode = async (
   slug: string,
-  requestOptions: submitCodeQueryOptions & { data_input: string }
+  requestOptions: submitCodeQueryOptions
 ): Promise<ResponsePagination<RunCodeResultType>> => {
   const data = await post(import.meta.env.VITE_APP_API + `problems/${slug}/run`, requestOptions);
   return data as unknown as ResponsePagination<RunCodeResultType>;
@@ -91,10 +90,10 @@ export const createProblem = async (requestOptions: CreateProblemRequest): Promi
   return data as unknown as ResponsePagination<ProblemType>;
 };
 
-export const getProblemById = async (id: string) => {
-  null;
-};
+// export const getProblemById = async (id: string) => {
+//   null;
+// };
 
-export const updateProblem = async (id: string, data: CreateProblemRequest) => {
-  null;
-};
+// export const updateProblem = async (id: string, data: CreateProblemRequest) => {
+//   null;
+// };

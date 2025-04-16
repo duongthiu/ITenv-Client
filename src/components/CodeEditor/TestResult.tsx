@@ -1,17 +1,19 @@
 import React from 'react';
-import { RunCodeResultType, SubmissionStatusType } from '../../types/ProblemType';
+import { RunCodeResultType, SubmissionStatusType, TestCase } from '../../types/ProblemType';
 import { Empty, Tabs } from 'antd';
+
 type TestResultProps = {
   submissionStatus?: SubmissionStatusType | RunCodeResultType;
-  parsedTestcases: { name: string; value: string }[][];
+  testCase: TestCase[];
 };
+
 const isSubmissionStatusType = (
   submissionStatus: SubmissionStatusType | RunCodeResultType
 ): submissionStatus is SubmissionStatusType => {
   return 'full_compile_error' in submissionStatus || 'full_runtime_error' in submissionStatus;
 };
-const TestResult: React.FC<TestResultProps> = ({ submissionStatus, parsedTestcases }) => {
-  console.log(submissionStatus);
+
+const TestResult: React.FC<TestResultProps> = ({ submissionStatus, testCase }) => {
   return (
     <div className="h-full w-full">
       {!submissionStatus ? (
@@ -50,25 +52,23 @@ const TestResult: React.FC<TestResultProps> = ({ submissionStatus, parsedTestcas
                 <span className="sub-title">Runtime: {submissionStatus?.status_runtime}</span>
               </div>
               <Tabs defaultActiveKey="0" type="card" className="w-full">
-                {parsedTestcases.map((testcase, index) => (
+                {testCase.map((testcase, index: number) => (
                   <Tabs.TabPane tab={`Case ${index + 1}`} key={index.toString()}>
                     <div className="flex flex-col gap-4 p-4">
-                      {testcase.map((singleCase, idx) => {
-                        return (
-                          <div key={idx} className="">
-                            {singleCase.name && <h4 className="sub-title mb-2">{singleCase.name} =</h4>}
-                            <pre
-                              className="overflow-auto rounded-xl bg-gray-300 p-3 text-black"
-                              style={{
-                                whiteSpace: 'pre-wrap',
-                                wordWrap: 'break-word'
-                              }}
-                            >
-                              {singleCase.value}
-                            </pre>
-                          </div>
-                        );
-                      })}
+                      {testcase.input.map((input, idx: number) => (
+                        <div key={idx} className="">
+                          <h4 className="sub-title mb-2">{input.name} =</h4>
+                          <pre
+                            className="overflow-auto rounded-xl bg-gray-300 p-3 text-black"
+                            style={{
+                              whiteSpace: 'pre-wrap',
+                              wordWrap: 'break-word'
+                            }}
+                          >
+                            {input.value}
+                          </pre>
+                        </div>
+                      ))}
                       <div className="flex flex-col">
                         <h4 className="sub-title mb-2">Output =</h4>
                         <pre

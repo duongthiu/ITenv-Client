@@ -160,7 +160,7 @@ const ProblemListPage = () => {
                       title={problem.title}
                       content={problem.content}
                       tags={problem.tags}
-                      votes={problem?.vote ?? 0}
+                      votes={problem?.vote?.length ?? 0}
                       slug={problem?.slug}
                       // saved={problem?.saved ?? false}
                       difficulty={problem.level}

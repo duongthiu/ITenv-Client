@@ -1,4 +1,4 @@
-import { Button, Input, Switch, Typography } from 'antd';
+import { Button, Input, Switch, Typography, Tag } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const { Text, Title } = Typography;
@@ -29,14 +29,11 @@ const TestCases: React.FC<TestCasesProps> = ({
   updateInput,
   updateTestCase
 }) => {
+  const exampleTestCasesCount = testCases.filter((tc) => !tc.isHidden).length;
+  const canAddExampleTestCase = exampleTestCasesCount < 3;
+
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
-        <Button type="primary" icon={<PlusOutlined />} onClick={addTestCase}>
-          Add Test Case
-        </Button>
-      </div>
-
       {testCases.length === 0 ? (
         <div className="text-center">
           <Text type="secondary">No test cases added yet</Text>
@@ -45,16 +42,36 @@ const TestCases: React.FC<TestCasesProps> = ({
         testCases.map((testCase, index) => (
           <div key={testCase.id} className="rounded-lg border p-4">
             <div className="mb-4 flex items-center justify-between">
-              <Title level={4}>Test Case {index + 1}</Title>
+              <div className="flex items-center space-x-2">
+                {!testCase.isHidden ? (
+                  <Tag color="blue">Example Test Case {index + 1}</Tag>
+                ) : (
+                  <Title level={5} className="mb-0">
+                    Test Case {index + 1}
+                  </Title>
+                )}
+              </div>
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2">
                   <Switch
                     checked={testCase.isHidden}
-                    onChange={(checked) => updateTestCase(testCase.id, 'isHidden', checked)}
+                    onChange={(checked) => {
+                      // if (!checked && exampleTestCasesCount >= 3) {
+                      //   return; // Prevent changing to example if already have 3 examples
+                      // }
+                      updateTestCase(testCase.id, 'isHidden', checked);
+                    }}
+                    // disabled={!testCase.isHidden && exampleTestCasesCount >= 3}
                   />
                   <Text>Hidden</Text>
                 </div>
-                <Button type="text" danger icon={<DeleteOutlined />} onClick={() => removeTestCase(testCase.id)} />
+                <Button
+                  type="text"
+                  danger
+                  icon={<DeleteOutlined />}
+                  onClick={() => removeTestCase(testCase.id)}
+                  disabled={testCases.length <= 1}
+                />
               </div>
             </div>
 
@@ -104,6 +121,11 @@ const TestCases: React.FC<TestCasesProps> = ({
           </div>
         ))
       )}
+      <div className="mt-5 flex w-full flex-1">
+        <Button type="default" size="middle" className="w-full" icon={<PlusOutlined />} onClick={addTestCase}>
+          Add Test Case
+        </Button>
+      </div>
     </div>
   );
 };

@@ -2,7 +2,7 @@
 import { Editor, Monaco } from '@monaco-editor/react';
 import { Divider, Select, Tabs } from 'antd';
 import { motion, useMotionValue } from 'framer-motion';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FaTerminal } from 'react-icons/fa';
 import { IoIosCheckboxOutline } from 'react-icons/io';
 import { IoCodeSlashOutline } from 'react-icons/io5';
@@ -31,24 +31,7 @@ interface CodeEditorProps {
   submissionStatus?: SubmissionStatusType | RunCodeResultType;
   detailSubmission?: SubmissionDetailType;
 }
-const getInputName = (content: string) => {
-  const regex = /<strong>Input:<\/strong>(.*?)<strong>Output:<\/strong>/s;
-  const match = content.match(regex);
-  const inputOutputString = match ? match[1] : 'No match found';
 
-  // Remove any HTML tags to get the inner text
-  const innerText = inputOutputString.replace(/<[^>]+>/g, '').trim();
-
-  const regex2 = /(\w+)\s*=/g; // Matches all input names before '='
-  let match2;
-  const inputNames: string[] = [];
-
-  while ((match2 = regex2.exec(innerText)) !== null) {
-    inputNames.push(match2[1]); // Capture all input names
-  }
-  console.log(inputNames);
-  return inputNames;
-};
 const CodeEditor: React.FC<CodeEditorProps> = ({
   problem,
   code,
@@ -67,30 +50,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   const outputHeight = useMotionValue(window.innerHeight - 680);
   const [isWidthDragging, setWidthDragging] = useState(false);
   const [isHeightDragging, setHeightDragging] = useState(false);
-
-  const parseTestcases = useMemo(
-    () => (testcase: string, inputNames: string[]) => {
-      inputNames = inputNames.length ? inputNames : [''];
-      const testcases = [];
-      const inputoutput = testcase.split('\n');
-      
-      while (inputoutput.length > 0) {
-        const testcase: { name: string; value: string }[] = [];
-
-        inputNames.forEach((inputName) => {
-          testcase.push({ name: inputName, value: inputoutput[0] });
-          inputoutput.shift(); // removes the first element from inputoutput array
-        });
-
-        testcases.push(testcase);
-      }
-      console.log(testcases);
-      return testcases;
-    },
-    []
-  );
-
-  const parsedTestcases = parseTestcases(problem?.exampleTestcases || '', getInputName(problem?.content || ''));
 
   useEffect(() => {
     if (submissionStatus) {
@@ -113,7 +72,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
         </div>
       ),
 
-      children: <TestCase parsedTestcases={parsedTestcases} />
+      children: <TestCase testCase={problem.testCase} />
     },
     {
       key: 'testresult',
@@ -123,7 +82,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
           <span>Test Result</span>
         </div>
       ),
-      children: <TestResult parsedTestcases={parsedTestcases} submissionStatus={submissionStatus} />
+      children: <TestResult testCase={problem.testCase} submissionStatus={submissionStatus} />
     }
   ];
   const ProblemTabs = [
@@ -250,6 +209,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
                     value: code?.langSlug,
                     label: code?.lang
                   }))}
+                  value={initCode?.langSlug}
                   defaultActiveFirstOption={true} //
                   defaultValue={initCode?.langSlug}
                   onChange={handleChangeLanguage}

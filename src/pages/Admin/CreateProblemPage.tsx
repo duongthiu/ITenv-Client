@@ -22,7 +22,14 @@ const CreateProblemPage = () => {
   const [form] = Form.useForm();
   const [tags, setTags] = useState<TagType[]>([]);
   const [loading, setLoading] = useState(false);
-  const [testCases, setTestCases] = useState<TestCase[]>([]);
+  const [testCases, setTestCases] = useState<TestCase[]>([
+    {
+      id: crypto.randomUUID(),
+      inputs: [{ id: crypto.randomUUID(), name: '', value: '' }],
+      output: '',
+      isHidden: false
+    }
+  ]);
   const [description, setDescription] = useState('');
   const [postImages, setPostImages] = useState<ImageType[]>([]);
 
@@ -51,6 +58,9 @@ const CreateProblemPage = () => {
   };
 
   const removeTestCase = (id: string) => {
+    if (testCases.length <= 1) {
+      return; // Prevent deletion if there's only one test case
+    }
     setTestCases(testCases.filter((testCase) => testCase.id !== id));
   };
 

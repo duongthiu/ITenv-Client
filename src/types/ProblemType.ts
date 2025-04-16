@@ -1,36 +1,52 @@
-import { TagType } from './TagType';
 import { UserType } from './UserType';
 
 export type ProblemType = {
+  _id: string;
   title: string;
   slug: string;
   content: string;
   level: string;
-  tags: TagType[];
-  acceptance?: UserType[];
-  submitBy?: UserType[];
+  tags: Tags[];
+  acceptance: string[];
+  submitBy: string[];
   hint: string[];
   exampleTestcases: string;
   initialCode: InitialCode[];
-  testCase?: [];
-  vote?: number;
+  testCase: TestCase[];
+  vote: string[];
+  downVote: string[];
   comment?: UserType[];
-  questionId: string;
-  frontendQuestionId: string;
+  questionId: string | null;
   postAt: Date;
-  editAt?: Date;
-  status?: boolean;
+  editAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
+  __v: number;
 };
+
 export type InitialCode = {
   lang: string;
   langSlug: string;
   code: string;
   _id: string;
 };
+
+export type TestCase = {
+  input: {
+    name: string;
+    value: string;
+    _id: string;
+  }[];
+  isHidden: boolean;
+  _id: string;
+};
+
 export type Tags = {
   _id: string;
   name: string;
 };
+
 export type SubmissionStatusType = {
   status_code: number;
   lang: string;
@@ -54,6 +70,7 @@ export type SubmissionStatusType = {
   status_msg: string;
   state: string;
 };
+
 export type RunCodeResultType = {
   status_code: number; // Status code of the execution
   lang: string; // Programming language used
@@ -91,6 +108,7 @@ export type RunCodeResultType = {
   status_msg: string; // Status message (e.g., "Accepted")
   state: string; // State of the submission (e.g., "SUCCESS")
 };
+
 export type SubmissionDetailType = {
   runtime: number;
   runtimeDisplay: string;

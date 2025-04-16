@@ -1,4 +1,4 @@
-import { MenuOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { LayoutDashboard, Settings, Users } from 'lucide-react';
 import { Menu } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -12,7 +12,7 @@ const Sidebar = () => {
   const menuItems = [
     {
       key: 'dashboard',
-      icon: <MenuOutlined />,
+      icon: <LayoutDashboard size={20} />,
       label: 'Dashboard',
       children: [
         { key: 'default', label: 'Default' },
@@ -22,7 +22,7 @@ const Sidebar = () => {
     },
     {
       key: 'layouts',
-      icon: <SettingOutlined />,
+      icon: <Settings size={20} />,
       label: 'Layouts',
       children: [
         { key: 'vertical', label: 'Vertical' },
@@ -32,7 +32,7 @@ const Sidebar = () => {
     },
     {
       key: 'users',
-      icon: <UserOutlined />,
+      icon: <Users size={20} />,
       label: 'Users',
       children: [
         { key: 'profile', label: 'Account Profile' },
