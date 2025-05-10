@@ -9,7 +9,7 @@ type CategoryBlockProps = {
 const CategoryBlock: React.FC<CategoryBlockProps> = ({ category, isActive }) => {
   return (
     <div
-      className={`category-block sub-title card flex min-h-[100px] w-full cursor-pointer items-center justify-center rounded-lg border p-4 text-[1.6rem] shadow-md ${
+      className={`category-block sub-title card flex min-h-[100px] w-full cursor-pointer items-center justify-center rounded-lg border p-4 text-base shadow-md ${
         isActive ? 'active' : ''
       }`}
     >

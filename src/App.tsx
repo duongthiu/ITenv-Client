@@ -62,7 +62,7 @@ function App() {
       </div> */}
       <main className="">
         {loading && (
-          <div className="fixed left-0 top-0 z-50 flex h-screen w-screen items-center justify-center bg-[rgba(0,0,0,0.5)]">
+          <div className="fixed left-0 top-0 z-50 text- flex h-screen w-screen items-center justify-center bg-[rgba(0,0,0,0.5)]">
             <Spin className="z-100" size="large" />
           </div>
         )}

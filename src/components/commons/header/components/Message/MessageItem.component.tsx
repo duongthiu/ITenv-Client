@@ -75,17 +75,17 @@ const MessageItem: React.FC<MessageItemProps> = memo(({ conversation }) => {
       </div>
       <div className="content flex flex-auto items-center justify-between truncate">
         <div className={`flex flex-col ${isSeenMessage && 'opacity-80'} `}>
-          <Typography.Text strong={!isSeenMessage} className="text-[1.4rem]">
+          <Typography.Text strong={!isSeenMessage} className="text-sm">
             {conversation?.isGroupChat
               ? conversation?.groupName
               : conversation?.participants?.find((member) => member?._id !== user?._id)?.username}
           </Typography.Text>
           <div className="flex flex-auto gap-3">
-            <Typography.Text strong={!isSeenMessage} className="text-[1.2rem]">
+            <Typography.Text strong={!isSeenMessage} className="text-xs">
               {getLastMessageText()}
             </Typography.Text>
 
-            <Typography.Text strong={!isSeenMessage} className="flex-none text-[1.2rem] text-gray-400">
+            <Typography.Text strong={!isSeenMessage} className="flex-none text-xs text-gray-400">
               {timeAgo(conversation?.lastMessage?.createdAt || conversation?.createdAt || '')}
             </Typography.Text>
           </div>

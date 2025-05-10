@@ -16,7 +16,7 @@ const UserGrowthChart: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
     >
-      <h2 className="sub-title mb-4 text-[1.6rem] font-semibold">User Growth</h2>
+      <h2 className="sub-title mb-4 text-base font-semibold">User Growth</h2>
       <div className="h-[320px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData}>

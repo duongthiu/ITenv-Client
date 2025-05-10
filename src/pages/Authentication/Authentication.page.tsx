@@ -199,7 +199,7 @@ const AuthenticationPage = () => {
         className="absolute left-10 top-10 flex cursor-pointer items-center gap-2"
       >
         <img src={logo} className="h-[32px] w-[32px]" style={{ userSelect: 'none' }} alt="Logo" />
-        <h6 className="font-mono text-[2.2rem] font-extrabold" style={{ userSelect: 'none' }}>
+        <h6 className="font-mono text-xl font-extrabold" style={{ userSelect: 'none' }}>
           ITenv
         </h6>
       </div>
@@ -215,7 +215,7 @@ const AuthenticationPage = () => {
             <div className="flex flex-col gap-5">
               <Typography.Text className="text-center opacity-55">or you can sign in with</Typography.Text>
               <div className="flex items-center justify-center">
-                <div className="flex items-center gap-8">
+                <div className="flex items-center gap-2">
                   <div className="cursor-pointer rounded-full bg-black p-2 opacity-55 duration-200 hover:bg-[#ea4335] hover:opacity-100">
                     <FaGoogle onClick={() => LoginWithGoogle()} size={18} className="text-white" />
                   </div>

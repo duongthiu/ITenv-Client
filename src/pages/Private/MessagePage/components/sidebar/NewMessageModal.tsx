@@ -79,7 +79,7 @@ const NewMessageModal: React.FC<NewMessageModalProps> = ({
   };
 
   const filteredFriends = data?.data?.filter((friend) =>
-    (friend?.sendBy?.username + friend?.receiver?.username).toLowerCase().includes(searchTerm.toLowerCase())
+    (friend?.sentBy?.username + friend?.receiver?.username).toLowerCase().includes(searchTerm.toLowerCase())
   );
   return (
     <Modal
@@ -109,7 +109,7 @@ const NewMessageModal: React.FC<NewMessageModalProps> = ({
                   disabled={!!receiverId}
                 >
                   {filteredFriends?.map((friend) => {
-                    const user = friend?.sendBy?._id === userSelector?._id ? friend.receiver : friend.sendBy;
+                    const user = friend?.sentBy?._id === userSelector?._id ? friend.receiver : friend.sentBy;
                     return (
                       <Option key={user?._id} value={user?._id}>
                         <div className="flex items-center gap-2">
@@ -155,7 +155,7 @@ const NewMessageModal: React.FC<NewMessageModalProps> = ({
                     allowClear
                   >
                     {filteredFriends?.map((friend) => {
-                      const user = friend?.sendBy?._id === userSelector?._id ? friend.receiver : friend.sendBy;
+                      const user = friend?.sentBy?._id === userSelector?._id ? friend.receiver : friend.sentBy;
                       return (
                         <Option key={user?._id} value={user?._id}>
                           <div className="flex items-center gap-2">

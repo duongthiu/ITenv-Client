@@ -49,7 +49,7 @@ const ProblemsTable: React.FC = () => {
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
-      render: (text: string) => <span className="sub-title text-[1.4rem]">{text}</span>
+      render: (text: string) => <span className="sub-title text-sm">{text}</span>
     },
     {
       title: 'Slug',
@@ -70,7 +70,7 @@ const ProblemsTable: React.FC = () => {
       render: (tags: { name: string }[]) => (
         <div className="flex flex-wrap">
           {tags?.map((tag) => (
-            <span key={tag.name} className="tag mb-2 mr-2 rounded px-2.5 py-0.5 text-[1rem] font-medium">
+            <span key={tag.name} className="tag mb-2 mr-2 rounded px-2.5 py-0.5 text-xs font-medium">
               {tag.name}
             </span>
           ))}
@@ -120,7 +120,7 @@ const ProblemsTable: React.FC = () => {
     >
       <div className="mb-6 flex items-center justify-between">
         <div className="flex items-center gap-[16px]">
-          <h2 className="sub-title text-[1.6rem] font-semibold">Problem List</h2>
+          <h2 className="sub-title text-base font-semibold">Problem List</h2>
           <div className="relative">
             <Input
               type="text"

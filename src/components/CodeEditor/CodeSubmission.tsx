@@ -6,7 +6,7 @@ type CodeSubmissionProps = {
   detailSubmission?: SubmissionDetailType;
 };
 const CodeSubmission: React.FC<CodeSubmissionProps> = ({ detailSubmission }) => {
-  console.log(detailSubmission)
+  console.log(detailSubmission);
   return (
     <div className="h-full w-full">
       {!detailSubmission ? (
@@ -15,7 +15,7 @@ const CodeSubmission: React.FC<CodeSubmissionProps> = ({ detailSubmission }) => 
         </div>
       ) : (
         <div className="flex flex-col gap-5 p-5">
-          <h2 className="text-[2rem] font-semibold text-green-600">Accepted</h2>
+          <h2 className="text-xl font-semibold text-green-600">Accepted</h2>
           <div className="flex items-center justify-center">
             <div className="rounded-xl border p-5">
               <div className="h-[400px] w-[700px]">

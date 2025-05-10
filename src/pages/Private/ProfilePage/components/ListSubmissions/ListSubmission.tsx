@@ -22,16 +22,16 @@ const ListSubmission: React.FC<ListSubmissionProps> = ({ userId }) => {
             {listSubmissions?.data?.map((submission: any) => {
               return (
                 <div
-                  className="group grid cursor-pointer grid-cols-12 gap-10 border-b-[1px]"
+                  className="group grid cursor-pointer grid-cols-12 gap-2 border-b-[1px]"
                   onClick={() => navigate(`/problems/${submission?.problem?.slug}`)}
                 >
                   <div className="col-span-2 flex flex-col gap-1 p-5">
-                    <span className={`text-[1.4rem] text-${submission?.isAccepted ? 'green-600' : 'red-600'}`}>
+                    <span className={`text-sm text-${submission?.isAccepted ? 'green-600' : 'red-600'}`}>
                       {submission?.isAccepted ? 'Accepted' : 'Rejected'}
                     </span>
                     <span className="sub-title">{timeAgo(submission?.createdAt)}</span>
                   </div>
-                  <span className="col-span-10 flex items-center text-[1.6rem] font-semibold duration-200 group-hover:text-primary-color">
+                  <span className="col-span-10 flex items-center text-base font-semibold duration-200 group-hover:text-primary-color">
                     {submission?.problem?.title}
                   </span>
                 </div>

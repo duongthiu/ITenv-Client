@@ -30,7 +30,7 @@ const ActivityTab: React.FC<ProfileFriendTabProps> = ({ userId }) => {
   return (
     <div>
       <div className="card">
-        <h3 className="mb-5 text-[1.6rem] font-semibold">Activity</h3>
+        <h3 className="mb-5 text-base font-semibold">Activity</h3>
         <Tabs tabPosition="left" items={TabItems} />
       </div>
     </div>

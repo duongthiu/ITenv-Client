@@ -32,7 +32,7 @@ const PersonCard: React.FC<PersonCardProps> = ({ user }) => {
         <div className="mt-4 flex space-x-4">
           <div className="flex w-full flex-col justify-between gap-1">
             <h3
-              className="cursor-pointer text-center text-[1.6rem] font-semibold duration-200 hover:text-primary-color"
+              className="cursor-pointer text-center text-base font-semibold duration-200 hover:text-primary-color"
               onClick={() => navigate(paths.profile.replace(':userId', user._id))}
             >
               {user.username}
@@ -42,7 +42,7 @@ const PersonCard: React.FC<PersonCardProps> = ({ user }) => {
             <div className="">
               <p className="flex items-center text-gray-500"></p>
               <p className="my-3 mt-1 text-center text-gray-500">
-                <span className="text-center text-[1.2rem]">
+                <span className="text-center text-xs">
                   {user?.friends?.length || 0} {(user?.friends?.length || 0) > 1 ? 'friends' : 'friend'}
                 </span>
               </p>

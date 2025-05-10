@@ -43,6 +43,10 @@ const LazyPostsPage = LazyLoadComponent(() => import('../pages/Admin/PostsPage')
 const LazyProblemsPage = LazyLoadComponent(() => import('../pages/Admin/ProblemsPage'))(true);
 const LazyCreateProblemPage = LazyLoadComponent(() => import('../pages/Admin/CreateProblemPage'))(true);
 
+// Add CodeSandbox lazy imports
+const LazyCodeSandboxPage = LazyLoadComponent(() => import('../pages/CodeSandbox'))(true);
+const LazyCodeSandboxDetailPage = LazyLoadComponent(() => import('../pages/CodeSandbox/Detail'))(true);
+
 export const PUBLIC_ROUTES: RouteType[] = [
   {
     path: paths.singleProblem,
@@ -154,6 +158,25 @@ export const PUBLIC_ROUTES: RouteType[] = [
     useHeader: true,
     useSidebar: true,
     useFooter: false
+  },
+  {
+    path: paths.codeSandbox,
+    element: <LazyCodeSandboxPage />,
+    layout: DefaultLayout,
+    private: 'public',
+    useHeader: true,
+    useSidebar: true,
+    useFooter: false
+  },
+  {
+    path: paths.codeSandboxDetail,
+    element: <LazyCodeSandboxDetailPage />,
+    layout: DefaultLayout,
+    private: 'public',
+    useHeader: true,
+    useSidebar: false,
+    useFooter: false,
+    fullWidth: true
   }
 ];
 export const DISCUSS_ROUTES: RouteType[] = [

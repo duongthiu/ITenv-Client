@@ -2,7 +2,6 @@ import { Button, Divider, Drawer, Empty, Input, Pagination, PaginationProps, Seg
 import { motion } from 'framer-motion';
 import React, { memo, useEffect, useState } from 'react';
 import { FiSend } from 'react-icons/fi';
-import { useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import TagMenu from '../../../../../components/post/TagMenu/TagMenu.component';
 import { getPostsWithCategoryId } from '../../../../../services/post/post.service';
@@ -79,10 +78,10 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex gap-10"></div>
+      <div className="flex gap-2"></div>
 
       <div className="flex gap-4">
-        <main className={`flex h-fit flex-1 flex-col ${posts?.data?.length !== 0 && 'card'}`}>
+        <main className={`flex h-fit flex-1 flex-col space-y-4 ${posts?.data?.length !== 0 && 'card'}`}>
           {/* <div className="flex gap-40">
             {childCategories && childCategories?.length > 0 && (
               <Segmented
@@ -94,8 +93,8 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
             )}
           </div> */}
           <div></div>
-          <div className="flex items-center justify-between p-5 text-[1.4rem]">
-            <div className="flex gap-5 text-[1.4rem]">
+          <div className="flex items-center justify-between p-5 text-sm">
+            <div className="flex gap-5 text-sm">
               <Segmented
                 onChange={handleSortChange}
                 size="large"

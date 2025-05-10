@@ -6,5 +6,6 @@ export type QueryOptions = {
   pageSize?: number;
   month?: number;
   year?: number;
+  language?: string;
   tags?: string[];
 };

@@ -160,7 +160,7 @@ const UsersTable: React.FC = () => {
       transition={{ delay: 0.2 }}
     >
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="sub-title text-[1.6rem] font-semibold">Users</h2>
+        <h2 className="sub-title text-base font-semibold">Users</h2>
         <div className="relative">
           <Input
             type="text"

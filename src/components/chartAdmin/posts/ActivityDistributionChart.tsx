@@ -39,12 +39,12 @@ const ActivityDistributionChart: React.FC = () => {
   // Transform fetched data into chart-friendly format
   const postData: PostData[] = postActivityDistribution?.data
     ? [
-      { name: 'Posts', value: postActivityDistribution.data.totalPosts },
-      { name: 'Comments', value: postActivityDistribution.data.totalComments },
-      { name: 'Upvotes', value: postActivityDistribution.data.totalUpvotes },
-      { name: 'Downvotes', value: postActivityDistribution.data.totalDownvotes },
-      { name: 'Shares', value: postActivityDistribution.data.totalShares }
-    ]
+        { name: 'Posts', value: postActivityDistribution.data.totalPosts },
+        { name: 'Comments', value: postActivityDistribution.data.totalComments },
+        { name: 'Upvotes', value: postActivityDistribution.data.totalUpvotes },
+        { name: 'Downvotes', value: postActivityDistribution.data.totalDownvotes },
+        { name: 'Shares', value: postActivityDistribution.data.totalShares }
+      ]
     : [];
 
   return (
@@ -54,7 +54,7 @@ const ActivityDistributionChart: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.3 }}
     >
-      <h2 className="sub-title mb-4 text-[1.6rem] font-medium">Post Activity Distribution by Month</h2>
+      <h2 className="sub-title mb-4 text-base font-medium">Post Activity Distribution by Month</h2>
 
       {/* Dropdowns for Month and Year */}
       <div className="mb-4 flex gap-4">

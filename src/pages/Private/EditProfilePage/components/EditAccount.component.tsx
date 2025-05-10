@@ -49,11 +49,11 @@ const AccountSettings: React.FC = () => {
   console.log(data?.data?.authenWith?.includes(0));
   return (
     <div className="basic-info-wrapper container mx-auto p-4">
-      <h2 className="mb-4 text-[1.8rem] font-semibold">Account Settings</h2>
+      <h2 className="mb-4 text-lg font-semibold">Account Settings</h2>
 
       {/* Account Information */}
       <div className="mb-6">
-        <h3 className="mb-8 text-start text-[1.6rem] font-semibold">Account Information</h3>
+        <h3 className="mb-8 text-start text-base font-semibold">Account Information</h3>
         <Form form={form} layout="vertical" onFinish={onFinish}>
           <Item name="email" label="Email" initialValue={data?.data?.authenWith?.includes(0) && data?.data?.email}>
             <Input disabled value={data?.data?.authenWith?.includes(0) ? data?.data?.email : ''} />
@@ -70,7 +70,7 @@ const AccountSettings: React.FC = () => {
 
       {/* Social Account */}
       <div className="mb-6">
-        <h3 className="mb-8 text-start text-[1.6rem] font-semibold">Social Account</h3>
+        <h3 className="mb-8 text-start text-base font-semibold">Social Account</h3>
         <div className="grid grid-cols-1 gap-4">
           {socialNetwork?.map((social) => (
             <div className="flex items-center justify-between">

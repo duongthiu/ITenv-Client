@@ -4,14 +4,14 @@ import React, { useEffect } from 'react';
 import './PreviewTextEditor.style.scss';
 type PreviewTextEditorProps = {
   content: any;
-  fontSize?: number;
+  fontSize?: string;
   inline?: boolean;
   lineHeight?: number;
   className?: string;
 };
 const PreviewTextEditorComponent: React.FC<PreviewTextEditorProps> = ({
   content,
-  fontSize = 1.6,
+  fontSize = 'sm',
   inline,
   lineHeight = 2,
   className
@@ -30,7 +30,7 @@ const PreviewTextEditorComponent: React.FC<PreviewTextEditorProps> = ({
         </Typography.Text>
       )} */}
       <div
-        className={`preview-text-editor-wrapper w-full overflow-y-auto text-[${fontSize}rem] leading-[${lineHeight}rem] ${inline && 'flex flex-wrap gap-1'} ${className}`}
+        className={`preview-text-editor-wrapper w-full overflow-y-auto text-${fontSize} leading-[${lineHeight}rem] ${inline && 'flex flex-wrap gap-1'} ${className}`}
         dangerouslySetInnerHTML={{ __html: content }}
       />
     </div>

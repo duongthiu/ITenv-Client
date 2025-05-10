@@ -2,7 +2,7 @@ import { UserType } from './UserType';
 
 export type FriendType = {
   _id: string;
-  sendBy: Pick<UserType, '_id' | 'username' | 'avatar'>;
+  sentBy: Pick<UserType, '_id' | 'username' | 'avatar'>;
   receiver: Pick<UserType, '_id' | 'username' | 'avatar'>;
   status: EnumFriend;
   isBlockBy: Pick<UserType, '_id' | 'username' | 'avatar'>;

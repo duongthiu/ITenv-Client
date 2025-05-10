@@ -74,7 +74,7 @@ const MembersModal: React.FC<MembersModalProps> = ({
   return (
     <>
       {/* Main Members Modal */}
-      <Modal title={<span className="text-[1.8rem]">Members</span>} open={open} onCancel={onClose} footer={null}>
+      <Modal title={<span className="text-lg">Members</span>} open={open} onCancel={onClose} footer={null}>
         <Divider className="my-4" />
         <div className="flex max-h-[300px] flex-col gap-5 overflow-y-auto">
           {conversation?.participants?.map((member) => {
@@ -131,7 +131,7 @@ const MembersModal: React.FC<MembersModalProps> = ({
                   onClick={() => navigate(paths.profile.replace(':userId', member._id))}
                 >
                   <div>{member.username}</div>
-                  {isMemberAdmin && <div className="sub-title text-[1.2rem]">Admin</div>}
+                  {isMemberAdmin && <div className="sub-title text-xs">Admin</div>}
                 </Typography.Text>
                 {member._id !== currentUser?._id && (
                   <Dropdown menu={{ items }} trigger={['click']}>
@@ -149,7 +149,7 @@ const MembersModal: React.FC<MembersModalProps> = ({
 
       {/* Add Friend Modal */}
       <Modal
-        title={<span className="text-[1.8rem]">Add Friends</span>}
+        title={<span className="text-lg">Add Friends</span>}
         open={addModalVisible}
         onCancel={() => setAddModalVisible(false)}
         footer={[
@@ -177,7 +177,7 @@ const MembersModal: React.FC<MembersModalProps> = ({
               allowClear
             >
               {friendsData?.data?.map((friend) => {
-                const user = friend.sendBy._id === currentUser?._id ? friend.receiver : friend.sendBy;
+                const user = friend.sentBy._id === currentUser?._id ? friend.receiver : friend.sentBy;
                 return (
                   <Option key={user?._id} value={user?._id}>
                     <div className="flex items-center gap-2">

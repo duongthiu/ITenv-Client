@@ -59,7 +59,7 @@ const BasicInfo: React.FC = () => {
   };
   return (
     <div className="basic-info-wrapper flex h-full w-full flex-col items-center justify-center">
-      <h2 className="mb-6 text-start text-[1.8rem] font-semibold">Basic Info</h2>
+      <h2 className="mb-6 text-start text-lg font-semibold">Basic Info</h2>
       {isLoading && (
         <div className="fixed bottom-0 left-0 right-0 top-0 z-50 flex items-center justify-center bg-[rgba(0,0,0,0.2)]">
           <Spin size="large" />
@@ -73,7 +73,7 @@ const BasicInfo: React.FC = () => {
         >
           <Input placeholder={user?.username} />
         </Form.Item>
-        <div className="flex w-full gap-10">
+        <div className="flex w-full gap-2">
           <Form.Item label="Birthday" name="dob" className="flex-[0.7]">
             <DatePicker
               style={{ width: '100%' }}

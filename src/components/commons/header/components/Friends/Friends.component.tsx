@@ -19,8 +19,8 @@ const FriendsComponent: React.FC<FriendsComponentProps> = ({
   const allRequests = friendRequestData || [];
   return (
     <div className="w-[350px]" style={{ maxHeight: '500px', overflow: 'auto' }}>
-      <div className="flex gap-2 pb-0 text-[1.6rem] font-semibold">
-        <div className="flex gap-2 p-[12px] pb-0 text-[1.6rem] font-semibold">
+      <div className="flex gap-2 pb-0 text-base font-semibold">
+        <div className="flex gap-2 p-[12px] pb-0 text-base font-semibold">
           Friend Requests
           <Badge count={total} />
         </div>

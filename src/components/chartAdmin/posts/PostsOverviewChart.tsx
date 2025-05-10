@@ -15,7 +15,7 @@ const PostsOverviewChart: React.FC = () => {
       transition={{ delay: 0.2 }}
     >
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="sub-title text-[1.6rem] font-semibold">Posts Overview</h2>
+        <h2 className="sub-title text-base font-semibold">Posts Overview</h2>
       </div>
 
       <div className="h-full max-h-[300px] max-w-full">

@@ -85,21 +85,21 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
         />
         <div className="content flex flex-2 items-center justify-between">
           <div className="flex flex-col justify-center">
-            <Typography.Text strong className="text-[1.4rem]">
+            <Typography.Text strong className="text-sm">
               {conversation?.isGroupChat
                 ? conversation?.groupName
                 : conversation?.participants?.find((member) => member?._id !== user?._id)?.username}
             </Typography.Text>
             <div className="flex gap-3">
               {conversation?.isGroupChat ? (
-                <Typography.Link className="text-[1.2rem]" onClick={() => setOpenMemberModal(true)}>
+                <Typography.Link className="text-xs" onClick={() => setOpenMemberModal(true)}>
                   {conversation?.participants?.length} members
                 </Typography.Link>
               ) : (
                 <div className={`${conversationInfo?.status && 'text-green-500'} flex items-center`}>
                   <GoDotFill size={18} />
                   <Typography.Text
-                    className={`inline text-[1.2rem] tracking-tight ${conversationInfo?.status && 'text-green-500'}`}
+                    className={`inline text-xs tracking-tight ${conversationInfo?.status && 'text-green-500'}`}
                   >
                     {conversationInfo?.status ? 'Online' : 'Offline ' + timeAgo(conversationInfo?.lastOnline || '')}
                   </Typography.Text>

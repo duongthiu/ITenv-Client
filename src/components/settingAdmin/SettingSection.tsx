@@ -19,7 +19,7 @@ const SettingSection: FC<SettingSectionProps> = ({ icon: Icon, title, children }
     >
       <div className="mb-4 flex items-center">
         <Icon className="mr-4 text-indigo-400" size={24} />
-        <h2 className="sub-title text-[1.6rem] font-semibold">{title}</h2>
+        <h2 className="sub-title text-base font-semibold">{title}</h2>
       </div>
       {children}
     </motion.div>

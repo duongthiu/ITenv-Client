@@ -32,7 +32,7 @@ const useFriendStatus = (data: UseFriendStatusType): UseFriendStatusTypeEnum => 
   }
 
   if (friendWithMe.status === EnumFriend.TYPE_PENDING) {
-    return friendWithMe.sendBy._id === currentUserId || (friendWithMe.sendBy as unknown as string) === currentUserId
+    return friendWithMe.sentBy._id === currentUserId || (friendWithMe.sentBy as unknown as string) === currentUserId
       ? UseFriendStatusTypeEnum.PENDING_SENDING
       : UseFriendStatusTypeEnum.PENDING_RECEIVING;
   }

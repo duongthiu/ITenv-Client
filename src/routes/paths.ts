@@ -10,6 +10,10 @@ export const paths = {
   problems: '/problems',
   singleProblem: '/problems/:slug',
 
+  // CodeSandbox paths
+  codeSandbox: '/code-sandbox',
+  codeSandboxDetail: '/code-sandbox/:id',
+
   discuss: '/discuss',
   parentCateDisCuss: '/discuss/:parentCateId',
   childCateDisCuss: '/discuss/:parentCateId/:childCateId',

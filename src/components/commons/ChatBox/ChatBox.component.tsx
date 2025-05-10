@@ -176,10 +176,10 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
         overlayClassName="chat-popover"
       >
         <div
-          className="flex h-20 w-20 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary-color shadow-lg transition-transform duration-300 hover:scale-110"
+          className="flex size-14 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary-color shadow-lg transition-transform duration-300 hover:scale-110"
           onClick={toggleChat}
         >
-          <img className="aspect-square h-full w-full scale-[200%] rounded-full" src={chatBoxLogo} />
+          <img className="aspect-square h-full w-full scale-[150%] rounded-full" src={chatBoxLogo} />
         </div>
       </Popover>
     </div>

@@ -38,7 +38,7 @@ const HeaderComponent: React.FC<EditorHeaderProps> = ({
 
         <button
           onClick={toggleDrawer}
-          className="flex cursor-pointer items-center gap-4 rounded-lg px-5 py-3 text-[1.4rem] font-semibold duration-500 hover:bg-gray-200"
+          className="flex cursor-pointer items-center gap-4 rounded-lg px-5 py-3 text-sm font-semibold duration-500 hover:bg-gray-200"
         >
           <CiBoxList size={20} />
           Problem List
@@ -47,7 +47,7 @@ const HeaderComponent: React.FC<EditorHeaderProps> = ({
       <div className="flex items-center gap-1">
         <button
           onClick={handleRunCode}
-          className={`flex cursor-pointer items-center gap-4 rounded-lg bg-gray-200 px-5 py-2 text-[1.4rem] font-semibold opacity-70 duration-500 hover:bg-gray-300 hover:opacity-100 ${isRunLoading && 'disabled'}`}
+          className={`flex cursor-pointer items-center gap-4 rounded-lg bg-gray-200 px-5 py-2 text-sm font-semibold opacity-70 duration-500 hover:bg-gray-300 hover:opacity-100 ${isRunLoading && 'disabled'}`}
         >
           {isRunLoading ? <Spin /> : <TbTriangle className="rotate-90" size={18} />}
           Run
@@ -55,7 +55,7 @@ const HeaderComponent: React.FC<EditorHeaderProps> = ({
         <button
           onClick={handleSubmitCode}
           disabled={isSubmitLoading}
-          className="flex cursor-pointer items-center gap-4 rounded-lg bg-gray-200 px-5 py-2 text-[1.4rem] font-semibold text-green-500 opacity-70 duration-500 hover:bg-gray-300 hover:opacity-100"
+          className="flex cursor-pointer items-center gap-4 rounded-lg bg-gray-200 px-5 py-2 text-sm font-semibold text-green-500 opacity-70 duration-500 hover:bg-gray-300 hover:opacity-100"
         >
           {isSubmitLoading ? <Spin /> : <FiUploadCloud size={20} />}
           Submit

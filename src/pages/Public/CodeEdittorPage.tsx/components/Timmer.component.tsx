@@ -24,7 +24,7 @@ const Timer = () => {
   };
 
   return (
-    <div className="flex cursor-pointer items-center gap-4 rounded-lg bg-gray-200 px-5 py-2 text-[1.4rem] font-semibold opacity-70 duration-500 hover:bg-gray-300 hover:opacity-100">
+    <div className="flex cursor-pointer items-center gap-4 rounded-lg bg-gray-200 px-5 py-2 text-sm font-semibold opacity-70 duration-500 hover:bg-gray-300 hover:opacity-100">
       <div className="flex items-center gap-4">
         <motion.div
           className="flex items-center"
@@ -44,7 +44,7 @@ const Timer = () => {
             </button>
           )}
         </motion.div>
-        <div className="text-[1.4rem] font-semibold">{formatTime(time)}</div>
+        <div className="text-sm font-semibold">{formatTime(time)}</div>
         <button
           onClick={() => {
             setTime(0);

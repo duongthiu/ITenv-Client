@@ -44,22 +44,22 @@ const ContentCard: React.FC<ContentCardProps> = ({ title, slug, tags, votes, sav
     }
   };
   return (
-    <div className="border-b-[1px] px-3 pb-4">
+    <div className="flex flex-col gap-2 border-b-[1px] px-2 py-4">
       <h2
-        className="mb-2 cursor-pointer text-[1.8rem] font-bold duration-200 hover:text-primary-color-hover"
+        className="cursor-pointer text-lg font-bold duration-200 hover:text-primary-color-hover"
         onClick={() => navigate(paths.singleProblem.replace(':slug', slug))}
       >
         {title}
       </h2>
-      {/* <p className="sub-title mb-4 text-[1.2rem]">{content}</p> */}
-      <div className="mb-4 flex flex-wrap">
+      {/* <p className="sub-title mb-4 text-xs">{content}</p> */}
+      <div className="flex flex-wrap">
         {tags?.map((tag, index) => (
-          <span key={index} className="tag mb-2 mr-2 rounded px-2.5 py-0.5 text-[1rem] font-medium">
+          <span key={index} className="tag mr-2 rounded px-2.5 py-0.5 text-xs font-medium">
             {tag.name}
           </span>
         ))}
       </div>
-      <div className="mb-4 flex items-center justify-between text-[1.2rem]">
+      <div className="flex items-center justify-between text-xs">
         <div className="flex items-center">
           <FaCheck className="mr-2 text-green-500" />
           <span className="text-gray-600">{acceptance}% Acceptance</span>
@@ -69,7 +69,7 @@ const ContentCard: React.FC<ContentCardProps> = ({ title, slug, tags, votes, sav
           <span className="">{difficulty}</span>
         </div>
       </div>
-      <div className="flex items-center justify-between text-[1.2rem]">
+      <div className="flex items-center justify-between text-xs">
         <button
           onClick={handleVote}
           className={`flex items-center ${isVoted ? 'text-blue-600' : 'text-gray-500'} transition-colors duration-200 hover:text-blue-600 focus:outline-none`}

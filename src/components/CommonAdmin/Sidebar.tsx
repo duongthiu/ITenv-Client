@@ -37,7 +37,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
       {/* Logo Section */}
       <a href={paths.adminOverviews} className="flex flex-col items-center justify-center gap-5 p-5 py-10">
         <img src={logo} alt="Logo" className="aspect-square max-h-[40px] max-w-[40px]" />
-        {!collapsed && <Typography className="font-mono text-[2rem] font-bold">ITENV</Typography>}
+        {!collapsed && <Typography className="font-mono text-xl font-bold">ITENV</Typography>}
       </a>
 
       {/* Menu Section */}

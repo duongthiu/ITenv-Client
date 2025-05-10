@@ -55,7 +55,7 @@ const NotificationComponent: React.FC<NotificationProps> = memo(({ notification,
       id="scrollableDiv"
       style={{ maxHeight: '500px', overflow: 'auto' }}
     >
-      <div className="flex gap-2 p-[12px] pb-0 text-[1.6rem] font-semibold">
+      <div className="flex gap-2 p-[12px] pb-0 text-base font-semibold">
         Notifications
         <Badge count={unreadCount} />
       </div>

@@ -83,15 +83,15 @@ const SettingsComponent = () => {
             >
               <Avatar size={36} src={user?.avatar} />
               <div className="flex flex-col justify-center">
-                <span className="text-[1.65rem] font-semibold">{user?.username}</span>
-                <span className="w-full truncate text-[1.4rem] font-light">{user?.email}</span>
+                <span className="text-base font-semibold">{user?.username}</span>
+                <span className="w-full truncate text-sm font-light">{user?.email}</span>
               </div>
             </Link>
             <Divider className="my-2" />
             {menuItems.map((item) => (
               <div
                 key={item.id}
-                className="link-hover flex cursor-pointer items-center gap-5 rounded-lg px-2 py-3 text-[1.6rem] font-semibold duration-500"
+                className="link-hover flex cursor-pointer items-center gap-2 rounded-lg px-2 py-3 text-sm font-semibold duration-500"
                 onClick={item?.onClick}
               >
                 {item.icon} {item.label}

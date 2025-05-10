@@ -40,7 +40,7 @@ const TagMenu: React.FC<TagMenuProps> = ({ selectedTags = [], setSelectedTags })
   });
   return (
     <div className={`mb-4 flex h-full w-full max-w-[400px] flex-col`}>
-      <h2 className="text-[1.6rem] font-semibold">Tags</h2>
+      <h2 className="text-base font-semibold">Tags</h2>
       <Divider className="my-3" />
       <Input
         placeholder="Search tags... "
@@ -57,7 +57,7 @@ const TagMenu: React.FC<TagMenuProps> = ({ selectedTags = [], setSelectedTags })
             <button
               key={tag._id}
               onClick={() => handleTagToggle(tag._id)}
-              className={`rounded-full px-3 py-1 text-[1.2rem] font-medium ${
+              className={`rounded-full px-3 py-1 text-xs font-medium ${
                 selectedTags.includes(tag._id)
                   ? 'bg-blue-500 text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'

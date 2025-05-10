@@ -28,9 +28,9 @@ const HeaderComponent: React.FC = memo(() => {
       href: '/problems'
     },
     {
-      key: 'contest',
-      title: 'Coding Meeting',
-      href: '/contest'
+      key: 'code-sandbox',
+      title: 'Code Sandbox',
+      href: '/code-sandbox'
     },
     {
       key: 'discuss',
@@ -64,7 +64,7 @@ const HeaderComponent: React.FC = memo(() => {
       <div className="flex h-full w-full max-w-[1440px] items-center justify-between px-5">
         <a href={paths.home} className="flex cursor-pointer items-center gap-2">
           <img src={logo} className="h-[32px] w-[32px]" style={{ userSelect: 'none' }} alt="Logo" />
-          <h6 className="font-mono text-[2.2rem] font-extrabold" style={{ userSelect: 'none' }}>
+          <h6 className="font-mono text-xl font-extrabold" style={{ userSelect: 'none' }}>
             ITenv
           </h6>
         </a>
@@ -86,14 +86,14 @@ const HeaderComponent: React.FC = memo(() => {
           </Form.Item>
         </Form>
         {user.isLogged && user?.user?._id ? (
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-4">
             <FriendPopover />
             <MessagePopover />
             <NotificationPopover />
             <SettingsPopover />
           </div>
         ) : (
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-2">
             <Button href="/signup" type="default">
               Signup
             </Button>

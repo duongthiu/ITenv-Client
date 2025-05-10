@@ -57,11 +57,11 @@ const Notifications = () => {
     <div className="basic-info-wrapper flex h-full w-full flex-col items-center justify-center p-4">
       <div className="flex h-full w-full flex-col items-center justify-center overflow-y-auto">
         <div className="lex h-full w-full flex-col items-center justify-center p-6">
-          <h2 className="mb-6 text-start text-[1.8rem] font-semibold">Send Notifications</h2>
+          <h2 className="mb-6 text-start text-lg font-semibold">Send Notifications</h2>
           <Form form={form} layout="vertical" onFinish={handleSubmit} className="space-y-4">
             {/* Title Input */}
             <Form.Item
-              label={<span className="text-[1.6rem]">Title</span>}
+              label={<span className="text-base">Title</span>}
               name="title"
               rules={[{ required: true, message: 'Please input the title!' }]}
             >
@@ -70,14 +70,14 @@ const Notifications = () => {
 
             {/* Content Input */}
             <Form.Item
-              label={<span className="text-[1.6rem]">Content</span>}
+              label={<span className="text-base">Content</span>}
               name="content"
               rules={[{ required: true, message: 'Please input the content!' }]}
             >
               <TextArea rows={4} placeholder="Enter notification content" />
             </Form.Item>
 
-            <Form.Item label={<span className="text-[1.6rem]">Recipients</span>} name="recipients">
+            <Form.Item label={<span className="text-base">Recipients</span>} name="recipients">
               <Select mode="multiple" placeholder="Select recipients">
                 <Option key={'ALL'} value={'ALL'}>
                   All

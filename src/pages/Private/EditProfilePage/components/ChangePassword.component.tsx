@@ -45,7 +45,7 @@ const ChangePassword = () => {
   }, [isLoadingAccount]);
   return (
     <div className="basic-info-wrapper relatve flex h-full w-full flex-col items-center justify-center p-4">
-      <h2 className="mb-4 text-[1.8rem] font-semibold">Change Password</h2>
+      <h2 className="mb-4 text-lg font-semibold">Change Password</h2>
       {isLoading && (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-gray-500 bg-opacity-50">
           <Spin size="large" />
@@ -110,7 +110,7 @@ const ChangePassword = () => {
           </Form.Item>
         </Form>
       ) : (
-        <p className="text-[1.6rem] text-red-500">You don't have an account with a password</p>
+        <p className="text-base text-red-500">You don't have an account with a password</p>
       )}
     </div>
   );

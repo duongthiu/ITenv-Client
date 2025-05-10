@@ -53,7 +53,7 @@ const ProfilePage = () => {
             style={{ background: 'linear-gradient(-150deg, #222222 15%, #373737 70%, #3c4859 94%)' }}
             className="h-72"
           ></div>
-          <div className="relative px-6 py-4">
+          <div className="relative px-2 py-4">
             <div className="md:flex-row flex items-center">
               {isLoadingUser ? (
                 <div>
@@ -70,11 +70,11 @@ const ProfilePage = () => {
                   </div>
                   <div className="md:mt-0 md:ml-40 mt-16">
                     <div className="flex items-center justify-between">
-                      <h1 className="text-[2.4rem] font-bold">{userData?.data?.username}</h1>
+                      <h1 className="text-2xl font-bold">{userData?.data?.username}</h1>
                       {isOwnProfile && (
                         <Button
                           onClick={handleEditProfile}
-                          className="ml-4 rounded-lg bg-primary-color px-4 py-2 text-[1.2rem] text-white transition hover:bg-primary-color-hover"
+                          className="ml-4 rounded-lg bg-primary-color px-4 py-2 text-sm text-white transition hover:bg-primary-color-hover"
                           aria-label="Edit profile"
                         >
                           <FaEdit className="mr-2 inline" /> Edit Profile

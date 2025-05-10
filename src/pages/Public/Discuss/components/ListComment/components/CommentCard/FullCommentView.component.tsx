@@ -19,7 +19,7 @@ const FullCommentView: React.FC<FullCommentViewProps> = memo(({ comment }) => {
             wrote :
           </div>
           <div className="sub-title ml-3 border-l-[1px] pl-2 font-semibold">
-            <PreviewTextEditorComponent content={comment?.content} fontSize={1.4} />
+            <PreviewTextEditorComponent content={comment?.content} fontSize="sm" />
           </div>
         </div>
       )}

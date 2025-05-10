@@ -27,7 +27,7 @@ const CommentTree: React.FC<CommentTreeProps> = ({ postById, postId, comments, m
   };
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-2">
       {comments?.map((comment: CommentType) => (
         <div key={comment._id}>
           <CommentCardComponent postById={postById} comment={comment} postId={postId} mutate={mutate} />
@@ -35,7 +35,7 @@ const CommentTree: React.FC<CommentTreeProps> = ({ postById, postId, comments, m
           {/* Show the toggle button if the comment has children */}
           {comment.children && comment.children.length > 0 && (
             <button
-              className="my-5 ml-14 mt-1 text-[1.2rem] text-blue-500 underline"
+              className="my-5 ml-14 mt-1 text-xs text-blue-500 underline"
               onClick={() => toggleExpand(comment?._id || '')}
             >
               {expandedKeys.includes(comment?._id || '') ? 'Hide Replies' : `Show ${comment.children.length} replies`}
