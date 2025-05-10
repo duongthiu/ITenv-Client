@@ -36,7 +36,7 @@ const PostComponent: React.FC<PostComponentProps> = ({ post }) => {
   return (
     <motion.div
       key={post._id}
-      className="group mb-6 cursor-pointer border-b-[1px] p-3"
+      className="group cursor-pointer border-b-[1px] p-3"
       onClick={() => navigate(paths.detailDiscuss2.replace(':id', post?._id))}
     >
       <div className="flex items-center space-x-8">
@@ -55,23 +55,23 @@ const PostComponent: React.FC<PostComponentProps> = ({ post }) => {
 
             <div>
               <div className="flex items-center gap-5">
-                <h2 className="text-[1.6rem] font-medium duration-200 group-hover:text-primary-color">{post.title}</h2>{' '}
+                <h2 className="text-base font-medium duration-200 group-hover:text-primary-color">{post.title}</h2>{' '}
                 <div className="flex flex-wrap">
                   {post?.tags?.map((tag) => (
-                    <span key={tag._id} className="tag mb-2 mr-2 rounded px-2.5 py-0.5 text-[1rem] font-medium">
+                    <span key={tag._id} className="tag mb-2 mr-2 rounded px-2.5 py-0.5 text-xs font-medium">
                       {tag.name}
                     </span>
                   ))}
                 </div>
               </div>
-              <p className="sub-title text-[1.2rem] group-hover:text-primary-color">
+              <p className="sub-title text-xs group-hover:text-primary-color">
                 Posted by {!post?.isAnonymous ? post?.postedBy?.username : 'Anonymous'} on{' '}
                 {new Date(post.createdAt).toLocaleString()}
               </p>
             </div>
           </div>
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-8 text-[1rem]">
+            <div className="flex items-center space-x-8 text-xs">
               <div className="flex items-center space-x-2">
                 {isDownvoted ? (
                   <FaCaretDown className={` ${isDownvoted ? 'text-red-500' : 'text-gray-500'}`} size={18} />

@@ -18,7 +18,7 @@ const FriendRequest: React.FC<FriendRequestItemProps> = ({ friendRequest, mutate
   const socket = useSocket();
   const { user } = useAppSelector((state) => state.user);
   const { handleRejectFriendRequest, handleAcceptFriendRequest } = useFriendAction({
-    userId: friendRequest?.sendBy?._id,
+    userId: friendRequest?.sentBy?._id,
     relationshipId: friendRequest?._id,
     mutate
   });
@@ -26,14 +26,14 @@ const FriendRequest: React.FC<FriendRequestItemProps> = ({ friendRequest, mutate
   return (
     <div
       className="link-hover cursor-pointer p-[12px] duration-200"
-      onClick={() => navigate(paths.profile.replace(':userId', friendRequest?.sendBy?._id || ''))}
+      onClick={() => navigate(paths.profile.replace(':userId', friendRequest?.sentBy?._id || ''))}
     >
       <div className="flex items-center gap-5">
         <Avatar size={42} icon={<UserOutlined />} />
         <div className="flex flex-2 items-center justify-between">
           <div className="flex flex-col">
             <Typography.Text>
-              <Typography.Text strong>{friendRequest?.sendBy?.username}</Typography.Text> sent you a friend request
+              <Typography.Text strong>{friendRequest?.sentBy?.username}</Typography.Text> sent you a friend request
             </Typography.Text>
             <p className="opacity-50">{timeAgo(friendRequest.createdAt!)}</p>
           </div>

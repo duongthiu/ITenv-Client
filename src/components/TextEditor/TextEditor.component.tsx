@@ -39,7 +39,7 @@ const TextEditorComponent: React.FC<TextEditorProps> = ({
         .post(import.meta.env.VITE_APP_API + 'storages', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
-          } 
+          }
         })
         .then((response) => {
           resolve(response.data.data.url);
@@ -107,7 +107,7 @@ const TextEditorComponent: React.FC<TextEditorProps> = ({
           <div className="flex w-full items-center justify-end border-t-[1px] p-3">
             <button
               onClick={handleFunction}
-              className="mr-2 rounded-lg bg-primary-color px-6 py-2 text-[1.4rem] font-medium text-white duration-200 hover:bg-primary-color-hover focus:ring-4 focus:ring-blue-300"
+              className="mr-2 rounded-lg bg-primary-color px-2 py-2 text-sm font-medium text-white duration-200 hover:bg-primary-color-hover focus:ring-4 focus:ring-blue-300"
             >
               {buttonTitle}
             </button>

@@ -70,7 +70,7 @@ const PostsTable: React.FC = () => {
       render: (tags: { name: string }[]) => (
         <div className="flex flex-wrap">
           {tags?.map((tag) => (
-            <span key={tag?.name} className="tag mb-2 mr-2 rounded px-2.5 py-0.5 text-[1rem] font-medium">
+            <span key={tag?.name} className="tag mb-2 mr-2 rounded px-2.5 py-0.5 text-xs font-medium">
               {tag?.name}
             </span>
           ))}
@@ -140,7 +140,7 @@ const PostsTable: React.FC = () => {
       transition={{ delay: 0.2 }}
     >
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="sub-title text-[1.6rem] font-semibold">Posts List</h2>
+        <h2 className="sub-title text-base font-semibold">Posts List</h2>
         <Input
           type="text"
           placeholder="Search posts..."

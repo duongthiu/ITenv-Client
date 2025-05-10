@@ -29,7 +29,7 @@ const ProblemSolversChart: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4 }}
     >
-      <h2 className="sub-title mb-4 text-[1.6rem] font-medium">Top 10 Problem Solvers</h2>
+      <h2 className="sub-title mb-4 text-base font-medium">Top 10 Problem Solvers</h2>
 
       <div className="h-80">
         <ResponsiveContainer>

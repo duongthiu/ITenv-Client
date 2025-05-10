@@ -113,8 +113,8 @@ const DetailDiscussPage = () => {
               </Tooltip>
             </div>
             <Divider type="vertical" className="ml-0 h-full" />
-            <div className="flex items-center gap-10">
-              <h1 className="text-[2.2rem] font-bold">{postData?.data?.title}</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl font-bold">{postData?.data?.title}</h1>
               {postData?.data?.resolve && (
                 <Tooltip title="This post has been resolved" placement="right">
                   <FaCheck size={25} className="text-green-500" />
@@ -122,7 +122,7 @@ const DetailDiscussPage = () => {
               )}
             </div>
           </div>
-          <div className="flex items-center gap-10 text-[1.4rem]">
+          <div className="flex items-center gap-2 text-sm">
             {!postData?.data?.resolve &&
               (user?._id === postData?.data?.postedBy?._id || user?._id === postData?.data?.postedBy) && (
                 <Popconfirm
@@ -161,14 +161,14 @@ const DetailDiscussPage = () => {
             <motion.button
               ref={upvoteRef}
               onClick={() => handleVote(TypeVoteEnum.upvote)}
-              className={`flex h-fit items-start rounded-md text-[3rem] text-gray-500 hover:text-green-500 focus:outline-none focus:ring-green-500 ${isVoted && 'text-green-500'}`}
+              className={`flex h-fit items-start rounded-md text-3xl text-gray-500 hover:text-green-500 focus:outline-none focus:ring-green-500 ${isVoted && 'text-green-500'}`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               aria-label="Upvote"
             >
               <CaretUpOutlined />
             </motion.button>
-            <p className="m-0 text-center text-[2rem] font-semibold">
+            <p className="m-0 text-center text-xl font-semibold">
               {(postData?.data?.vote?.length || 0) - (postData?.data?.downVote?.length || 0) > 0
                 ? (postData?.data?.vote?.length || 0) - (postData?.data?.downVote?.length || 0)
                 : 0}
@@ -176,7 +176,7 @@ const DetailDiscussPage = () => {
             <motion.button
               ref={downvoteRef}
               onClick={() => handleVote(TypeVoteEnum.downvote)}
-              className={`flex h-fit items-start rounded-md text-[3rem] text-gray-500 hover:text-red-500 focus:outline-none focus:ring-red-500 ${isDownvoted && 'text-red-500'}`}
+              className={`flex h-fit items-start rounded-md text-3xl text-gray-500 hover:text-red-500 focus:outline-none focus:ring-red-500 ${isDownvoted && 'text-red-500'}`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               aria-label="Downvote"
@@ -185,31 +185,28 @@ const DetailDiscussPage = () => {
             </motion.button>
           </div>
           <div className="flex-auto">
-            <div className="mb-4 flex items-center gap-4 text-[1.2rem]">
+            <div className="mb-4 flex items-center gap-4 text-xs">
               {postData?.data?.isAnonymous ? (
                 <Avatar icon={<AnonymousIcon />} />
               ) : (
                 <Avatar size={40} src={postData?.data?.postedBy?.avatar} />
               )}
               <div>
-                <span className="mr-2 text-[1.4rem] font-semibold">
+                <span className="mr-2 text-sm font-semibold">
                   {postData?.data?.isAnonymous ? 'Anonymous' : postData?.data?.postedBy?.username}
                 </span>
                 <span className="sub-title">{new Date(postData?.data?.createdAt || '').toLocaleString()}</span>
               </div>
             </div>
             <div className="prose mb-6 max-w-none">
-              <PreviewTextEditorComponent content={postData?.data?.content} fontSize={1.4} />
+              <PreviewTextEditorComponent content={postData?.data?.content} fontSize="sm" />
             </div>
           </div>
         </div>
 
         <div className="mb-6">
           {postData?.data?.tags?.map((tag: any) => (
-            <span
-              key={tag._id}
-              className="tag mb-2 mr-2 inline-block rounded-full px-5 py-2 text-[1.2rem] font-semibold"
-            >
+            <span key={tag._id} className="tag mb-2 mr-2 inline-block rounded-full px-5 py-2 text-xs font-semibold">
               #{tag.name}
             </span>
           ))}

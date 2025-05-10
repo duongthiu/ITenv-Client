@@ -27,7 +27,7 @@ const DailyOrders: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
-      <h2 className="sub-title mb-4 text-[1.6rem] font-semibold">Daily Problem Solver</h2>
+      <h2 className="sub-title mb-4 text-base font-semibold">Daily Problem Solver</h2>
 
       <div style={{ width: '100%', height: 300 }}>
         <ResponsiveContainer>

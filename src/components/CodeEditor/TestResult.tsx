@@ -26,7 +26,7 @@ const TestResult: React.FC<TestResultProps> = ({ submissionStatus, testCase }) =
             !submissionStatus?.run_success ? (
               <div className="">
                 <h2
-                  className={`text-[2rem] font-medium ${submissionStatus?.run_success ? 'text-green-500' : 'text-red-500'}`}
+                  className={`text-xl font-medium ${submissionStatus?.run_success ? 'text-green-500' : 'text-red-500'}`}
                 >
                   {submissionStatus?.status_msg}
                 </h2>
@@ -43,7 +43,7 @@ const TestResult: React.FC<TestResultProps> = ({ submissionStatus, testCase }) =
             <div>
               <div className="mb-5 flex items-center gap-5">
                 <h2
-                  className={`text-[2rem] font-medium ${submissionStatus?.run_success && submissionStatus?.total_correct === submissionStatus?.total_testcases ? 'text-green-500' : 'text-red-500'}`}
+                  className={`text-xl font-medium ${submissionStatus?.run_success && submissionStatus?.total_correct === submissionStatus?.total_testcases ? 'text-green-500' : 'text-red-500'}`}
                 >
                   {submissionStatus?.total_correct === submissionStatus?.total_testcases
                     ? submissionStatus?.status_msg

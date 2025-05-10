@@ -33,7 +33,7 @@ const ProfileFriendTab: React.FC<ProfileFriendTabProps> = memo(({ userId }) => {
         >
           <img src={user.avatar} alt="avatar" className="aspect-square w-[70px] rounded-md object-cover" />
           <div className="w-[70px]">
-            <p className="truncate text-center text-[1.2rem] font-bold">{user.username}</p>
+            <p className="truncate text-center text-xs font-bold">{user.username}</p>
           </div>
         </div>
       </Tooltip>
@@ -43,10 +43,10 @@ const ProfileFriendTab: React.FC<ProfileFriendTabProps> = memo(({ userId }) => {
   return (
     <div className="card m-5 ml-0">
       <div className="flex justify-between">
-        <h3 className="text-[1.6rem] font-semibold">Friends</h3>
+        <h3 className="text-base font-semibold">Friends</h3>
         <Link>See all</Link>
       </div>
-      <p className="sub-title mb-[20px] mt-2 text-[1.2rem]">
+      <p className="sub-title mb-[20px] mt-2 text-xs">
         {friendData?.total || 0} {friendData?.total === 1 ? 'friend' : 'friends'}
       </p>
       {friendData?.data?.length === 0 && <Empty />}
@@ -59,7 +59,7 @@ const ProfileFriendTab: React.FC<ProfileFriendTabProps> = memo(({ userId }) => {
       )}
       <div className="grid grid-cols-3 gap-5">
         {friendData?.data?.slice(0, 9)?.map((friend) => {
-          const friendUser = friend.receiver?._id === userId ? friend.sendBy : friend.receiver;
+          const friendUser = friend.receiver?._id === userId ? friend.sentBy : friend.receiver;
           return typeof friendUser === 'object' && friendUser !== null ? (
             <FriendBlock key={friendUser._id} user={friendUser} />
           ) : null;

@@ -91,7 +91,7 @@ const MessageInformation: React.FC<MessageInformationProps> = ({ conversation })
               <Avatar src={member?.avatar} size="default">
                 {member?.username?.charAt(0).toUpperCase()}
               </Avatar>
-              <Typography.Text className="text-[1.4rem]">{member?.username}</Typography.Text>
+              <Typography.Text className="text-sm">{member?.username}</Typography.Text>
             </div>
           ),
           type: 'label'
@@ -247,21 +247,19 @@ const MessageInformation: React.FC<MessageInformationProps> = ({ conversation })
           )}
           <div className="content flex flex-2 items-center justify-between">
             <div className="flex flex-col items-center justify-center">
-              <Typography.Text strong className="text-[1.8rem]">
+              <Typography.Text strong className="text-lg">
                 {conversation?.isGroupChat
                   ? conversation?.groupName
                   : conversation?.participants?.find((member) => member?._id !== user?._id)?.username}
               </Typography.Text>
               <div className="flex gap-3">
                 {conversation?.isGroupChat ? (
-                  <Typography.Link className="text-[1.2rem]">
-                    {conversation?.participants?.length} members
-                  </Typography.Link>
+                  <Typography.Link className="text-xs">{conversation?.participants?.length} members</Typography.Link>
                 ) : (
                   <div className={`${conversationInfo?.status && 'text-green-500'} flex items-center`}>
                     <GoDotFill size={18} />
                     <Typography.Text
-                      className={`inline text-[1.2rem] tracking-tight ${conversationInfo?.status && 'text-green-500'}`}
+                      className={`inline text-xs tracking-tight ${conversationInfo?.status && 'text-green-500'}`}
                     >
                       {conversationInfo?.status ? 'Online' : 'Offline ' + timeAgo(conversationInfo?.lastOnline || '')}
                     </Typography.Text>
@@ -282,7 +280,7 @@ const MessageInformation: React.FC<MessageInformationProps> = ({ conversation })
         {conversation?.isGroupChat && (
           <div className="flex w-full">
             <Popconfirm title="Are you sure you want to leave this group?" onConfirm={handleLeaveGroup}>
-              <Button icon={<IoExitOutline size={20} />} type="default" className="w-full text-[1.4rem]">
+              <Button icon={<IoExitOutline size={20} />} type="default" className="w-full text-sm">
                 Leave group
               </Button>
             </Popconfirm>

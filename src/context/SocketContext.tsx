@@ -58,7 +58,7 @@ export const SocketProvider: React.FC<SocketContextProviderProps> = ({ children 
       socket.current.on('receive_friend', (friend: FriendType) => {
         console.log('receive_friend', friend);
         dispatch(addFriendRequest(friend));
-        notifyInfo(`${friend.sendBy.username} sent you a friend request`);
+        notifyInfo(`${friend.sentBy.username} sent you a friend request`);
       });
 
       socket.current.on('recall_message', (messageInfo: MessageType) => {

@@ -245,18 +245,18 @@ $second-orange: (
     }
   }
 }
-html {
-  font-size: 62.5% !important;
-  @include respond(phone) {
-    font-size: 62.5% !important;
-  }
-  @include respond(tablet) {
-    font-size: 62.5% !important;
-  }
-  @include respond(laptop) {
-    font-size: 62.5% !important;
-  }
-  @include respond(desktop) {
-    font-size: 62.5% !important;
-  }
-}
+// html {
+//   font-size: 62.5% !important;
+//   @include respond(phone) {
+//     font-size: 62.5% !important;
+//   }
+//   @include respond(tablet) {
+//     font-size: 62.5% !important;
+//   }
+//   @include respond(laptop) {
+//     font-size: 62.5% !important;
+//   }
+//   @include respond(desktop) {
+//     font-size: 62.5% !important;
+//   }
+// }

@@ -191,17 +191,17 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
               <Avatar className="flex-none" src={commentState?.commentBy?.avatar} size={40} />
               <div className="flex flex-col gap-3">
                 <div className="flex flex-col">
-                  <p className="text-[1.4rem] font-semibold group-hover:text-primary-color">
+                  <p className="text-sm font-semibold group-hover:text-primary-color">
                     {commentState?.commentBy?.username}
                   </p>
-                  <p className="sub-title text-[1.2rem]">{new Date(commentState?.createdAt || 0).toLocaleString()}</p>
+                  <p className="sub-title text-xs">{new Date(commentState?.createdAt || 0).toLocaleString()}</p>
                 </div>
-                <PreviewTextEditorComponent content={commentState?.content} fontSize={1.4} />
-                <div className="flex items-center gap-8 text-[1.4rem] duration-200">
+                <PreviewTextEditorComponent content={commentState?.content} fontSize="sm" />
+                <div className="flex items-center gap-2 text-sm duration-200">
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => handleVote(TypeVoteEnum.upvote)}
-                      className={`flex h-fit items-center rounded-md text-[1.8rem] text-gray-500 hover:text-green-500 focus:outline-none focus:ring-green-500 ${isVoted && 'text-green-500'}`}
+                      className={`flex h-fit items-center rounded-md text-lg text-gray-500 hover:text-green-500 focus:outline-none focus:ring-green-500 ${isVoted && 'text-green-500'}`}
                       // whileHover={{ scale: 1.1 }}
                       //   whileTap={{ scale: 0.9 }}
                       aria-label="Upvote"
@@ -215,7 +215,7 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
                     </p>
                     <button
                       onClick={() => handleVote(TypeVoteEnum.downvote)}
-                      className={`flex items-center rounded-md text-[1.8rem] text-gray-500 hover:text-red-500 focus:outline-none focus:ring-red-500 ${isDownvoted && 'text-red-500'}`}
+                      className={`flex items-center rounded-md text-lg text-gray-500 hover:text-red-500 focus:outline-none focus:ring-red-500 ${isDownvoted && 'text-red-500'}`}
                       // whileHover={{ scale: 1.1 }}
                       // whileTap={{ scale: 0.9 }}
                       aria-label="Downvote"
@@ -232,7 +232,7 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
                   </button>
 
                   {user?._id === commentState?.commentBy._id && (
-                    <div className="flex items-center gap-8">
+                    <div className="flex items-center gap-2">
                       <button className="flex items-center gap-2 duration-200 hover:text-blue-500" onClick={onOpenEdit}>
                         <MdModeEdit />
                         Edit

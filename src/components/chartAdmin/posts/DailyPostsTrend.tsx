@@ -13,7 +13,7 @@ const DailyPostsTrend: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4 }}
     >
-      <h2 className="sub-title mb-4 text-[1.6rem] font-semibold">Daily Posts Trend</h2>
+      <h2 className="sub-title mb-4 text-base font-semibold">Daily Posts Trend</h2>
 
       <div style={{ width: '100%', height: 300 }}>
         <ResponsiveContainer>

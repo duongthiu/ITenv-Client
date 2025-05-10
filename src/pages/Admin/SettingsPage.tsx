@@ -120,7 +120,7 @@ const SettingsPage = () => {
       <Header title="Settings" />
       <div className="bg-gradient-editprofile flex-[0.5]"></div>
       <div className="flex-[0.5]">
-        <div className="absolute left-1/2 top-[50%] mt-[20px] flex translate-x-[-50%] translate-y-[-50%] items-center gap-10 rounded-2xl bg-white bg-opacity-40 shadow-lg backdrop-blur-md">
+        <div className="absolute left-1/2 top-[50%] mt-[20px] flex translate-x-[-50%] translate-y-[-50%] items-center gap-2 rounded-2xl bg-white bg-opacity-40 shadow-lg backdrop-blur-md">
           <div className="flex flex-col gap-1 p-5">
             <div className="mb-10 flex w-full flex-col items-center justify-center gap-5 text-center">
               <div className="group relative cursor-pointer rounded-lg border border-[5px] border-white shadow-lg">
@@ -159,13 +159,13 @@ const SettingsPage = () => {
                 </div>
               )}
 
-              <p className="mt-2 text-[1.6rem] font-bold">{user?.username}</p>
+              <p className="mt-2 text-base font-bold">{user?.username}</p>
             </div>
             {EditProfileSidebar.map((item) => (
               <div
                 onClick={() => navigate(item.href)}
                 key={item.key}
-                className={`flex w-[250px] cursor-pointer items-center gap-3 rounded-lg px-6 py-3 text-[1.5rem] duration-300 ${tab !== item.key && 'hover:bg-blue-100 hover:text-black'} ${tab === item.key && 'bg-white text-black'}`}
+                className={`flex w-[250px] cursor-pointer items-center gap-3 rounded-lg px-2 py-3 text-base duration-300 ${tab !== item.key && 'hover:bg-blue-100 hover:text-black'} ${tab === item.key && 'bg-white text-black'}`}
               >
                 {item.icon}
                 {item.label}

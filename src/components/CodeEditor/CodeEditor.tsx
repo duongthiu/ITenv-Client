@@ -167,7 +167,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
           <div className={`flex h-full w-full items-center justify-center`}>
             <div className="flex -rotate-90 items-center gap-5">
               <IoCodeSlashOutline size={22} color="#21a1d3" />
-              <span className="text-[1.6rem] font-semibold">Content</span>
+              <span className="text-base font-semibold">Content</span>
             </div>
           </div>
         ) : (
@@ -196,7 +196,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
             <div>
               <div className="flex w-full items-center gap-2 px-5 py-2">
                 <IoCodeSlashOutline size={20} className="text-green-500" />
-                <span className="text-[1.4rem] font-semibold">Code</span>
+                <span className="text-sm font-semibold">Code</span>
               </div>
             </div>
           )}
@@ -219,7 +219,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
             </div>
           )}
 
-          <motion.div className={cn('py-3')} style={{ height: mHeight, width: mWidth }}>
+          <motion.div className={cn('w-full py-3')} style={{ height: mHeight, width: mWidth }}>
             {mWidth.get() > 30 ? (
               <Editor
                 theme={theme === THEME.DARK ? 'OneDarkPro' : 'light'}

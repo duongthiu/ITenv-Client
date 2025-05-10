@@ -1,0 +1,47 @@
+.menu-wrapper {
+  .ant-dropdown {
+    width: 200px;
+  }
+  .ant-dropdown-menu-root {
+    width: 200px;
+  }
+  .ant-dropdown-menu {
+    min-width: 160px;
+  }
+}
+
+.folder-tree {
+  .ant-tree-node-content-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .ant-tree-title {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ant-tree-node-selected {
+    background-color: #e6f4ff;
+  }
+
+  .ant-tree-node:hover {
+    background-color: #f5f5f5;
+  }
+  .ant-tree-treenode {
+    width: 100%;
+  }
+  .ant-tree-node-content-wrapper {
+    width: 100%;
+    display: flex;
+  }
+  .ant-tree-title {
+    flex: 1;
+  }
+  .ant-tree-draggable-icon {
+    display: none;
+  }
+}

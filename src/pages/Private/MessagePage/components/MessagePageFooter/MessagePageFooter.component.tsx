@@ -234,7 +234,7 @@ const MessagePageFooter: React.FC<MessagePageFooterProps> = ({ conversationId, r
               </div>
             )
           }))}
-          className="w-full rounded-full !border-none bg-transparent px-4 py-2 text-[1.4rem] outline-none"
+          className="w-full rounded-full !border-none bg-transparent px-4 py-2 text-sm outline-none"
           styles={mentionsStyles}
         />
         <InputWithEmoji onEmojiClick={onEmojiClick} />

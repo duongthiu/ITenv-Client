@@ -11,7 +11,7 @@ const Problem: React.FC<{ problem: ProblemType }> = ({ problem }) => {
         {problem?.title}
       </Title>
       <div
-        className="preview-text-editor-wrapper w-fit text-[1.4rem]"
+        className="preview-text-editor-wrapper w-fit text-sm"
         dangerouslySetInnerHTML={{
           __html: problem?.content?.replace(/<pre/g, '<pre class="pre-wrapper"')
         }}

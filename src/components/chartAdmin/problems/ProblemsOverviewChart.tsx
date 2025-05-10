@@ -13,7 +13,7 @@ const ProblemsOverviewChart: FC = () => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
-      <h2 className="sub-title mb-4 text-[1.6rem] font-medium">User Engagement with Problems</h2>
+      <h2 className="sub-title mb-4 text-base font-medium">User Engagement with Problems</h2>
 
       <div className="h-80">
         <ResponsiveContainer width="100%" height="100%">

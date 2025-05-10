@@ -34,7 +34,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification }) => 
         navigate(paths.detailDiscuss2.replace(':id', notification?.postId || ''));
     }
   };
-  
+
   return (
     <div
       className={`link-hover flex h-full cursor-pointer items-start gap-5 p-[12px] duration-200 ${notification.isSeen ? 'opacity-50' : 'opacity-100'}`}
@@ -52,8 +52,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification }) => 
           <PreviewTextEditorComponent
             content={notification?.content}
             inline
-            fontSize={1.4}
-            lineHeight={1.4}
+            fontSize="sm"
             className="w-full overflow-y-hidden"
           />
           <p className="opacity-50">{timeAgo(notification.createdAt!)}</p>

@@ -73,7 +73,7 @@ const ContributionGrid: React.FC<ContributionGridProps> = ({ contributions }) =>
             </div>
           ))}
         </div>
-        <div className="sub-title mb-1 mt-3 w-full text-center text-[1.2rem]">{monthNames[month]}</div>
+        <div className="sub-title mb-1 mt-3 w-full text-center text-xs">{monthNames[month]}</div>
       </div>
     );
   };
@@ -82,7 +82,7 @@ const ContributionGrid: React.FC<ContributionGridProps> = ({ contributions }) =>
   const daysInMonth = getDaysInMonth(currentYear);
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   return (
-    <div className="flex w-full gap-10">
+    <div className="flex w-full gap-2">
       {/* <div className="mr-8 mt-5 flex flex-none flex-col gap-1">
         {daysOfWeek.map((day, index) => (
           <div key={index} className="h-4 w-4 text-[0.8rem]">

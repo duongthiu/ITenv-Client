@@ -83,7 +83,7 @@ const ProblemListPage = () => {
 
         <div>
           <div className="card flex flex-col gap-4">
-            <div className="grid grid-cols-3 gap-10">
+            <div className="grid grid-cols-3 gap-2">
               <div className="group relative h-full cursor-pointer">
                 <img src={banner1} className="h-full rounded-xl object-cover" />
                 <div className="absolute left-0 top-0 rounded-xl bg-black bg-opacity-50 opacity-0 duration-500 group-hover:bottom-0 group-hover:right-0 group-hover:opacity-100"></div>
@@ -100,9 +100,9 @@ const ProblemListPage = () => {
             <Divider />
 
             <div className="mb-5">
-              {/* <h2 className="mb-4 text-[1.4rem] font-semibold">Solve problems here</h2> */}
+              {/* <h2 className="mb-4 text-sm font-semibold">Solve problems here</h2> */}
 
-              <div className="flex items-center gap-10">
+              <div className="flex items-center gap-2">
                 {/* <div className="flex items-center gap-3">
                   <Select
                     placeholder="Select Difficulty"

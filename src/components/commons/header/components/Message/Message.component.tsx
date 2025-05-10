@@ -15,8 +15,8 @@ const MessageComponent: React.FC<ConversationProps> = ({ conversations, totalNot
     <div className="flex h-[500px] w-[350px] flex-col">
       <div className="flex-none p-4">
         <div className="flex items-center justify-between">
-          <div className="mb-5 flex gap-2 text-[1.6rem] font-semibold">
-            <Typography.Title level={3} className="text-[1.6rem]">
+          <div className="mb-5 flex gap-2 text-base font-semibold">
+            <Typography.Title level={3} className="text-base">
               Messages
             </Typography.Title>
             <Badge count={totalNotSeen} />

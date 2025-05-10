@@ -10,7 +10,7 @@ module.exports = {
         'danger-color': '#D1293D',
         'danger-color-hover': '#BA1B2E',
         'danger-color-disabled': '#F76F7F',
-
+        
         'color-border': '#d2ddec',
         'grey-color': '#f6f6f6',
         'color-border-primary': '#2c7be5',
