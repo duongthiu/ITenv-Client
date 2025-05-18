@@ -14,7 +14,6 @@ const ActivityTab: React.FC<ProfileFriendTabProps> = ({ userId }) => {
   const problemContributions = problemActivities?.data?.map((item: PostType) => new Date(item.createdAt));
   const postContributions = postActivities?.data?.map((item: PostType) => new Date(item.createdAt));
 
-  console.log(problemActivities);
   const TabItems = [
     {
       key: 'contributions-discuss',

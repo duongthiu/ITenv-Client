@@ -225,6 +225,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
                 theme={theme === THEME.DARK ? 'OneDarkPro' : 'light'}
                 height="100%"
                 width="100%"
+                className="absolute h-full"
                 defaultLanguage={initCode?.langSlug}
                 value={code}
                 language={initCode?.langSlug}

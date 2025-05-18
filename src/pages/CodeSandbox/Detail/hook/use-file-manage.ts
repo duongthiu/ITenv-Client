@@ -1,8 +1,14 @@
 import { useState } from 'react';
 import { message } from 'antd';
 import { DataNode } from 'antd/es/tree';
-import { addFileToSandbox, addFolderToSandbox } from '../../../../services/codesanbox/codesandbox.service';
-import { CodeSandboxFileType } from '../../../../types/codesandbox.type';
+import {
+  addFileToSandbox,
+  addFolderToSandbox,
+  updateFileInSandbox,
+  deleteFileFromSandbox,
+  updateFolderInSandbox,
+  deleteFolderFromSandbox
+} from '../../../../services/codesanbox/codesandbox.service';
 
 interface UseFileManageProps {
   sandboxId: string;
@@ -83,7 +89,6 @@ export const useFileManage = ({ sandboxId, treeData, mutate }: UseFileManageProp
       try {
         const fileData = {
           name: newItemName,
-          type: CodeSandboxFileType.JAVASCRIPT,
           code: '',
           version: 1
         };
@@ -99,8 +104,8 @@ export const useFileManage = ({ sandboxId, treeData, mutate }: UseFileManageProp
         setIsCreatingNew(false);
         mutate();
       } catch (error: any) {
-        if (error.message?.includes('already exists')) {
-          message.error(error.message);
+        if (error.response.data.message?.includes('already exists')) {
+          message.error(error.response.data.message);
         } else {
           message.error('Failed to create item');
         }
@@ -114,28 +119,57 @@ export const useFileManage = ({ sandboxId, treeData, mutate }: UseFileManageProp
   };
 
   const handleRename = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!sandboxId || !selectedNode) return;
+
     if (e.key === 'Enter' && newItemName.trim()) {
+      setIsLoading(true);
       try {
-        // TODO: Implement rename functionality
+        if (selectedNode.isLeaf) {
+          // Rename file
+          await updateFileInSandbox(sandboxId, selectedNode.key as string, { name: newItemName });
+        } else {
+          // Rename folder
+          await updateFolderInSandbox(sandboxId, selectedNode.key as string, { folderName: newItemName });
+        }
         message.success('Item renamed successfully');
         setEditingNode(null);
+        setNewItemName('');
         mutate();
       } catch (error: any) {
-        message.error('Failed to rename item');
+        if (error.response.data.message?.includes('already exists')) {
+          message.error(error.response.data.message);
+        } else {
+          message.error(error.response.data.message);
+        }
+      } finally {
+        setIsLoading(false);
       }
     } else if (e.key === 'Escape') {
       setEditingNode(null);
+      setNewItemName('');
     }
   };
 
   const handleDelete = async () => {
+    if (!sandboxId || !selectedNode) return;
+
+    setIsLoading(true);
     try {
-      // TODO: Implement delete functionality
+      if (selectedNode.isLeaf) {
+        // Delete file
+        await deleteFileFromSandbox(sandboxId, selectedNode.key);
+      } else {
+        // Delete folder
+        await deleteFolderFromSandbox(sandboxId, selectedNode.key);
+      }
       message.success('Item deleted successfully');
       setIsDeleteModalOpen(false);
+      setSelectedNode(null);
       mutate();
     } catch (error: any) {
       message.error('Failed to delete item');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -168,15 +202,20 @@ export const useFileManage = ({ sandboxId, treeData, mutate }: UseFileManageProp
     };
 
     const dragNode = findNodeByKey(treeData, dragKey);
-    if (dragNode && isDropInSubFolder(dragNode, dropKey)) {
+    if (!dragNode) return;
+
+    if (isDropInSubFolder(dragNode, dropKey)) {
       message.error('Cannot drop a folder into its own subfolder');
       return;
     }
 
     setIsLoading(true);
     try {
-      // TODO: Implement move functionality in the backend
-      // For now, just show a success message
+      if (dragNode.isLeaf) {
+        await updateFileInSandbox(sandboxId, dragNode.key as string, { parentFolder: dropNode.key as string });
+      } else {
+        await updateFolderInSandbox(sandboxId, dragNode.key as string, { parentFolder: dropNode.key as string });
+      }
       message.success('Item moved successfully');
       mutate();
     } catch (error: any) {

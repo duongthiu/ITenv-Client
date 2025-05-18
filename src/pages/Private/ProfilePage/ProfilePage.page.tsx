@@ -15,13 +15,14 @@ import ListPost from './components/ListPost/ListPost.component';
 import './components/ListPost/ListPost.style.scss';
 import ListSubmission from './components/ListSubmissions/ListSubmission';
 import ProfileFriendTab from './components/ProfileFriendTab/ProfileFriendTab.component';
+import Sandbox from './components/Sandbox/Sandbox.component';
+
 const ProfilePage = () => {
   const { user: userSelector } = useAppSelector((state) => state.user);
   const { userId } = useParams();
   const navigate = useNavigate();
   const isOwnProfile = useMemo(() => userSelector?._id === userId, [userSelector?._id, userId]);
   const { data: userData, isLoading: isLoadingUser } = useSWR('profile' + userId, () => getUserById(userId!));
-
   const handleEditProfile = () => {
     navigate(paths.editProfile.replace(':tab', ''));
   };
@@ -103,12 +104,13 @@ const ProfilePage = () => {
           <div className="flex-none">
             <ProfileFriendTab userId={userId || ''} />
           </div>
-          <div className="my-5 flex h-full flex-1 flex-auto flex-col gap-5">
+          <div className="my-5 flex h-full flex-auto flex-col gap-5">
             <ActivityTab userId={userId || ''} />
 
             <div className="card tab-wraper h-full">
               <Tabs type="card" defaultActiveKey="1" items={TabItems} />
             </div>
+            <Sandbox isOwnProfile={isOwnProfile} userId={userId || ''} />
           </div>
         </div>
       </div>

@@ -100,7 +100,7 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
           ×
         </Button>
       </div>
-      <div className="flex flex-1 flex-col-reverse overflow-y-auto p-3">
+      <div className="flex flex-1 flex-col-reverse overflow-y-auto py-3">
         <div className="flex flex-col space-y-4">
           {messages.map((msg) => (
             <MessageItem

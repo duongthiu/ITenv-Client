@@ -25,7 +25,7 @@ axiosInstance.interceptors.request.use(function (config: InternalAxiosRequestCon
 
 axiosInstance.interceptors.response.use(
   (response) => response.data,
-  (error: { response: { status: number } }) => {
+  (error: any) => {
     const persistKey = 'persist:user';
     const persistedState = localStorage.getItem(persistKey);
     const parsedState = JSON.parse(persistedState!);
@@ -34,7 +34,7 @@ axiosInstance.interceptors.response.use(
       localStorage.setItem(persistKey, JSON.stringify(parsedState));
       return Promise.reject(error);
     }
-    if (error.response.status === 401) {
+    if (error.response.status === 401 && error.response.data.message.toLowerCase() === 'invalid accesstoken') {
       parsedState.isLogged = false;
 
       notify(
@@ -48,6 +48,7 @@ axiosInstance.interceptors.response.use(
             if (response?.success) {
               localStorage.setItem('accessToken', response.data!);
               parsedState.isLogged = true;
+              parsedState.token = response.data!;
               notifySuccess('Đã refresh phiên đăng nhập thành công! Trang web sẽ tự động reload sau 5s.');
               setTimeout(() => {
                 window.location.reload();

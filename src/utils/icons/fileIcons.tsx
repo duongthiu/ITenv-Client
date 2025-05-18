@@ -2,6 +2,7 @@ import { DiJavascript1, DiPython, DiJava, DiCss3, DiHtml5, DiReact, DiPhp } from
 import { SiTypescript, SiCplusplus, SiCsharp, SiRuby, SiSwift, SiKotlin, SiGo } from 'react-icons/si';
 import { VscCode } from 'react-icons/vsc';
 import { ReactElement } from 'react';
+import { FaFolder, FaFileImage } from 'react-icons/fa';
 
 export const getFileIcon = (fileName: string | undefined): ReactElement => {
   if (!fileName) return <VscCode size={20} />;
@@ -41,9 +42,20 @@ export const getFileIcon = (fileName: string | undefined): ReactElement => {
     case 'jsx':
     case 'react':
       return <DiReact {...iconProps} className="text-blue-400" />;
+    // Image file types
+    case 'jpg':
+    case 'jpeg':
+    case 'png':
+    case 'gif':
+    case 'svg':
+      return <FaFileImage {...iconProps} className="text-green-500" />;
     default:
       return <VscCode className="text-gray-500" {...iconProps} />;
   }
+};
+
+export const FolderIcon = (props: any) => {
+  return <FaFolder {...props} className="text-yellow-400" />;
 };
 
 export const getLanguageFromExtension = (fileName: string): string => {
@@ -64,7 +76,13 @@ export const getLanguageFromExtension = (fileName: string): string => {
     go: 'go',
     css: 'css',
     html: 'html',
-    jsx: 'javascript'
+    jsx: 'javascript',
+    // Image file types
+    jpg: 'image',
+    jpeg: 'image',
+    png: 'image',
+    gif: 'image',
+    svg: 'image'
   };
   return languageMap[extension || ''] || 'plaintext';
 };
