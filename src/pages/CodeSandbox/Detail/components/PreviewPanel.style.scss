@@ -1,0 +1,12 @@
+.preview-panel_wrapper {
+  .ant-tabs-content-holder {
+    display: flex;
+    flex: auto;
+    .ant-tabs-content {
+      flex: auto;
+      .ant-tabs-tabpane {
+        height: 100%;
+      }
+    }
+  }
+}

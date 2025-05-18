@@ -13,9 +13,10 @@ export interface EditorFile extends CodeSandboxFile {
 interface UseEditorProps {
   onContentChange?: (content: string) => void;
   onSave?: (content: string) => void;
+  onRequestAccess?: () => void;
 }
 
-export const useEditor = ({ onContentChange, onSave }: UseEditorProps = {}) => {
+export const useEditor = ({ onContentChange, onSave, onRequestAccess }: UseEditorProps = {}) => {
   const [openFiles, setOpenFiles] = useState<EditorFile[]>([]);
   const [activeFileId, setActiveFileId] = useState<string | null>(null);
   const [isCloseModalVisible, setIsCloseModalVisible] = useState(false);
@@ -133,7 +134,12 @@ export const useEditor = ({ onContentChange, onSave }: UseEditorProps = {}) => {
         onSave?.(currentValue);
         message.success('File saved successfully');
       } catch (error: any) {
-        message.error(error.response.data.message || 'Failed to save file');
+        if (error.response?.status === 403) {
+          onRequestAccess?.();
+          message.error('Permission denied. Request access to edit this file.');
+        } else {
+          message.error(error.response?.data?.message || 'Failed to save file');
+        }
       } finally {
         setIsSaving(false);
       }

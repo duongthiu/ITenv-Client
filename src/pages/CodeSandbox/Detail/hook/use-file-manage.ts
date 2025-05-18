@@ -14,9 +14,10 @@ interface UseFileManageProps {
   sandboxId: string;
   treeData: DataNode[];
   mutate: () => void;
+  onRequestAccess?: () => void;
 }
 
-export const useFileManage = ({ sandboxId, treeData, mutate }: UseFileManageProps) => {
+export const useFileManage = ({ sandboxId, treeData, mutate, onRequestAccess }: UseFileManageProps) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [newItemName, setNewItemName] = useState('');
   const [actionType, setActionType] = useState<'file' | 'folder' | 'rename' | 'delete'>('file');
@@ -104,7 +105,10 @@ export const useFileManage = ({ sandboxId, treeData, mutate }: UseFileManageProp
         setIsCreatingNew(false);
         mutate();
       } catch (error: any) {
-        if (error.response.data.message?.includes('already exists')) {
+        if (error.response?.status === 403) {
+          onRequestAccess?.();
+          message.error('Permission denied. Request access to create items.');
+        } else if (error.response.data.message?.includes('already exists')) {
           message.error(error.response.data.message);
         } else {
           message.error('Failed to create item');
@@ -136,7 +140,10 @@ export const useFileManage = ({ sandboxId, treeData, mutate }: UseFileManageProp
         setNewItemName('');
         mutate();
       } catch (error: any) {
-        if (error.response.data.message?.includes('already exists')) {
+        if (error.response?.status === 403) {
+          onRequestAccess?.();
+          message.error('Permission denied. Request access to rename items.');
+        } else if (error.response.data.message?.includes('already exists')) {
           message.error(error.response.data.message);
         } else {
           message.error(error.response.data.message);
@@ -167,7 +174,12 @@ export const useFileManage = ({ sandboxId, treeData, mutate }: UseFileManageProp
       setSelectedNode(null);
       mutate();
     } catch (error: any) {
-      message.error('Failed to delete item');
+      if (error.response?.status === 403) {
+        onRequestAccess?.();
+        message.error('Permission denied. Request access to delete items.');
+      } else {
+        message.error('Failed to delete item');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -219,7 +231,12 @@ export const useFileManage = ({ sandboxId, treeData, mutate }: UseFileManageProp
       message.success('Item moved successfully');
       mutate();
     } catch (error: any) {
-      message.error('Failed to move item');
+      if (error.response?.status === 403) {
+        onRequestAccess?.();
+        message.error('Permission denied. Request access to move items.');
+      } else {
+        message.error('Failed to move item');
+      }
     } finally {
       setIsLoading(false);
     }

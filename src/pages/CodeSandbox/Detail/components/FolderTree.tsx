@@ -13,11 +13,13 @@ interface FolderTreeProps {
   onSelect: (file: any) => void;
   mutate: () => void;
   sandboxName: string;
+  onRequestAccess?: () => void;
 }
 
-const FolderTree: React.FC<FolderTreeProps> = ({ treeData, onSelect, mutate, sandboxName }) => {
+const FolderTree: React.FC<FolderTreeProps> = ({ treeData, onSelect, mutate, sandboxName, onRequestAccess }) => {
   const { id: sandboxId } = useParams<{ id: string }>();
   const navigate = useNavigate();
+
   const [searchParams] = useSearchParams();
   const {
     isDeleteModalOpen,
@@ -43,10 +45,14 @@ const FolderTree: React.FC<FolderTreeProps> = ({ treeData, onSelect, mutate, san
     onDrop,
     setTargetFolderId,
     setActionType
-  } = useFileManage({ sandboxId: sandboxId || '', treeData, mutate });
+  } = useFileManage({
+    sandboxId: sandboxId || '',
+    treeData,
+    mutate,
+    onRequestAccess: onRequestAccess
+  });
 
   const [isCollapsed, setIsCollapsed] = useState(false);
-
   // Handle file selection from URL
   useEffect(() => {
     const fileId = searchParams.get('file');
@@ -122,9 +128,14 @@ const FolderTree: React.FC<FolderTreeProps> = ({ treeData, onSelect, mutate, san
       await addImageToSandbox(sandboxId || '', file, folderId);
       message.success('Image uploaded successfully');
       mutate(); // Refresh the tree
-    } catch (error) {
-      message.error('Failed to upload image');
-      console.error('Upload error:', error);
+    } catch (error: any) {
+      if (error.response?.status === 403) {
+        onRequestAccess?.();
+        message.error('Permission denied. Request access to upload image.');
+      } else {
+        message.error('Failed to upload image');
+        console.error('Upload error:', error);
+      }
     }
   };
 

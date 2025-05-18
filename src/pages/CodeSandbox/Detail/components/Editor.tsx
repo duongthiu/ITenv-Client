@@ -13,10 +13,12 @@ interface EditorProps {
   file: any;
   onContentChange?: (content: string) => void;
   onSave?: (content: string) => void;
+  onRequestAccess?: () => void;
 }
 
-const Editor: React.FC<EditorProps> = ({ file, onContentChange, onSave }) => {
+const Editor: React.FC<EditorProps> = ({ file, onContentChange, onSave, onRequestAccess }) => {
   const theme = useAppSelector((state) => state.app.theme);
+  
   const {
     openFiles,
     activeFileId,
@@ -31,7 +33,7 @@ const Editor: React.FC<EditorProps> = ({ file, onContentChange, onSave }) => {
     setActiveFileId,
     setIsCloseModalVisible,
     setFileToClose
-  } = useEditor({ onContentChange, onSave });
+  } = useEditor({ onContentChange, onSave, onRequestAccess });
 
   useEffect(() => {
     handleFileOpen(file);

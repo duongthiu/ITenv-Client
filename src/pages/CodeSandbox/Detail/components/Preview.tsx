@@ -17,6 +17,48 @@ const Preview: React.FC<PreviewProps> = ({ fileMap, mainHtmlPath }) => {
   const [processedHtml, setProcessedHtml] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
+  // Helper function to process image URLs in content
+  const processImageUrls = (content: string): string => {
+    // Process CSS url() patterns
+    content = content.replace(/url\(['"]?([^'"()]+)['"]?\)/g, (match, url) => {
+      const normalizedPath = url.startsWith('./') ? url : `./${url}`;
+      const fileContent = fileMap[normalizedPath];
+
+      if (fileContent) {
+        if (fileContent.type === 'image' && fileContent.url) {
+          return `url("${fileContent.url}")`;
+        } else if (fileContent.type === 'text' && fileContent.content) {
+          const base64 = btoa(fileContent.content);
+          const mimeType = getMimeType(normalizedPath);
+          return `url("data:${mimeType};base64,${base64}")`;
+        }
+      }
+      return match; // Keep original if not found
+    });
+
+    // Process JavaScript string literals that might contain image paths
+    content = content.replace(
+      /(['"])(\.\/[^'"]+\.(png|jpg|jpeg|gif|svg))(['"])/g,
+      (match, quote1, path, ext, quote2) => {
+        const normalizedPath = path.startsWith('./') ? path : `./${path}`;
+        const fileContent = fileMap[normalizedPath];
+
+        if (fileContent) {
+          if (fileContent.type === 'image' && fileContent.url) {
+            return `${quote1}${fileContent.url}${quote2}`;
+          } else if (fileContent.type === 'text' && fileContent.content) {
+            const base64 = btoa(fileContent.content);
+            const mimeType = getMimeType(normalizedPath);
+            return `${quote1}data:${mimeType};base64,${base64}${quote2}`;
+          }
+        }
+        return match; // Keep original if not found
+      }
+    );
+
+    return content;
+  };
+
   useEffect(() => {
     if (!mainHtmlPath || !fileMap[mainHtmlPath]) {
       setError('No HTML file selected or file not found');
@@ -39,7 +81,8 @@ const Preview: React.FC<PreviewProps> = ({ fileMap, mainHtmlPath }) => {
           const fileContent = fileMap[normalizedPath];
           if (fileContent && fileContent.type === 'text' && fileContent.content) {
             const style = document.createElement('style');
-            style.textContent = fileContent.content;
+            // Process image URLs in CSS content
+            style.textContent = processImageUrls(fileContent.content);
             link.parentNode?.replaceChild(style, link);
           } else {
             console.warn(`CSS file not found: ${normalizedPath}`);
@@ -57,7 +100,8 @@ const Preview: React.FC<PreviewProps> = ({ fileMap, mainHtmlPath }) => {
           const fileContent = fileMap[normalizedPath];
           if (fileContent && fileContent.type === 'text' && fileContent.content) {
             const inlineScript = document.createElement('script');
-            inlineScript.textContent = fileContent.content;
+            // Process image URLs in JavaScript content
+            inlineScript.textContent = processImageUrls(fileContent.content);
             script.parentNode?.replaceChild(inlineScript, script);
           } else {
             console.warn(`Script file not found: ${normalizedPath}`);
