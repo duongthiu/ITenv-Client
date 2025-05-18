@@ -10,10 +10,12 @@ import { CodeSandboxType, CodeSandboxLanguage } from '../../types/codesandbox.ty
 import { QueryOptions } from '../../types/common';
 import { useNavigate } from 'react-router-dom';
 import { useDebounce } from '../../utils/hooks/useDebounce.hook';
+import { useAppSelector } from '../../redux/app/hook';
 
 const { Title } = Typography;
 
 const CodeSandboxPage = () => {
+  const { user: userSelector } = useAppSelector((state) => state.user);
   const navigate = useNavigate();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
@@ -150,7 +152,11 @@ const CodeSandboxPage = () => {
             <Row gutter={[24, 24]} className="mb-6">
               {sandboxes.map((sandbox: CodeSandboxType) => (
                 <Col xs={24} sm={12} md={8} key={sandbox._id}>
-                  <CodeSandboxCard sandbox={sandbox} onClick={() => navigate(`/code-sandbox/${sandbox._id}`)} />
+                  <CodeSandboxCard
+                    isOwnProfile={userSelector?._id === sandbox?.createdBy?._id}
+                    sandbox={sandbox}
+                    onClick={() => navigate(`/code-sandbox/${sandbox._id}`)}
+                  />
                 </Col>
               ))}
             </Row>

@@ -8,4 +8,5 @@ export type QueryOptions = {
   year?: number;
   language?: string;
   tags?: string[];
+  createdBy?: string;
 };

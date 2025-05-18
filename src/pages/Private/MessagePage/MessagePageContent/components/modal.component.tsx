@@ -67,7 +67,7 @@ const MembersModal: React.FC<MembersModalProps> = ({
         if (socket) socket.emit('update_conversation', response.data!);
       }
     } catch (error: any) {
-      notifyError(error.message);
+      notifyError(error.response.data.message);
     }
   };
 

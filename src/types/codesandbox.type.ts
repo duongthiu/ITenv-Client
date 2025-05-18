@@ -8,6 +8,11 @@ export enum CodeSandboxFileType {
   CSS = 'css',
   JSON = 'json',
   MARKDOWN = 'markdown',
+  PNG = 'png',
+  JPG = 'jpg',
+  JPEG = 'jpeg',
+  GIF = 'gif',
+  SVG = 'svg',
   OTHER = 'other'
 }
 
@@ -29,10 +34,17 @@ export enum CodeSandboxLanguage {
 }
 
 export interface CodeSandboxFile {
+  _id: string;
   type: CodeSandboxFileType;
   name: string;
-  code: string;
+  code?: string;
   version: number;
+  sandboxId: string;
+  parentFolder?: string | null;
+  isImage?: boolean;
+  imageUrl?: string;
+  imageSize?: number;
+  imageMimeType?: string;
   createdAt: string;
   updatedAt: string;
 }
