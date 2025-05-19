@@ -36,7 +36,9 @@ axiosInstance.interceptors.response.use(
     }
     if (error.response.status === 401 && error.response.data.message.toLowerCase() === 'invalid accesstoken') {
       parsedState.isLogged = false;
-
+      parsedState.user = null;
+      parsedState.token = '';
+      localStorage.setItem('accessToken', '');
       notify(
         'warning',
         'Thông báo đăng nhập',
