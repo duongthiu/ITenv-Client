@@ -36,30 +36,26 @@ const HeaderComponent: React.FC<EditorHeaderProps> = ({
         </div>
         <Divider type="vertical" className="mx-4" />
 
-        <button
-          onClick={toggleDrawer}
-          className="flex cursor-pointer items-center gap-4 rounded-lg px-5 py-3 text-sm font-semibold duration-500 hover:bg-gray-200"
-        >
+        <Button onClick={toggleDrawer}>
           <CiBoxList size={20} />
           Problem List
-        </button>
+        </Button>
       </div>
       <div className="flex items-center gap-1">
-        <button
-          onClick={handleRunCode}
-          className={`flex cursor-pointer items-center gap-4 rounded-lg bg-gray-200 px-5 py-2 text-sm font-semibold opacity-70 duration-500 hover:bg-gray-300 hover:opacity-100 ${isRunLoading && 'disabled'}`}
-        >
+        <Button size="large" className="text-primary-color" onClick={handleRunCode} loading={isRunLoading}>
           {isRunLoading ? <Spin /> : <TbTriangle className="rotate-90" size={18} />}
           Run
-        </button>
-        <button
+        </Button>
+        <Button
+          size="large"
+          className="text-success-color"
           onClick={handleSubmitCode}
           disabled={isSubmitLoading}
-          className="flex cursor-pointer items-center gap-4 rounded-lg bg-gray-200 px-5 py-2 text-sm font-semibold text-green-500 opacity-70 duration-500 hover:bg-gray-300 hover:opacity-100"
+          loading={isSubmitLoading}
         >
           {isSubmitLoading ? <Spin /> : <FiUploadCloud size={20} />}
           Submit
-        </button>
+        </Button>
         <Timer />
       </div>
       <div>

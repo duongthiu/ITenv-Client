@@ -9,8 +9,11 @@ import PreviewPanel from './components/PreviewPanel';
 import RequestAccessModal from './components/RequestAccessModal';
 import { FolderIcon, getFileIcon } from '../../../utils/icons/fileIcons';
 import { getErrorMessage } from '../../../types/common/error.type';
+import { useAppDispatch } from '../../../redux/app/hook';
+import { setTheme, THEME } from '../../../redux/app/app.slice';
 
 const CodeSandboxDetailPage: React.FC = () => {
+  const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
   const { data, error, isLoading, mutate } = useSWR(id ? ['codeSandbox', id] : null, () =>
     id ? getCodeSandbox(id) : null
@@ -19,7 +22,9 @@ const CodeSandboxDetailPage: React.FC = () => {
   const [hasHtmlFiles, setHasHtmlFiles] = useState(false);
   const [fileMap, setFileMap] = useState<Record<string, any>>({});
   const [isRequestModalVisible, setIsRequestModalVisible] = useState(false);
-
+  useEffect(() => {
+    dispatch(setTheme(THEME.DARK));
+  });
   // Check if project has HTML files
   useEffect(() => {
     if (data?.data) {
