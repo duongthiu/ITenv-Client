@@ -1,11 +1,11 @@
-import { Button, Input, Switch, Typography, Tag } from 'antd';
+import { Button, Input, Switch, Typography, Tag, Select } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 
 const { Text, Title } = Typography;
 
 interface TestCase {
   id: string;
-  inputs: Array<{ id: string; name: string; value: string }>;
+  inputs: Array<{ id: string; name: string; value: string; type: string }>;
   output: string;
   isHidden: boolean;
 }
@@ -16,7 +16,7 @@ interface TestCasesProps {
   removeTestCase: (id: string) => void;
   addInput: (testCaseId: string) => void;
   removeInput: (testCaseId: string, inputId: string) => void;
-  updateInput: (testCaseId: string, inputId: string, field: 'name' | 'value', value: string) => void;
+  updateInput: (testCaseId: string, inputId: string, field: 'name' | 'value' | 'type', value: string) => void;
   updateTestCase: (testCaseId: string, field: 'output' | 'isHidden', value: string | boolean) => void;
 }
 
@@ -90,6 +90,19 @@ const TestCases: React.FC<TestCasesProps> = ({
                       value={input.name}
                       onChange={(e) => updateInput(testCase.id, input.id, 'name', e.target.value)}
                       className="flex-1"
+                    />
+                    <Select
+                      value={input.type}
+                      onChange={(value) => updateInput(testCase.id, input.id, 'type', value)}
+                      className="w-32"
+                      options={[
+                        { value: 'string', label: 'String' },
+                        { value: 'number', label: 'Number' },
+                        { value: 'boolean', label: 'Boolean' },
+                        { value: 'array', label: 'Array' },
+                        { value: 'object', label: 'Object' },
+                        { value: 'null', label: 'Null' }
+                      ]}
                     />
                     <Input
                       placeholder="Value"

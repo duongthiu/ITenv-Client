@@ -12,7 +12,7 @@ import { ProblemDetails, TestCases, SolutionTemplates } from '../../components/P
 
 interface TestCase {
   id: string;
-  inputs: Array<{ id: string; name: string; value: string }>;
+  inputs: Array<{ id: string; name: string; value: string; type: string }>;
   output: string;
   isHidden: boolean;
 }
@@ -25,7 +25,7 @@ const CreateProblemPage = () => {
   const [testCases, setTestCases] = useState<TestCase[]>([
     {
       id: crypto.randomUUID(),
-      inputs: [{ id: crypto.randomUUID(), name: '', value: '' }],
+      inputs: [{ id: crypto.randomUUID(), name: '', value: '', type: 'string' }],
       output: '',
       isHidden: false
     }
@@ -50,7 +50,7 @@ const CreateProblemPage = () => {
   const addTestCase = () => {
     const newTestCase = {
       id: crypto.randomUUID(),
-      inputs: [{ id: crypto.randomUUID(), name: '', value: '' }],
+      inputs: [{ id: crypto.randomUUID(), name: '', value: '', type: 'string' }],
       output: '',
       isHidden: false
     };
@@ -70,7 +70,7 @@ const CreateProblemPage = () => {
         if (testCase.id === testCaseId) {
           return {
             ...testCase,
-            inputs: [...testCase.inputs, { id: crypto.randomUUID(), name: '', value: '' }]
+            inputs: [...testCase.inputs, { id: crypto.randomUUID(), name: '', value: '', type: 'string' }]
           };
         }
         return testCase;
@@ -92,7 +92,7 @@ const CreateProblemPage = () => {
     );
   };
 
-  const updateInput = (testCaseId: string, inputId: string, field: 'name' | 'value', value: string) => {
+  const updateInput = (testCaseId: string, inputId: string, field: 'name' | 'value' | 'type', value: string) => {
     setTestCases(
       testCases.map((testCase) => {
         if (testCase.id === testCaseId) {
@@ -133,7 +133,7 @@ const CreateProblemPage = () => {
             name: input.name,
             value: input.value
           })),
-          output: [testCase.output],
+          output: testCase.output,
           isHidden: testCase.isHidden
         })),
         initialCode: [
