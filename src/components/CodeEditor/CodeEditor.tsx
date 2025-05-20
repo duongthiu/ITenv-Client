@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Editor, Monaco } from '@monaco-editor/react';
-import { Divider, Select, Tabs } from 'antd';
-import { motion, useMotionValue } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { DiffEditor, Editor } from '@monaco-editor/react';
+import { Button, Divider, Select, Tabs } from 'antd';
+import { motion } from 'framer-motion';
 import { FaTerminal } from 'react-icons/fa';
 import { IoIosCheckboxOutline } from 'react-icons/io';
 import { IoCodeSlashOutline } from 'react-icons/io5';
@@ -21,6 +20,7 @@ import Problem from './Problem';
 import TestCase from './TestCase';
 import TestResult from './TestResult';
 import CodeSubmission from './CodeSubmission';
+import { useCodeEditor } from './hooks/code-editor';
 
 interface CodeEditorProps {
   problem: ProblemType;
@@ -42,26 +42,39 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   detailSubmission
 }) => {
   const theme = useAppSelector((state) => state.app.theme);
-  const editorRef = useRef(null);
-  const mHeight = useMotionValue(400);
-  const mWidth = useMotionValue(600);
-  const [activeOutputTab, setActiveOutputTab] = useState('testcase');
-  const [activeProblemTab, setActiveProblemTab] = useState('des');
-  const outputHeight = useMotionValue(window.innerHeight - 680);
-  const [isWidthDragging, setWidthDragging] = useState(false);
-  const [isHeightDragging, setHeightDragging] = useState(false);
+  const {
+    mHeight,
+    mWidth,
+    activeOutputTab,
+    setActiveOutputTab,
+    activeProblemTab,
+    setActiveProblemTab,
+    outputHeight,
+    isWidthDragging,
+    setWidthDragging,
+    isHeightDragging,
+    setHeightDragging,
+    isRefactoring,
+    showDiff,
+    originalCode,
+    refactoredCode,
+    handleMount,
+    handleChange,
+    handleDragHeight,
+    handleDragWidth,
+    handleEditorDidMount,
+    handleChangeLanguage,
+    handleRefactor,
+    handleAcceptRefactor,
+    handleCancelRefactor
+  } = useCodeEditor({
+    problem,
+    setInitCode,
+    setCode,
+    submissionStatus,
+    detailSubmission
+  });
 
-  useEffect(() => {
-    if (submissionStatus) {
-      setActiveOutputTab('testresult'); // Switch to Test Result tab
-    }
-  }, [submissionStatus]);
-  useEffect(() => {
-    if (detailSubmission) {
-      console.log(detailSubmission);
-      setActiveProblemTab('submission');
-    }
-  }, [detailSubmission]);
   const OutputItems = [
     {
       key: 'testcase',
@@ -71,7 +84,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
           <span>Testcase</span>
         </div>
       ),
-
       children: <TestCase testCase={problem.testCase} />
     },
     {
@@ -85,6 +97,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
       children: <TestResult testCase={problem.testCase} submissionStatus={submissionStatus} />
     }
   ];
+
   const ProblemTabs = [
     {
       key: 'des',
@@ -94,7 +107,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
           <span>Description</span>
         </div>
       ),
-
       children: <Problem problem={problem} />
     },
     {
@@ -108,58 +120,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
       children: <CodeSubmission detailSubmission={detailSubmission} />
     }
   ];
-  const handleMount = (editor: any) => {
-    editorRef.current = editor;
-    editor.focus();
-  };
 
-  const handleChange = (newValue: any) => {
-    setCode(newValue);
-  };
-
-  const handleDragHeight = (_event: any, info: any) => {
-    const newHeight = mHeight.get() + info.delta.y;
-    if (newHeight > 0 && newHeight < (window.innerHeight * 75) / 100) {
-      mHeight.set(newHeight);
-      outputHeight.set(window.innerHeight - newHeight - 100);
-    }
-  };
-
-  const handleDragWidth = (_event: any, info: any) => {
-    const newWidth = mWidth.get() - info.delta.x;
-    if (newWidth > 20 && newWidth < (window.innerWidth * 94) / 100) {
-      mWidth.set(newWidth);
-    }
-  };
-
-  useEffect(() => {
-    const handleResize = () => {
-      const value = window.innerHeight - mHeight.get() - 280;
-      outputHeight.set(value > 300 ? value : 300);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [mHeight, outputHeight]);
-
-  const handleEditorDidMount = (monaco: Monaco) => {
-    monaco.editor.defineTheme('OneDarkPro', {
-      base: 'vs-dark',
-      inherit: true,
-      rules: [{ token: '', foreground: 'ffffff', background: '282828' }],
-      colors: {
-        'editor.background': '#282828'
-      }
-    });
-  };
-  const handleChangeLanguage = (value: string) => {
-    const selectedCode = problem?.initialCode.find((code) => code.langSlug === value);
-    if (selectedCode) {
-      setInitCode(selectedCode);
-      setCode(selectedCode.code);
-    }
-  };
   return (
     <div style={{ height: 'calc(100vh-20px)' }} className="code-editor-wrapper flex w-full justify-end">
       <motion.div className="card h-[calc(100vh-60px)] flex-1 overflow-auto rounded-lg shadow-md">
@@ -194,7 +155,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
         >
           {mWidth.get() > 30 && (
             <div>
-              <div className="flex w-full items-center gap-2 px-5 py-2">
+              <div className="flex w-full items-center gap-2 px-2 py-2">
                 <IoCodeSlashOutline size={20} className="text-green-500" />
                 <span className="text-sm font-semibold">Code</span>
               </div>
@@ -202,7 +163,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
           )}
           {mWidth.get() > 30 && (
             <div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between p-2">
                 <Select
                   className="w-fit min-w-[100px] border-none outline-none"
                   options={problem?.initialCode.map((code) => ({
@@ -210,29 +171,81 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
                     label: code?.lang
                   }))}
                   value={initCode?.langSlug}
-                  defaultActiveFirstOption={true} //
+                  defaultActiveFirstOption={true}
                   defaultValue={initCode?.langSlug}
                   onChange={handleChangeLanguage}
                 />
+                {showDiff ? (
+                  <div className="flex gap-2">
+                    <Button type="primary" onClick={handleAcceptRefactor}>
+                      Accept Changes
+                    </Button>
+                    <Button onClick={handleCancelRefactor}>Cancel</Button>
+                  </div>
+                ) : (
+                  <Button
+                    type="primary"
+                    onClick={() => handleRefactor(code, initCode.langSlug)}
+                    loading={isRefactoring}
+                  >
+                    Refactor
+                  </Button>
+                )}
               </div>
-              <Divider className="my-[6px]" />
+              <Divider className="my-2" />
             </div>
           )}
 
-          <motion.div className={cn('w-full py-3')} style={{ height: mHeight, width: mWidth }}>
+          <motion.div className={cn('w-full')} style={{ height: mHeight, width: mWidth }}>
             {mWidth.get() > 30 ? (
-              <Editor
-                theme={theme === THEME.DARK ? 'OneDarkPro' : 'light'}
-                height="100%"
-                width="100%"
-                className="absolute h-full"
-                defaultLanguage={initCode?.langSlug}
-                value={code}
-                language={initCode?.langSlug}
-                beforeMount={handleEditorDidMount}
-                onMount={handleMount}
-                onChange={handleChange}
-              />
+              showDiff ? (
+                <DiffEditor
+                  theme={theme === THEME.DARK ? 'vs-dark' : 'light'}
+                  height="100%"
+                  width="100%"
+                  className="absolute h-full"
+                  language={initCode?.langSlug}
+                  // original={originalCode}
+                  // modified={refactoredCode}
+                  onMount={handleMount}
+                  original="123"
+                  modified={refactoredCode}
+                  options={{
+                    readOnly: true,
+                    renderSideBySide: false,
+                    originalEditable: false,
+                    modifiedEditable: false,
+                    renderOverviewRuler: true,
+                    renderIndicators: true,
+                    renderMarginRevertIcon: true,
+                    renderOverviewGutter: true,
+                    renderWhitespace: 'all',
+                    renderLineHighlight: 'all',
+                    renderIndentGuides: true,
+                    renderValidationDecorations: 'on',
+                    renderLineNumbers: 'on',
+                    renderGlyphMargin: true,
+                    renderFolding: true,
+                    renderLineDecorationsWidth: 10,
+                    renderLineNumbersMinChars: 3,
+                    renderLineHighlightOnlyWhenFocus: false,
+                    enableSplitViewResizing: false
+                  }}
+                />
+              ) : (
+                <Editor
+                  theme={theme === THEME.DARK ? 'vs-dark' : 'light'}
+                  height="100%"
+                  width="100%"
+                  className="absolute h-full"
+                  defaultLanguage={initCode?.langSlug}
+                  value={code}
+                  language={initCode?.langSlug}
+                  beforeMount={handleEditorDidMount}
+                  onMount={handleMount}
+                  onChange={handleChange}
+                />
+              )
             ) : (
               <div className="flex h-full w-full items-center justify-center">
                 <div className="flex rotate-90 items-center gap-5">
@@ -301,7 +314,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
                 </div>
               </div>
             ) : (
-              // <Output language={initCode.lang} editorRef={editorRef} />
               <div>
                 <Tabs
                   defaultActiveKey="testcase"

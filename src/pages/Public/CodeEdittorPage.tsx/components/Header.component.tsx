@@ -42,17 +42,11 @@ const HeaderComponent: React.FC<EditorHeaderProps> = ({
         </Button>
       </div>
       <div className="flex items-center gap-1">
-        <Button size="large" className="text-primary-color" onClick={handleRunCode} loading={isRunLoading}>
+        <Button size="large" className="text-primary-color" onClick={handleRunCode}>
           {isRunLoading ? <Spin /> : <TbTriangle className="rotate-90" size={18} />}
           Run
         </Button>
-        <Button
-          size="large"
-          className="text-success-color"
-          onClick={handleSubmitCode}
-          disabled={isSubmitLoading}
-          loading={isSubmitLoading}
-        >
+        <Button size="large" className="text-success-color" onClick={handleSubmitCode} disabled={isSubmitLoading}>
           {isSubmitLoading ? <Spin /> : <FiUploadCloud size={20} />}
           Submit
         </Button>
