@@ -26,9 +26,9 @@ const CodeSubmission: React.FC<CodeSubmissionProps> = ({ detailSubmission }) => 
           <div className="sub-title flex items-center">
             <span>Code</span>
             <Divider type="vertical" />
-            <span>{detailSubmission?.lang?.verboseName}</span>
+            <span>{detailSubmission?.code.language}</span>
           </div>
-          <pre className="overflow-auto rounded-xl bg-gray-200 p-5 text-black">{detailSubmission?.code}</pre>
+          <pre className="overflow-auto rounded-xl bg-gray-200 p-5 text-black">{detailSubmission?.code.content}</pre>
         </div>
       )}
     </div>

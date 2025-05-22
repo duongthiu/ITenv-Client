@@ -23,35 +23,6 @@ function solution(nums, target) {
     // Write your solution here
     
 }`
-  },
-  {
-    id: 'python',
-    language: 'python',
-    code: `class Solution:
-    def solution(self, nums: List[int], target: int) -> List[int]:
-        // Write your solution here
-        pass`
-  },
-  {
-    id: 'java',
-    language: 'java',
-    code: `class Solution {
-    public int[] solution(int[] nums, int target) {
-        // Write your solution here
-        
-    }
-}`
-  },
-  {
-    id: 'cpp',
-    language: 'cpp',
-    code: `class Solution {
-public:
-    vector<int> solution(vector<int>& nums, int target) {
-        // Write your solution here
-        
-    }
-};`
   }
 ];
 
@@ -59,6 +30,16 @@ const SolutionTemplates: React.FC = () => {
   const [templates, setTemplates] = useState<Template[]>(defaultTemplates);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newTemplate, setNewTemplate] = useState({ language: '', code: '' });
+  const [form] = Form.useForm();
+
+  // Create initial values object from templates
+  const initialValues = templates.reduce(
+    (acc, template) => ({
+      ...acc,
+      [`${template.id}Code`]: template.code
+    }),
+    {}
+  );
 
   const handleAddTemplate = () => {
     if (newTemplate.language && newTemplate.code) {
@@ -103,10 +84,8 @@ const SolutionTemplates: React.FC = () => {
     }
   };
 
-  const [form] = Form.useForm();
-
   return (
-    <div className="space-y-4">
+    <Form form={form} className="space-y-4" initialValues={initialValues}>
       <Tabs
         type="editable-card"
         onChange={handleTabChange}
@@ -120,7 +99,7 @@ const SolutionTemplates: React.FC = () => {
               name={`${template.id}Code`}
               rules={[{ required: true, message: `Please provide ${template.language} solution!` }]}
             >
-              <MonacoEditor height="300px" language={template.language} theme="vs-dark" defaultValue={template.code} />
+              <MonacoEditor height="300px" language={template.language} theme="vs-dark" />
             </Form.Item>
           )
         }))}
@@ -154,7 +133,7 @@ const SolutionTemplates: React.FC = () => {
           </div>
         </div>
       </Modal>
-    </div>
+    </Form>
   );
 };
 

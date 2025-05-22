@@ -110,48 +110,36 @@ export type RunCodeResultType = {
 };
 
 export type SubmissionDetailType = {
-  runtime: number;
-  runtimeDisplay: string;
-  runtimePercentile: number | null;
-  runtimeDistribution: string;
+  submitBy: UserType;
+  problem: ProblemType;
+  code: {
+    language: string;
+    content: string;
+  };
+  score: number;
+  isAccepted: boolean;
+  status_code: number;
+  status_runtime: string;
   memory: number;
-  memoryDisplay: string;
-  memoryPercentile: number | null;
-  memoryDistribution: string;
-  code: string;
-  timestamp: number;
-  statusCode: number;
-  user: {
-    username: string;
-    profile: {
-      realName: string;
-      userAvatar: string;
-    };
-  };
-  lang: {
-    name: string;
-    verboseName: string;
-  };
-  question: {
-    questionId: string;
-    titleSlug: string;
-    hasFrontendPreview: boolean;
-  };
-  notes: string;
-  flagType: string;
-  topicTags: string[];
-  runtimeError: string | null;
-  compileError: string | null;
-  lastTestcase: string | null;
-  codeOutput: string | null; // JSON string, should be parsed if you need an object
-  expectedOutput: string | null;
-  totalCorrect: number | null;
-  totalTestcases: number;
-  fullCodeOutput: string | null;
-  testDescriptions: string | null;
-  testBodies: string | null;
-  testInfo: string | null;
-  stdOutput: string | null;
+  display_runtime?: string;
+  code_answer: string[];
+  code_output: string[];
+  std_output_list: string[];
+  expected_code_answer?: string[];
+  expected_code_output?: string[];
+  expected_std_output_list?: string[];
+  correct_answer?: boolean;
+  compare_result?: string;
+  total_correct: number;
+  total_testcases: number;
+  status_memory: string;
+  status_msg: string;
+  state: string;
+  compile_error?: string;
+  full_compile_error?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
 };
 
 export type AverageProblemsResponse = {

@@ -56,7 +56,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
     setHeightDragging,
     isRefactoring,
     showDiff,
-    originalCode,
+    // originalCode,
     refactoredCode,
     handleMount,
     handleChange,

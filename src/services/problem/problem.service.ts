@@ -33,9 +33,9 @@ export const runCode = async (
 export const submitCode = async (
   slug: string,
   requestOptions: submitCodeQueryOptions
-): Promise<ResponsePagination<SubmissionStatusType>> => {
+): Promise<ResponsePagination<RunCodeResultType>> => {
   const data = await post(import.meta.env.VITE_APP_API + `problems/${slug}/submit`, requestOptions);
-  return data as unknown as ResponsePagination<SubmissionStatusType>;
+  return data as unknown as ResponsePagination<RunCodeResultType>;
 };
 
 export const getSubmissionDetail = async (submissionId: string): Promise<ResponsePagination<SubmissionDetailType>> => {

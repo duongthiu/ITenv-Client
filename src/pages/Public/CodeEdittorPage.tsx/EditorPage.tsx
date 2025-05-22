@@ -12,7 +12,7 @@ import {
 import { cn } from '../../../utils/helpers/cn';
 import HeaderComponent from './components/Header.component';
 import { useEffect, useState } from 'react';
-import { InitialCode, RunCodeResultType, SubmissionDetailType, SubmissionStatusType } from '../../../types/ProblemType';
+import { InitialCode, RunCodeResultType, SubmissionDetailType } from '../../../types/ProblemType';
 import { notifyError } from '../../../utils/helpers/notify';
 import { useAppSelector } from '../../../redux/app/hook';
 const EditorPage = () => {
@@ -23,7 +23,7 @@ const EditorPage = () => {
   const [code, setCode] = useState<string>(singleProblem?.data?.initialCode[0].code || '');
   const [isSubmitLoading, setIsSubmitLoading] = useState<boolean>(false);
   const [isRunCodeLoading, setIsRunCodeLoading] = useState<boolean>(false);
-  const [submissionStatus, setSubmissionStatus] = useState<SubmissionStatusType | RunCodeResultType>();
+  const [submissionStatus, setSubmissionStatus] = useState<RunCodeResultType>();
   const [detailSubmission, setDetailSubmission] = useState<SubmissionDetailType>();
   useEffect(() => {
     console.log(singleProblem);
@@ -49,10 +49,10 @@ const EditorPage = () => {
           setSubmissionStatus(result.data!);
         }
         const detailSubmission = await getSubmissionDetail(result?.data?.submission_id || '');
-        if (detailSubmission?.success && !detailSubmission.data?.compileError) {
+        if (detailSubmission?.success && !detailSubmission.data?.compile_error) {
           setDetailSubmission(detailSubmission.data!);
-        } else notifyError('Failed to get submission detail');
-      } else notifyError('Failed to submit code');
+        }
+      }
       setIsSubmitLoading(false);
     } catch (error) {
       setIsSubmitLoading(false);
