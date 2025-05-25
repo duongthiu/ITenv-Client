@@ -49,10 +49,14 @@ const EditorPage = () => {
           setSubmissionStatus(result.data!);
         }
         const detailSubmission = await getSubmissionDetail(result?.data?.submission_id || '');
-        if (detailSubmission?.success && !detailSubmission.data?.compile_error) {
-          setDetailSubmission(detailSubmission.data!);
-        }
+        // if (detailSubmission?.success && !detailSubmission.data?.compile_error) {
+        //   setDetailSubmission(detailSubmission.data!);
+        // }
+        setDetailSubmission(detailSubmission.data!);
       }
+      const detailSubmission = await getSubmissionDetail(result?.data?.submission_id || '');
+
+      setDetailSubmission(detailSubmission.data!);
       setIsSubmitLoading(false);
     } catch (error) {
       setIsSubmitLoading(false);
@@ -79,6 +83,18 @@ const EditorPage = () => {
       notifyError('Failed to run code');
     }
   };
+  const handleSubmissionSelect = (submission: SubmissionDetailType) => {
+    setDetailSubmission(submission);
+    setCode(submission.code.content);
+    if (initCode) {
+      setInitCode({
+        ...initCode,
+        lang: submission.code.language,
+        langSlug: submission.code.language.toLowerCase(),
+        code: submission.code.content
+      });
+    }
+  };
   return (
     <div className={cn('')}>
       <HeaderComponent
@@ -99,6 +115,7 @@ const EditorPage = () => {
             setCode={setCode}
             setInitCode={setInitCode}
             problem={singleProblem?.data}
+            onSubmissionSelect={handleSubmissionSelect}
           />
         ) : null}
       </div>

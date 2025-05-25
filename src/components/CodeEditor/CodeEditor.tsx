@@ -30,6 +30,7 @@ interface CodeEditorProps {
   setCode: (code: string) => void;
   submissionStatus?: SubmissionStatusType | RunCodeResultType;
   detailSubmission?: SubmissionDetailType;
+  onSubmissionSelect?: (submission: SubmissionDetailType) => void;
 }
 
 const CodeEditor: React.FC<CodeEditorProps> = ({
@@ -39,7 +40,8 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   initCode,
   setInitCode,
   submissionStatus,
-  detailSubmission
+  detailSubmission,
+  onSubmissionSelect
 }) => {
   const theme = useAppSelector((state) => state.app.theme);
   const {
@@ -117,7 +119,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
           <span>Compile</span>
         </div>
       ),
-      children: <CodeSubmission detailSubmission={detailSubmission} />
+      children: <CodeSubmission detailSubmission={detailSubmission} onSubmissionSelect={onSubmissionSelect} />
     }
   ];
 

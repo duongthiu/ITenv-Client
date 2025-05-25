@@ -3,7 +3,7 @@ import { CategoryType } from '../../types/CategoryType';
 import { QueryOptions, ResponsePagination } from '../../types/common';
 import { EnumLevelProblem } from '../../types/enum/schemaProblem.enum';
 import { PostType } from '../../types/PostType';
-import { ProblemType, RunCodeResultType, SubmissionDetailType, SubmissionStatusType } from '../../types/ProblemType';
+import { ProblemType, RunCodeResultType, SubmissionDetailType } from '../../types/ProblemType';
 
 export const getProblems = async (queryOptions: QueryOptions): Promise<ResponsePagination<ProblemType[]>> => {
   const data = await get(import.meta.env.VITE_APP_API + 'problems', { params: queryOptions });
@@ -43,10 +43,21 @@ export const getSubmissionDetail = async (submissionId: string): Promise<Respons
   return data as unknown as ResponsePagination<SubmissionDetailType>;
 };
 
-export const getSubmissionByUserId = async (userId: string): Promise<ResponsePagination<any>> => {
-  const data = await get(import.meta.env.VITE_APP_API + `problems//user/submissions/${userId}`);
-  return data as unknown as ResponsePagination<any>;
+export const getSubmissionByUserId = async (userId: string): Promise<ResponsePagination<SubmissionDetailType[]>> => {
+  const data = await get(import.meta.env.VITE_APP_API + `problems/submissions/${userId}`);
+  return data as unknown as ResponsePagination<SubmissionDetailType[]>;
 };
+
+export const getSubmissionsByUserAndProblem = async (
+  userId: string,
+  slug: string
+): Promise<ResponsePagination<SubmissionDetailType[]>> => {
+  const data = await get(import.meta.env.VITE_APP_API + `problems/submissions/${userId}/problem`, {
+    params: { slug: slug }
+  });
+  return data as unknown as ResponsePagination<SubmissionDetailType[]>;
+};
+
 export const getAverageProblemsPerUser = async (): Promise<ResponsePagination<any>> => {
   const total = await get(import.meta.env.VITE_APP_API + 'problems/average/per-user');
   return total as ResponsePagination<any>;

@@ -109,7 +109,29 @@ export type RunCodeResultType = {
   state: string; // State of the submission (e.g., "SUCCESS")
 };
 
+export type CodeReviewType = {
+  overallScore: number;
+  feedback: string;
+  suggestions: string[];
+  bestPractices: string[];
+  complexityAnalysis: {
+    timeComplexity: string;
+    spaceComplexity: string;
+    bigONotation: string;
+  };
+  memoryUsage: {
+    estimatedMemory: string;
+    potentialMemoryIssues: string[];
+  };
+  algorithmSuitability: {
+    isOptimal: boolean;
+    alternativeApproaches: string[];
+    reasoning: string;
+  };
+};
+
 export type SubmissionDetailType = {
+  _id: string;
   submitBy: UserType;
   problem: ProblemType;
   code: {
@@ -137,6 +159,7 @@ export type SubmissionDetailType = {
   state: string;
   compile_error?: string;
   full_compile_error?: string;
+  review?: CodeReviewType;
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;
