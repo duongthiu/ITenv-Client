@@ -55,7 +55,7 @@ const MessagePage = () => {
         'seen_message',
         conversationData?.data?.find((conv) => conv?._id === activeConversationId)?.lastMessage
       );
-      dispatch(setSeenConversation({ conversationId: activeConversationId!, userId: user!._id! }));
+      dispatch(setSeenConversation({ conversationId: activeConversationId!, userId: user?._id || '' }));
     }
   }, [activeConversationId, conversationData?.data, dispatch, socket, user]);
   useEffect(() => {

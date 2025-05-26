@@ -1,4 +1,4 @@
-import { Divider, Empty, Progress, Tag, Collapse, Typography, Table, Skeleton } from 'antd';
+import { Divider, Empty, Progress, Tag, Collapse, Typography, Table, Skeleton, Button } from 'antd';
 import React from 'react';
 import { SubmissionDetailType, CodeReviewType } from '../../types/ProblemType';
 import { getSubmissionsByUserAndProblem } from '../../services/problem/problem.service';
@@ -6,10 +6,13 @@ import { useParams } from 'react-router-dom';
 import { useAppSelector } from '../../redux/app/hook';
 import { timeAgo } from '../../utils/helpers/formatDate';
 import useSWR from 'swr';
+import { ChevronLeft } from 'lucide-react';
 
 type CodeSubmissionProps = {
+  isDetail: boolean;
   detailSubmission?: SubmissionDetailType;
   onSubmissionSelect?: (submission: SubmissionDetailType) => void;
+  setIsDetail: (isDetail: boolean) => void;
 };
 
 const ReviewSection: React.FC<{ review: CodeReviewType }> = ({ review }) => {
@@ -20,7 +23,18 @@ const ReviewSection: React.FC<{ review: CodeReviewType }> = ({ review }) => {
       children: (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <div className="text-lg font-semibold">Overall Score: {review.overallScore}/10</div>
+            <div className="flex items-center gap-4">
+              <Progress
+                type="dashboard"
+                steps={{ count: 5, gap: 5 }}
+                strokeWidth={20}
+                percent={review.overallScore * 10}
+                format={(percent) => `${review.overallScore}/10`}
+                status={review.overallScore >= 7 ? 'success' : review.overallScore >= 5 ? 'normal' : 'exception'}
+                size={64}
+              />
+              <div className="text-lg font-semibold">Overall Score</div>
+            </div>
             <Tag color={review.overallScore >= 7 ? 'success' : review.overallScore >= 5 ? 'warning' : 'error'}>
               {review.overallScore >= 7 ? 'Good' : review.overallScore >= 5 ? 'Average' : 'Needs Improvement'}
             </Tag>
@@ -31,14 +45,14 @@ const ReviewSection: React.FC<{ review: CodeReviewType }> = ({ review }) => {
             <p className="">{review.feedback}</p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 small_desktop:grid-cols-2">
             <ComplexityAnalysis complexity={review.complexityAnalysis} />
             <MemoryUsage memory={review.memoryUsage} />
           </div>
 
           <AlgorithmSuitability suitability={review.algorithmSuitability} />
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 small_desktop:grid-cols-2">
             <SuggestionsList suggestions={review.suggestions} />
             <BestPracticesList practices={review.bestPractices} />
           </div>
@@ -265,6 +279,7 @@ const SubmissionList: React.FC<{
     <Table
       columns={columns}
       dataSource={submissions}
+      scroll={{ x: 500 }}
       rowKey={(record) => record._id}
       pagination={false}
       onRow={(record) => ({
@@ -275,7 +290,12 @@ const SubmissionList: React.FC<{
   );
 };
 
-const CodeSubmission: React.FC<CodeSubmissionProps> = ({ detailSubmission, onSubmissionSelect }) => {
+const CodeSubmission: React.FC<CodeSubmissionProps> = ({
+  isDetail = false,
+  detailSubmission,
+  onSubmissionSelect,
+  setIsDetail
+}) => {
   const { user } = useAppSelector((state) => state.user);
   const { slug } = useParams<{ slug: string }>();
 
@@ -286,7 +306,7 @@ const CodeSubmission: React.FC<CodeSubmissionProps> = ({ detailSubmission, onSub
 
   if (!user?._id || !slug) return null;
 
-  if (!detailSubmission) {
+  if (!detailSubmission || !isDetail) {
     return (
       <div className="flex h-full w-full flex-col gap-4 p-5">
         <Typography.Title level={4}>Your Submissions</Typography.Title>
@@ -297,7 +317,10 @@ const CodeSubmission: React.FC<CodeSubmissionProps> = ({ detailSubmission, onSub
         ) : (submissions?.data?.length ?? 0) > 0 ? (
           <SubmissionList
             submissions={submissions!.data || []}
-            onSelect={(submission) => onSubmissionSelect?.(submission)}
+            onSelect={(submission) => {
+              onSubmissionSelect?.(submission);
+              setIsDetail(true);
+            }}
           />
         ) : (
           <div className="flex h-full items-center justify-center">
@@ -328,7 +351,12 @@ const CodeSubmission: React.FC<CodeSubmissionProps> = ({ detailSubmission, onSub
   return (
     <div className="flex h-full w-full flex-col gap-5 p-5">
       <div className="flex items-center justify-between">
-        <h2 className={`text-xl font-semibold ${isAccepted ? 'text-green-600' : 'text-red-600'}`}>{status_msg}</h2>
+        <div className="flex items-center gap-2">
+          <Button className="w-fit" onClick={() => setIsDetail(false)}>
+            <ChevronLeft />
+          </Button>
+          <h2 className={`text-xl font-semibold ${isAccepted ? 'text-green-600' : 'text-red-600'}`}>{status_msg}</h2>
+        </div>
         <div className="flex items-center gap-2">
           <Tag color={isAccepted ? 'success' : 'error'}>
             {total_correct}/{total_testcases} Test Cases

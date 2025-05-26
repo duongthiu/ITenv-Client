@@ -25,6 +25,7 @@ const EditorPage = () => {
   const [isRunCodeLoading, setIsRunCodeLoading] = useState<boolean>(false);
   const [submissionStatus, setSubmissionStatus] = useState<RunCodeResultType>();
   const [detailSubmission, setDetailSubmission] = useState<SubmissionDetailType>();
+  const [isDetail, setIsDetail] = useState<boolean>(false);
   useEffect(() => {
     console.log(singleProblem);
     if (singleProblem?.data?.initialCode) {
@@ -57,6 +58,7 @@ const EditorPage = () => {
       const detailSubmission = await getSubmissionDetail(result?.data?.submission_id || '');
 
       setDetailSubmission(detailSubmission.data!);
+      setIsDetail(true);
       setIsSubmitLoading(false);
     } catch (error) {
       setIsSubmitLoading(false);
@@ -85,6 +87,7 @@ const EditorPage = () => {
   };
   const handleSubmissionSelect = (submission: SubmissionDetailType) => {
     setDetailSubmission(submission);
+    setIsDetail(false);
     setCode(submission.code.content);
     if (initCode) {
       setInitCode({
@@ -116,6 +119,8 @@ const EditorPage = () => {
             setInitCode={setInitCode}
             problem={singleProblem?.data}
             onSubmissionSelect={handleSubmissionSelect}
+            isDetail={isDetail}
+            setIsDetail={setIsDetail}
           />
         ) : null}
       </div>

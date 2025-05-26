@@ -18,12 +18,11 @@ interface EditorProps {
 
 const Editor: React.FC<EditorProps> = ({ file, onContentChange, onSave, onRequestAccess }) => {
   const theme = useAppSelector((state) => state.app.theme);
-  
+
   const {
     openFiles,
     activeFileId,
     isCloseModalVisible,
-
     handleFileOpen,
     handleMount,
     handleEditorChange,
@@ -54,6 +53,7 @@ const Editor: React.FC<EditorProps> = ({ file, onContentChange, onSave, onReques
     }
     return (
       <MonacoEditor
+        key={activeFileId}
         theme={theme === THEME.DARK ? 'OneDarkPro' : 'light'}
         width="100%"
         height="100%"

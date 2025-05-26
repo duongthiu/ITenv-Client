@@ -86,11 +86,10 @@ export const useEditor = ({ onContentChange, onSave, onRequestAccess }: UseEdito
       setOpenFiles((prev) =>
         prev.map((f) => {
           if (f._id === activeFileId) {
-            const currentFile = prev.find((file) => file._id === activeFileId);
             return {
               ...f,
               code: value,
-              hasUnsavedChanges: value !== currentFile?.originalCode
+              hasUnsavedChanges: value !== f.originalCode
             };
           }
           return f;
@@ -113,36 +112,36 @@ export const useEditor = ({ onContentChange, onSave, onRequestAccess }: UseEdito
   };
 
   const handleSave = async () => {
-    if (editorRef.current && activeFileId && sandboxId) {
-      setIsSaving(true);
-      try {
-        const currentValue = editorRef.current.getValue();
-        const currentFile = openFiles.find((f) => f._id === activeFileId);
-        if (!currentFile) return;
+    if (!editorRef.current || !activeFileId || !sandboxId) return;
 
-        await updateFileInSandbox(sandboxId, activeFileId, {
-          code: currentValue
-        });
+    setIsSaving(true);
+    try {
+      const currentValue = editorRef.current.getValue();
+      const currentFile = openFiles.find((f) => f._id === activeFileId);
+      if (!currentFile) return;
 
-        setOpenFiles((prev) =>
-          prev.map((f) =>
-            f._id === activeFileId
-              ? { ...f, code: currentValue, hasUnsavedChanges: false, originalCode: currentValue }
-              : f
-          )
-        );
-        onSave?.(currentValue);
-        message.success('File saved successfully');
-      } catch (error: any) {
-        if (error.response?.status === 403) {
-          onRequestAccess?.();
-          message.error('Permission denied. Request access to edit this file.');
-        } else {
-          message.error(error.response?.data?.message || 'Failed to save file');
-        }
-      } finally {
-        setIsSaving(false);
+      await updateFileInSandbox(sandboxId, activeFileId, {
+        code: currentValue
+      });
+
+      setOpenFiles((prev) =>
+        prev.map((f) =>
+          f._id === activeFileId
+            ? { ...f, code: currentValue, hasUnsavedChanges: false, originalCode: currentValue }
+            : f
+        )
+      );
+      onSave?.(currentValue);
+      message.success('File saved successfully');
+    } catch (error: any) {
+      if (error.response?.status === 403) {
+        onRequestAccess?.();
+        message.error('Permission denied. Request access to edit this file.');
+      } else {
+        message.error(error.response?.data?.message || 'Failed to save file');
       }
+    } finally {
+      setIsSaving(false);
     }
   };
 

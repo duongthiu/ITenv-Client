@@ -31,6 +31,8 @@ interface CodeEditorProps {
   submissionStatus?: SubmissionStatusType | RunCodeResultType;
   detailSubmission?: SubmissionDetailType;
   onSubmissionSelect?: (submission: SubmissionDetailType) => void;
+  isDetail: boolean;
+  setIsDetail: (isDetail: boolean) => void;
 }
 
 const CodeEditor: React.FC<CodeEditorProps> = ({
@@ -41,7 +43,9 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   setInitCode,
   submissionStatus,
   detailSubmission,
-  onSubmissionSelect
+  onSubmissionSelect,
+  isDetail,
+  setIsDetail
 }) => {
   const theme = useAppSelector((state) => state.app.theme);
   const {
@@ -119,7 +123,14 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
           <span>Compile</span>
         </div>
       ),
-      children: <CodeSubmission detailSubmission={detailSubmission} onSubmissionSelect={onSubmissionSelect} />
+      children: (
+        <CodeSubmission
+          detailSubmission={detailSubmission}
+          onSubmissionSelect={onSubmissionSelect}
+          isDetail={isDetail}
+          setIsDetail={setIsDetail}
+        />
+      )
     }
   ];
 
@@ -211,7 +222,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
                   // modified={refactoredCode}
                   onMount={handleMount}
                   original={code}
-                  modified={refactoredCode} 
+                  modified={refactoredCode}
                   options={{
                     readOnly: true,
                     renderSideBySide: false,

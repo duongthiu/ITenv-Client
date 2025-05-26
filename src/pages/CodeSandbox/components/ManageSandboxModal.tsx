@@ -85,10 +85,10 @@ const ManageSandboxModal: React.FC<ManageSandboxModalProps> = ({ open, onClose, 
       dataIndex: 'user',
       key: 'user',
       render: (user: any) => (
-        <Space>
-          <img src={user.avatar} alt={user.username} className="h-8 w-8 rounded-full" />
+        <div className="flex items-center gap-2">
+          <img src={user.avatar} alt={user.username} className="h-8 w-8 flex-none rounded-full" />
           <span>{user.username}</span>
-        </Space>
+        </div>
       )
     },
     {
@@ -144,10 +144,10 @@ const ManageSandboxModal: React.FC<ManageSandboxModalProps> = ({ open, onClose, 
       dataIndex: 'requester',
       key: 'requester',
       render: (user: any) => (
-        <Space>
-          <img src={user.avatar} alt={user.username} className="h-8 w-8 rounded-full" />
+        <div className="flex items-center gap-2">
+          <img src={user.avatar} alt={user.username} className="h-8 w-8 flex-none rounded-full" />
           <span>{user.username}</span>
-        </Space>
+        </div>
       )
     },
     {
