@@ -210,8 +210,8 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
                   // original={originalCode}
                   // modified={refactoredCode}
                   onMount={handleMount}
-                  original="123"
-                  modified={refactoredCode}
+                  original={code}
+                  modified={refactoredCode} 
                   options={{
                     readOnly: true,
                     renderSideBySide: false,
