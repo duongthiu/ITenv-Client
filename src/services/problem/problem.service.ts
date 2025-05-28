@@ -38,6 +38,7 @@ export const submitCode = async (
   return data as unknown as ResponsePagination<RunCodeResultType>;
 };
 
+
 export const getSubmissionDetail = async (submissionId: string): Promise<ResponsePagination<SubmissionDetailType>> => {
   const data = await get(import.meta.env.VITE_APP_API + `problems/submission/${submissionId}`);
   return data as unknown as ResponsePagination<SubmissionDetailType>;

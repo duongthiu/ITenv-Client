@@ -111,7 +111,7 @@ export const useFileManage = ({ sandboxId, treeData, mutate, onRequestAccess }: 
         } else if (error.response.data.message?.includes('already exists')) {
           message.error(error.response.data.message);
         } else {
-          message.error('Failed to create item');
+          message.error(error.response.data.message);
         }
       } finally {
         setIsLoading(false);

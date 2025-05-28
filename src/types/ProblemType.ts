@@ -103,10 +103,9 @@ export type RunCodeResultType = {
   runtime_percentile: number | null; // Percentile of runtime (nullable)
   status_memory: string; // Human-readable memory usage (e.g., "16.7 MB")
   memory_percentile: number | null; // Percentile of memory usage (nullable)
-  pretty_lang: string; // Pretty name for the language (e.g., "Python3")
-  submission_id: string; // Unique submission ID
-  status_msg: string; // Status message (e.g., "Accepted")
-  state: string; // State of the submission (e.g., "SUCCESS")
+  pretty_lang: string;
+  compile_error?: string; // Compilation error message
+  full_compile_error?: string; // Full compilation error details
 };
 
 export type CodeReviewType = {

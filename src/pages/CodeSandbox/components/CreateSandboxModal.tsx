@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
-import { Modal, Form, Input, Switch, Button, message, Card, Tag } from 'antd';
+import { Modal, Form, Input, Switch, Button, message, Card } from 'antd';
 import { createCodeSandbox } from '../../../services/codesanbox/codesandbox.service';
 import { CodeSandboxLanguage } from '../../../types/codesandbox.type';
-import { CodeOutlined, Html5TwoTone, PythonOutlined } from '@ant-design/icons';
+
+// Import language icons
+import htmlIcon from '../../../assets/lang-icons/icons8-html5-48.png';
+import jsIcon from '../../../assets/lang-icons/icons8-javascript-48.png';
+import javaIcon from '../../../assets/lang-icons/icons8-java-48.png';
+import pythonIcon from '../../../assets/lang-icons/icons8-python-48.png';
+import cppIcon from '../../../assets/lang-icons/icons8-cpp-64.png';
+import typescriptIcon from '../../../assets/lang-icons/icons8-typescript-48.png';
+import cssIcon from '../../../assets/lang-icons/icons8-css-48.png';
 
 interface CreateSandboxModalProps {
   open: boolean;
@@ -16,41 +24,47 @@ const GROUPS = [
     label: 'HTML + CSS + JS',
     description: 'Create a project with HTML, CSS, and JavaScript',
     language: [CodeSandboxLanguage.HTML, CodeSandboxLanguage.CSS, CodeSandboxLanguage.JAVASCRIPT],
-    icon: <CodeOutlined style={{ fontSize: 28, color: '#faad14' }} />, // group icon
+    icon: <img src={htmlIcon} alt="HTML" className="size-10" />,
     enabled: true
   }
 ];
 
 const INDIVIDUAL_LANGUAGES = [
   {
-    key: 'html',
-    label: 'HTML',
-    language: [CodeSandboxLanguage.HTML],
-    icon: <Html5TwoTone style={{ fontSize: 28 }} twoToneColor="#e34c26" />,
-    enabled: true
-  },
-  {
-    key: 'css',
-    label: 'CSS',
-    language: [CodeSandboxLanguage.CSS],
-    icon: <CodeOutlined style={{ fontSize: 28, color: '#2965f1' }} />,
-    enabled: true
-  },
-  {
     key: 'javascript',
     label: 'JavaScript',
     language: [CodeSandboxLanguage.JAVASCRIPT],
-    icon: <CodeOutlined style={{ fontSize: 28, color: '#f7df1e' }} />,
+    icon: <img src={jsIcon} alt="JavaScript" className="size-10" />,
+    enabled: true
+  },
+  {
+    key: 'typescript',
+    label: 'TypeScript',
+    language: [CodeSandboxLanguage.TYPESCRIPT],
+    icon: <img src={typescriptIcon} alt="TypeScript" className="size-10" />,
     enabled: true
   },
   {
     key: 'python',
     label: 'Python',
     language: [CodeSandboxLanguage.PYTHON],
-    icon: <PythonOutlined style={{ fontSize: 28, color: '#3776ab' }} />,
-    enabled: false // disabled for now
+    icon: <img src={pythonIcon} alt="Python" className="size-10" />,
+    enabled: true
+  },
+  {
+    key: 'java',
+    label: 'Java',
+    language: [CodeSandboxLanguage.JAVA],
+    icon: <img src={javaIcon} alt="Java" className="size-10" />,
+    enabled: true
+  },
+  {
+    key: 'cpp',
+    label: 'C++',
+    language: [CodeSandboxLanguage.CPP],
+    icon: <img src={cppIcon} alt="C++" className="size-10" />,
+    enabled: true
   }
-  // Add more languages as needed
 ];
 
 const CreateSandboxModal: React.FC<CreateSandboxModalProps> = ({ open, onClose, mutate }) => {
@@ -158,12 +172,36 @@ const CreateSandboxModal: React.FC<CreateSandboxModalProps> = ({ open, onClose, 
           </Form.Item> */}
 
           <Form.Item label="Languages">
-            <div>
-              {selectedLanguages.map((lang) => (
-                <Tag color="blue" key={lang}>
-                  {lang.toUpperCase()}
-                </Tag>
-              ))}
+            <div className="flex flex-wrap gap-2">
+              {selectedLanguages.map((lang) => {
+                const getIcon = () => {
+                  switch (lang) {
+                    case CodeSandboxLanguage.HTML:
+                      return htmlIcon;
+                    case CodeSandboxLanguage.JAVASCRIPT:
+                      return jsIcon;
+                    case CodeSandboxLanguage.CSS:
+                      return cssIcon;
+                    case CodeSandboxLanguage.TYPESCRIPT:
+                      return typescriptIcon;
+                    case CodeSandboxLanguage.PYTHON:
+                      return pythonIcon;
+                    case CodeSandboxLanguage.JAVA:
+                      return javaIcon;
+                    case CodeSandboxLanguage.CPP:
+                      return cppIcon;
+                    default:
+                      return jsIcon; // Default to JavaScript icon for unknown languages
+                  }
+                };
+
+                return (
+                  <div color="blue" key={lang} className="flex items-center gap-1 px-2 py-1">
+                    <img src={getIcon()} alt={lang} className="size-10" />
+                    <span>{lang.toUpperCase()}</span>
+                  </div>
+                );
+              })}
             </div>
           </Form.Item>
           <Form.Item

@@ -1,6 +1,8 @@
 import { get, post, put, remove } from '../../apis';
 import { CodeSandboxType, CodeSandboxFile } from '../../types/codesandbox.type';
 import { QueryOptions, ResponsePagination } from '../../types/common';
+import { RunCodeResultType } from '../../types/ProblemType';
+import { submitCodeQueryOptions } from '../problem/problem.service';
 
 export const getCodeSandboxes = async (queryOptions: QueryOptions): Promise<ResponsePagination<CodeSandboxType[]>> => {
   const data = await get(import.meta.env.VITE_APP_API + 'codesandbox', { params: queryOptions });
@@ -162,4 +164,10 @@ export const updateMemberRole = async (
 export const removeMember = async (sandboxId: string, userId: string): Promise<ResponsePagination<CodeSandboxType>> => {
   const response = await remove(`${import.meta.env.VITE_APP_API}codesandbox/${sandboxId}/members/${userId}`);
   return response as unknown as ResponsePagination<CodeSandboxType>;
+};
+export const compileCode = async (
+  requestOptions: submitCodeQueryOptions
+): Promise<ResponsePagination<RunCodeResultType>> => {
+  const data = await post(import.meta.env.VITE_APP_API + 'codesandbox/compile', requestOptions);
+  return data as unknown as ResponsePagination<RunCodeResultType>;
 };

@@ -3,6 +3,7 @@ import { Spin, Splitter, Result } from 'antd';
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { getCodeSandbox } from '../../../services/codesanbox/codesandbox.service';
+import { compileCode } from '../../../services/codesanbox/codesandbox.service';
 import FolderTree from './components/FolderTree';
 import Editor from './components/Editor';
 import PreviewPanel from './components/PreviewPanel';
@@ -11,6 +12,8 @@ import { FolderIcon, getFileIcon } from '../../../utils/icons/fileIcons';
 import { getErrorMessage } from '../../../types/common/error.type';
 import { useAppDispatch } from '../../../redux/app/hook';
 import { setTheme, THEME } from '../../../redux/app/app.slice';
+import SandboxResult from './components/SandboxResult';
+import { RunCodeResultType } from '../../../types/ProblemType';
 
 const CodeSandboxDetailPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -22,9 +25,35 @@ const CodeSandboxDetailPage: React.FC = () => {
   const [hasHtmlFiles, setHasHtmlFiles] = useState(false);
   const [fileMap, setFileMap] = useState<Record<string, any>>({});
   const [isRequestModalVisible, setIsRequestModalVisible] = useState(false);
+  const [compileResult, setCompileResult] = useState<RunCodeResultType | null>(null);
+  const [isCompiling, setIsCompiling] = useState(false);
+  const [compileError, setCompileError] = useState<{ message?: string } | null>(null);
+
   useEffect(() => {
     dispatch(setTheme(THEME.DARK));
   });
+
+  const handleCompile = async (code: string, lang: string) => {
+    if (!code || !lang) return;
+
+    setIsCompiling(true);
+    setCompileError(null);
+    try {
+      const response = await compileCode({
+        lang,
+        typed_code: code
+      });
+      setCompileResult(response.data);
+    } catch (error: any) {
+      console.error('Compilation error:', error);
+      setCompileError({
+        message: error.response?.data?.message || error.message || 'An error occurred while compiling the code'
+      });
+    } finally {
+      setIsCompiling(false);
+    }
+  };
+
   // Check if project has HTML files
   useEffect(() => {
     if (data?.data) {
@@ -211,7 +240,7 @@ const CodeSandboxDetailPage: React.FC = () => {
     <div className="flex h-[calc(100vh-60px)] flex-col overflow-hidden rounded-none p-0">
       {/* <Header name={sandbox.name} /> */}
       <Splitter style={{ height: '100%' }}>
-        <Splitter.Panel defaultSize="256px" min="160px" max="500px">
+        <Splitter.Panel className="min-w-[250px]" defaultSize={250} min="250px">
           <FolderTree
             onRequestAccess={onRequestAccess}
             treeData={treeData}
@@ -241,11 +270,21 @@ const CodeSandboxDetailPage: React.FC = () => {
                       }
                     }
                   }}
+                  onCompile={handleCompile}
                 />
               </div>
             </Splitter.Panel>
             <Splitter.Panel style={{ height: '100%' }}>
-              <PreviewPanel hasHtmlFiles={hasHtmlFiles} fileMap={fileMap} mainHtmlPath={mainHtmlPath} sandboxId={id!} />
+              {hasHtmlFiles ? (
+                <PreviewPanel
+                  hasHtmlFiles={hasHtmlFiles}
+                  fileMap={fileMap}
+                  mainHtmlPath={mainHtmlPath}
+                  sandboxId={id!}
+                />
+              ) : (
+                <SandboxResult compileResult={compileResult} isCompiling={isCompiling} error={compileError} />
+              )}
             </Splitter.Panel>
           </Splitter>
         </Splitter.Panel>
@@ -254,7 +293,6 @@ const CodeSandboxDetailPage: React.FC = () => {
         sandboxId={id!}
         open={isRequestModalVisible}
         onClose={() => setIsRequestModalVisible(false)}
-        // You might want to add a loading state prop here if needed
       />
     </div>
   );

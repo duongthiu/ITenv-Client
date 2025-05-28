@@ -1,4 +1,8 @@
 .preview-panel_wrapper {
+  .ant-tabs-nav {
+    margin: 0 !important;
+    height: 48px;
+  }
   .ant-tabs-content-holder {
     display: flex;
     flex: auto;

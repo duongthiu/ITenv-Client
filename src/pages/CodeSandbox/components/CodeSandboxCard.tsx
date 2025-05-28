@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
-import { Card, Avatar, Tag, Space, Typography, Tooltip, Dropdown, Button, MenuProps } from 'antd';
-import { CodeSandboxType } from '../../../types/codesandbox.type';
+import { Card, Avatar, Space, Typography, Tooltip, Dropdown, Button, MenuProps } from 'antd';
+import { CodeSandboxType, CodeSandboxLanguage } from '../../../types/codesandbox.type';
 import { TeamOutlined, MoreOutlined } from '@ant-design/icons';
 import { Lock, Unlock } from 'lucide-react';
 import { timeAgo } from '../../../utils/helpers/formatDate';
 import { useNavigate } from 'react-router-dom';
 import ManageSandboxModal from './ManageSandboxModal';
+
+// Import language icons
+import htmlIcon from '../../../assets/lang-icons/icons8-html5-48.png';
+import jsIcon from '../../../assets/lang-icons/icons8-javascript-48.png';
+import typescriptIcon from '../../../assets/lang-icons/icons8-typescript-48.png';
+import pythonIcon from '../../../assets/lang-icons/icons8-python-48.png';
+import javaIcon from '../../../assets/lang-icons/icons8-java-48.png';
+import cppIcon from '../../../assets/lang-icons/icons8-cpp-64.png';
+import cssIcon from '../../../assets/lang-icons/icons8-css-48.png';
 
 const { Text } = Typography;
 
@@ -81,11 +90,38 @@ const CodeSandboxCard: React.FC<CodeSandboxCardProps> = ({ sandbox, onClick, isO
           </Text>
 
           <Space wrap>
-            {sandbox.language.map((lang) => (
-              <Tag key={lang} color="blue">
-                {lang.toUpperCase()}
-              </Tag>
-            ))}
+            {sandbox.language.map((lang) => {
+              const getIcon = () => {
+                switch (lang) {
+                  case CodeSandboxLanguage.HTML:
+                    return htmlIcon;
+                  case CodeSandboxLanguage.CSS:
+                    return cssIcon;
+                  case CodeSandboxLanguage.JAVASCRIPT:
+                    return jsIcon;
+                  case CodeSandboxLanguage.TYPESCRIPT:
+                    return typescriptIcon;
+                  case CodeSandboxLanguage.PYTHON:
+                    return pythonIcon;
+                  case CodeSandboxLanguage.JAVA:
+                    return javaIcon;
+                  case CodeSandboxLanguage.CPP:
+                    return cppIcon;
+                  default:
+                    return jsIcon; // Default to JavaScript icon
+                }
+              };
+
+              return (
+                <Tooltip key={lang} title={lang}>
+                  <img
+                    src={getIcon()}
+                    alt={lang}
+                    className="h-8 w-8 cursor-pointer transition-transform hover:scale-110"
+                  />
+                </Tooltip>
+              );
+            })}
           </Space>
 
           <div className="flex items-center justify-between">

@@ -1,8 +1,17 @@
-import { DiJavascript1, DiPython, DiJava, DiCss3, DiHtml5, DiReact, DiPhp } from 'react-icons/di';
-import { SiTypescript, SiCplusplus, SiCsharp, SiRuby, SiSwift, SiKotlin, SiGo } from 'react-icons/si';
+import { DiReact, DiPhp } from 'react-icons/di';
+import { SiCsharp, SiRuby, SiSwift, SiKotlin, SiGo } from 'react-icons/si';
 import { VscCode } from 'react-icons/vsc';
 import { ReactElement } from 'react';
 import { FaFolder, FaFileImage } from 'react-icons/fa';
+
+// Import custom language icons
+import htmlIcon from '../../assets/lang-icons/icons8-html5-48.png';
+import jsIcon from '../../assets/lang-icons/icons8-javascript-48.png';
+import typescriptIcon from '../../assets/lang-icons/icons8-typescript-48.png';
+import pythonIcon from '../../assets/lang-icons/icons8-python-48.png';
+import javaIcon from '../../assets/lang-icons/icons8-java-48.png';
+import cppIcon from '../../assets/lang-icons/icons8-cpp-64.png';
+import cssIcon from '../../assets/lang-icons/icons8-css-48.png';
 
 export const getFileIcon = (fileName: string | undefined): ReactElement => {
   if (!fileName) return <VscCode size={20} />;
@@ -12,17 +21,22 @@ export const getFileIcon = (fileName: string | undefined): ReactElement => {
 
   switch (extension) {
     case 'js':
-      return <DiJavascript1 {...iconProps} className="text-yellow-400" />;
+      return <img src={jsIcon} alt="JavaScript" className="h-5 w-5" {...iconProps} />;
     case 'ts':
     case 'tsx':
-      return <SiTypescript {...iconProps} className="text-blue-400" />;
+      return <img src={typescriptIcon} alt="TypeScript" className="h-5 w-5" {...iconProps} />;
     case 'py':
-      return <DiPython {...iconProps} className="text-blue-500" />;
+      return <img src={pythonIcon} alt="Python" className="h-5 w-5" {...iconProps} />;
     case 'java':
-      return <DiJava {...iconProps} className="text-red-500" />;
+      return <img src={javaIcon} alt="Java" className="h-5 w-5" {...iconProps} />;
     case 'cpp':
     case 'c':
-      return <SiCplusplus {...iconProps} className="text-blue-600" />;
+      return <img src={cppIcon} alt="C++" className="h-5 w-5" {...iconProps} />;
+    case 'css':
+      return <img src={cssIcon} alt="CSS" className="h-5 w-5" {...iconProps} />;
+    case 'html':
+      return <img src={htmlIcon} alt="HTML" className="h-5 w-5" {...iconProps} />;
+    // Fallback to React icons for other languages
     case 'cs':
       return <SiCsharp {...iconProps} className="text-purple-500" />;
     case 'php':
@@ -35,13 +49,9 @@ export const getFileIcon = (fileName: string | undefined): ReactElement => {
       return <SiKotlin {...iconProps} className="text-orange-400" />;
     case 'go':
       return <SiGo {...iconProps} className="text-blue-400" />;
-    case 'css':
-      return <DiCss3 {...iconProps} className="text-blue-500" />;
-    case 'html':
-      return <DiHtml5 {...iconProps} className="text-orange-500" />;
     case 'jsx':
     case 'react':
-      return <DiReact {...iconProps} className="text-blue-400" />;
+      return <img src={typescriptIcon} alt="TypeScript" className="h-5 w-5" {...iconProps} />;
     // Image file types
     case 'jpg':
     case 'jpeg':

@@ -261,7 +261,7 @@ const FolderTree: React.FC<FolderTreeProps> = ({ treeData, onSelect, mutate, san
   };
 
   return (
-    <div className="h-full w-full min-w-64 overflow-y-auto border-r p-0">
+    <div className="h-full overflow-y-auto p-0">
       <div className="w-full border-b border-gray-500 p-2">
         <div className="flex cursor-pointer items-center justify-between" onClick={() => setIsCollapsed(!isCollapsed)}>
           <div className="flex items-center gap-2">

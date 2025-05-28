@@ -14,14 +14,25 @@ interface UseEditorProps {
   onContentChange?: (content: string) => void;
   onSave?: (content: string) => void;
   onRequestAccess?: () => void;
+  onCompile?: (code: string, lang: string) => Promise<void>;
 }
 
-export const useEditor = ({ onContentChange, onSave, onRequestAccess }: UseEditorProps = {}) => {
+const SUPPORTED_LANGUAGES = {
+  py: 'python',
+  js: 'javascript',
+  ts: 'typescript',
+  java: 'java',
+  cpp: 'cpp',
+  c: 'c'
+};
+
+export const useEditor = ({ onContentChange, onSave, onRequestAccess, onCompile }: UseEditorProps = {}) => {
   const [openFiles, setOpenFiles] = useState<EditorFile[]>([]);
   const [activeFileId, setActiveFileId] = useState<string | null>(null);
   const [isCloseModalVisible, setIsCloseModalVisible] = useState(false);
   const [fileToClose, setFileToClose] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isRunning, setIsRunning] = useState(false);
   const editorRef = useRef<any>(null);
   const monacoRef = useRef<Monaco | null>(null);
   const { id: sandboxId } = useParams<{ id: string }>();
@@ -174,12 +185,39 @@ export const useEditor = ({ onContentChange, onSave, onRequestAccess }: UseEdito
     setIsCloseModalVisible(false);
   };
 
+  const getFileExtension = (filename: string) => {
+    return filename.split('.').pop()?.toLowerCase();
+  };
+
+  const isLanguageSupported = (filename: string) => {
+    const ext = getFileExtension(filename);
+    return ext ? ext in SUPPORTED_LANGUAGES : false;
+  };
+
+  const handleRunCode = async () => {
+    if (!activeFileId || !onCompile) return;
+
+    const currentFile = openFiles.find((f) => f._id === activeFileId);
+    if (!currentFile) return;
+
+    const ext = getFileExtension(currentFile.name);
+    if (!ext || !SUPPORTED_LANGUAGES[ext as keyof typeof SUPPORTED_LANGUAGES]) return;
+
+    setIsRunning(true);
+    try {
+      await onCompile(currentFile.code || '', SUPPORTED_LANGUAGES[ext as keyof typeof SUPPORTED_LANGUAGES]);
+    } finally {
+      setIsRunning(false);
+    }
+  };
+
   return {
     openFiles,
     activeFileId,
     isCloseModalVisible,
     fileToClose,
     isSaving,
+    isRunning,
     editorRef,
     monacoRef,
     handleFileOpen,
@@ -189,6 +227,8 @@ export const useEditor = ({ onContentChange, onSave, onRequestAccess }: UseEdito
     handleSave,
     handleClose,
     handleCloseConfirm,
+    handleRunCode,
+    isLanguageSupported,
     setActiveFileId,
     setIsCloseModalVisible,
     setFileToClose
