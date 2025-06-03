@@ -6,7 +6,10 @@ const { Text, Title } = Typography;
 interface TestCase {
   id: string;
   inputs: Array<{ id: string; name: string; value: string; type: string }>;
-  output: string;
+  output: {
+    value: string;
+    type: string;
+  };
   isHidden: boolean;
 }
 
@@ -17,7 +20,11 @@ interface TestCasesProps {
   addInput: (testCaseId: string) => void;
   removeInput: (testCaseId: string, inputId: string) => void;
   updateInput: (testCaseId: string, inputId: string, field: 'name' | 'value' | 'type', value: string) => void;
-  updateTestCase: (testCaseId: string, field: 'output' | 'isHidden', value: string | boolean) => void;
+  updateTestCase: (
+    testCaseId: string,
+    field: 'output' | 'isHidden',
+    value: { value: string; type: string } | boolean
+  ) => void;
 }
 
 const TestCases: React.FC<TestCasesProps> = ({
@@ -29,11 +36,8 @@ const TestCases: React.FC<TestCasesProps> = ({
   updateInput,
   updateTestCase
 }) => {
-  const exampleTestCasesCount = testCases.filter((tc) => !tc.isHidden).length;
-  const canAddExampleTestCase = exampleTestCasesCount < 3;
-
   return (
-    <div className="space-y-4">
+    <div className="max-h-[500px] space-y-4 overflow-y-auto">
       {testCases.length === 0 ? (
         <div className="text-center">
           <Text type="secondary">No test cases added yet</Text>
@@ -56,12 +60,8 @@ const TestCases: React.FC<TestCasesProps> = ({
                   <Switch
                     checked={testCase.isHidden}
                     onChange={(checked) => {
-                      // if (!checked && exampleTestCasesCount >= 3) {
-                      //   return; // Prevent changing to example if already have 3 examples
-                      // }
                       updateTestCase(testCase.id, 'isHidden', checked);
                     }}
-                    // disabled={!testCase.isHidden && exampleTestCasesCount >= 3}
                   />
                   <Text>Hidden</Text>
                 </div>
@@ -123,12 +123,29 @@ const TestCases: React.FC<TestCasesProps> = ({
 
               <div>
                 <Text strong>Expected Output</Text>
-                <Input.TextArea
-                  placeholder="Expected output for this test case"
-                  value={testCase.output}
-                  onChange={(e) => updateTestCase(testCase.id, 'output', e.target.value)}
-                  rows={4}
-                />
+                <div className="space-y-2">
+                  <Select
+                    value={testCase.output.type}
+                    onChange={(value) => updateTestCase(testCase.id, 'output', { ...testCase.output, type: value })}
+                    className="w-full"
+                    options={[
+                      { value: 'string', label: 'String' },
+                      { value: 'number', label: 'Number' },
+                      { value: 'boolean', label: 'Boolean' },
+                      { value: 'array', label: 'Array' },
+                      { value: 'object', label: 'Object' },
+                      { value: 'null', label: 'Null' }
+                    ]}
+                  />
+                  <Input.TextArea
+                    placeholder="Expected output for this test case"
+                    value={testCase.output.value}
+                    onChange={(e) =>
+                      updateTestCase(testCase.id, 'output', { ...testCase.output, value: e.target.value })
+                    }
+                    rows={4}
+                  />
+                </div>
               </div>
             </div>
           </div>

@@ -13,7 +13,10 @@ import { ProblemDetails, TestCases, SolutionTemplates } from '../../components/P
 interface TestCase {
   id: string;
   inputs: Array<{ id: string; name: string; value: string; type: string }>;
-  output: string;
+  output: {
+    value: string;
+    type: string;
+  };
   isHidden: boolean;
 }
 
@@ -26,7 +29,7 @@ const CreateProblemPage = () => {
     {
       id: crypto.randomUUID(),
       inputs: [{ id: crypto.randomUUID(), name: '', value: '', type: 'string' }],
-      output: '',
+      output: { value: '', type: 'string' },
       isHidden: false
     }
   ]);
@@ -51,7 +54,7 @@ const CreateProblemPage = () => {
     const newTestCase = {
       id: crypto.randomUUID(),
       inputs: [{ id: crypto.randomUUID(), name: '', value: '', type: 'string' }],
-      output: '',
+      output: { value: '', type: 'string' },
       isHidden: false
     };
     setTestCases([...testCases, newTestCase]);
@@ -111,11 +114,18 @@ const CreateProblemPage = () => {
     );
   };
 
-  const updateTestCase = (testCaseId: string, field: 'output' | 'isHidden', value: string | boolean) => {
+  const updateTestCase = (
+    testCaseId: string,
+    field: 'output' | 'isHidden',
+    value: { value: string; type: string } | boolean
+  ) => {
     setTestCases(
       testCases.map((testCase) => {
         if (testCase.id === testCaseId) {
-          return { ...testCase, [field]: value };
+          if (field === 'output') {
+            return { ...testCase, output: value as { value: string; type: string } };
+          }
+          return { ...testCase, isHidden: value as boolean };
         }
         return testCase;
       })
@@ -131,7 +141,8 @@ const CreateProblemPage = () => {
         testCase: testCases.map((testCase) => ({
           input: testCase.inputs.map((input) => ({
             name: input.name,
-            value: input.value
+            value: input.value,
+            type: input.type
           })),
           output: testCase.output,
           isHidden: testCase.isHidden
@@ -169,9 +180,9 @@ const CreateProblemPage = () => {
   };
 
   return (
-    <div className="relative z-10 flex-1 overflow-auto">
+    <div className="relative z-10 h-full flex-1 overflow-auto">
       <Header title="Create Problem" />
-      <main className="lg:px-8 px-4 py-6">
+      <main className="lg:px-8 h-full px-4 py-6">
         <Form form={form} layout="vertical" onFinish={handleCreateProblem}>
           <motion.div
             className="grid grid-cols-8 gap-6"
@@ -209,7 +220,7 @@ const CreateProblemPage = () => {
                 />
               </Card>
 
-              <Card title="Solution Templates" className="rounded-xl shadow-lg">
+              <Card title="Solution Templates" className="h-[450px] flex-auto overflow-y-auto rounded-xl shadow-lg">
                 <SolutionTemplates />
               </Card>
 

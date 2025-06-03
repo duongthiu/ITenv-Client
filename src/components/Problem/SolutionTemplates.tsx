@@ -1,4 +1,4 @@
-import { Form, Typography, Tabs, Modal, Input, message } from 'antd';
+import { Form, Typography, Tabs, Modal, Input, message, Select } from 'antd';
 import MonacoEditor from '@monaco-editor/react';
 import { useState, MouseEvent, KeyboardEvent } from 'react';
 
@@ -9,6 +9,14 @@ interface Template {
   language: string;
   code: string;
 }
+
+const supportedLanguages = [
+  { value: 'javascript', label: 'JavaScript' },
+  { value: 'python', label: 'Python' },
+  { value: 'java', label: 'Java' },
+  { value: 'cpp', label: 'C++' },
+  { value: 'typescript', label: 'TypeScript' }
+];
 
 const defaultTemplates: Template[] = [
   {
@@ -44,7 +52,7 @@ const SolutionTemplates: React.FC = () => {
   const handleAddTemplate = () => {
     if (newTemplate.language && newTemplate.code) {
       const template: Template = {
-        id: newTemplate.language.toLowerCase(),
+        id: newTemplate.language,
         language: newTemplate.language,
         code: newTemplate.code
       };
@@ -84,6 +92,11 @@ const SolutionTemplates: React.FC = () => {
     }
   };
 
+  const getAvailableLanguages = () => {
+    const usedLanguages = templates.map((t) => t.id);
+    return supportedLanguages.filter((lang) => !usedLanguages.includes(lang.value));
+  };
+
   return (
     <Form form={form} className="space-y-4" initialValues={initialValues}>
       <Tabs
@@ -116,10 +129,12 @@ const SolutionTemplates: React.FC = () => {
         <div className="space-y-4">
           <div>
             <Text strong>Language</Text>
-            <Input
-              placeholder="e.g., Go, Rust, Kotlin"
+            <Select
+              placeholder="Select a language"
               value={newTemplate.language}
-              onChange={(e) => setNewTemplate({ ...newTemplate, language: e.target.value })}
+              onChange={(value) => setNewTemplate({ ...newTemplate, language: value })}
+              className="w-full"
+              options={getAvailableLanguages()}
             />
           </div>
           <div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import chatBoxLogo from '../../../assets/logo/ai-box.jpg';
 import robotThinking from '../../../assets/ai-chat/robot-thinking.json';
 import { Popover, Typography, Input, Button } from 'antd';
@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { SendOutlined } from '@ant-design/icons';
 import MessageItem from './MessageItem.component';
 import Lottie from 'lottie-react';
-import { chatWithClaude } from '../../../services/chat/chat.service';
+import { generateStreamingResponse } from '../../../services/ai/ai.service';
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -18,6 +18,7 @@ interface Message {
   id: string;
   content: string;
   isUser: boolean;
+  isStreaming?: boolean;
 }
 
 const ChatBox: React.FC<ChatBoxProps> = () => {
@@ -31,7 +32,16 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
       isUser: false
     }
   ]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  // const scrollToBottom = () => {
+  //   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  // };
+
+  // useEffect(() => {
+  //   scrollToBottom();
+  // }, [messages]);
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
@@ -49,29 +59,48 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
       setMessage('');
       setIsLoading(true);
 
+      // Create a temporary message for the AI response
+      const aiMessageId = (Date.now() + 1).toString();
+      const aiMessage: Message = {
+        id: aiMessageId,
+        content: '',
+        isUser: false,
+        isStreaming: true
+      };
+      setMessages((prev) => [...prev, aiMessage]);
+
       try {
-        // Get Claude response
-        const response = await chatWithClaude(message);
-        if (response.success) {
-          // Add Claude response
-          const aiMessage: Message = {
-            id: (Date.now() + 1).toString(),
-            content: response.data as any,
-            isUser: false
-          };
-          setMessages((prev) => [...prev, aiMessage]);
-        } else {
-          throw new Error(response.message || 'Failed to get response from Claude');
-        }
+        await generateStreamingResponse(
+          message,
+          (chunk) => {
+            setMessages((prev) =>
+              prev.map((msg) => (msg.id === aiMessageId ? { ...msg, content: msg.content + chunk } : msg))
+            );
+          },
+          (error) => {
+            setMessages((prev) =>
+              prev.map((msg) =>
+                msg.id === aiMessageId
+                  ? { ...msg, content: "I'm sorry, I encountered an error. Please try again.", isStreaming: false }
+                  : msg
+              )
+            );
+            console.error('Error getting AI response:', error);
+          },
+          () => {
+            setMessages((prev) => prev.map((msg) => (msg.id === aiMessageId ? { ...msg, isStreaming: false } : msg)));
+            setIsLoading(false);
+          }
+        );
       } catch (error) {
-        console.error('Error getting AI response:', error);
-        const errorMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          content: "I'm sorry, I encountered an error. Please try again.",
-          isUser: false
-        };
-        setMessages((prev) => [...prev, errorMessage]);
-      } finally {
+        console.error('Error in streaming:', error);
+        setMessages((prev) =>
+          prev.map((msg) =>
+            msg.id === aiMessageId
+              ? { ...msg, content: "I'm sorry, I encountered an error. Please try again.", isStreaming: false }
+              : msg
+          )
+        );
         setIsLoading(false);
       }
     }
@@ -109,8 +138,10 @@ const ChatBox: React.FC<ChatBoxProps> = () => {
               isUser={msg.isUser}
               avatar={chatBoxLogo}
               userId={msg.isUser ? 'user' : 'ai-assistant'}
+              isStreaming={msg.isStreaming}
             />
           ))}
+          <div ref={messagesEndRef} />
           {isLoading && (
             <div className="flex w-fit max-w-[70%] items-end gap-3">
               <div className="flex h-[32px] w-[32px] items-center justify-center rounded-full border bg-white">

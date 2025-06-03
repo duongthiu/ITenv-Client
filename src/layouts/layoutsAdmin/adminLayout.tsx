@@ -27,7 +27,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
           </div>
 
           <div className={cn('w-full duration-200', !collapsed ? 'ml-[220px]' : 'ml-[80px]')}>
-            <div className="pl-6"> {children}</div>
+            <div className="h-full pl-6"> {children}</div>
           </div>
         </Content>
       </div>
