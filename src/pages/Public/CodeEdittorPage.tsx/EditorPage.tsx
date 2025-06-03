@@ -33,6 +33,11 @@ const EditorPage = () => {
       setCode(singleProblem?.data?.initialCode[0].code);
     }
   }, [singleProblem?.data?.initialCode]);
+  useEffect(() => {
+    setSubmissionStatus(undefined);
+    setDetailSubmission(undefined);
+    setIsDetail(false);
+  }, [slug]);
   const handleSubmitCode = async () => {
     if (!user || !isLogged) {
       notifyError('Please login to use this feature');

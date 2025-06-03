@@ -72,6 +72,7 @@ export type SubmissionStatusType = {
 };
 
 export type RunCodeResultType = {
+  submission_id?: string;
   status_code: number; // Status code of the execution
   lang: string; // Programming language used
   run_success: boolean; // Indicates if the run was successful

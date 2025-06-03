@@ -21,9 +21,13 @@ import { useAppSelector } from '../../../redux/app/hook';
 export interface Ingredient {
   label: string;
 }
+type CreatePostPageProps = {
+  mutate: () => void;
+  onClose: () => void;
+};
 
 const initialTabs: Ingredient[] = [{ label: 'Text Editor' }, { label: 'Preview Text Editor' }];
-const CreatePostPage = () => {
+const CreatePostPage = ({ mutate, onClose }: CreatePostPageProps) => {
   const { parentCateId } = useParams();
   const { user, isLogged } = useAppSelector((state) => state.user);
   const [loading, setLoading] = useState(false);
@@ -83,6 +87,8 @@ const CreatePostPage = () => {
         setSelectedTags([]);
         setPostImages([]);
         setTitle('');
+        onClose();
+        mutate();
       } else notifyError('Failed to create post, please try again!!!');
     } catch (error) {
       notifyError('Failed to create post, please try again!!!');

@@ -39,6 +39,7 @@ export const useCodeEditor = ({
   const [originalCode, setOriginalCode] = useState('');
   const [refactoredCode, setRefactoredCode] = useState('');
 
+
   useEffect(() => {
     if (submissionStatus) {
       setActiveOutputTab('testresult');

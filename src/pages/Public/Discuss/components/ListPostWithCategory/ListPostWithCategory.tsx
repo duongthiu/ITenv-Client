@@ -29,14 +29,18 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
     search: search,
     tags: []
   });
-  const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
+  const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current) => {
     setQueryOption({ ...queryOption, page: current });
   };
   const onPaginationChange = (page: number, pageSize: number) => {
     setQueryOption({ ...queryOption, page: page, pageSize: pageSize });
   };
 
-  const { data: posts, isLoading } = useSWR(`list-posts-${categoryId}-${JSON.stringify(queryOption)}`, () =>
+  const {
+    data: posts,
+    isLoading,
+    mutate
+  } = useSWR(`list-posts-${categoryId}-${JSON.stringify(queryOption)}`, () =>
     getPostsWithCategoryId(categoryId, queryOption)
   );
   const showDrawer = () => {
@@ -166,7 +170,7 @@ const ListPostWithCategory: React.FC<ListPostWithCategoryProps> = memo(({ catego
         open={openDrawer}
         key={categoryId}
       >
-        <CreatePostPage />
+        <CreatePostPage onClose={onClose} mutate={mutate} />
       </Drawer>
     </div>
   );

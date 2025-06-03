@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import chatBoxLogo from '../../../assets/logo/ai-box.jpg';
 import robotThinking from '../../../assets/ai-chat/robot-thinking.json';
 import { Popover, Typography, Input, Button } from 'antd';
