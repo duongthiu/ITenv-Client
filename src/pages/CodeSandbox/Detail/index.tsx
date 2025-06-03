@@ -106,7 +106,7 @@ const CodeSandboxDetailPage: React.FC = () => {
     };
 
     return (
-      <>
+      <div>
         <Result
           status={error.response.status}
           title={getErrorMessage(error.response.status)}
@@ -132,7 +132,12 @@ const CodeSandboxDetailPage: React.FC = () => {
             </div>
           ]}
         />
-      </>
+        <RequestAccessModal
+          sandboxId={id!}
+          open={isRequestModalVisible}
+          onClose={() => setIsRequestModalVisible(false)}
+        />
+      </div>
     );
   }
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, Form, Input, Tabs, Button, Space, Table, Tag, message, Dropdown, Tooltip } from 'antd';
+import { Modal, Form, Input, Tabs, Button, Table, Tag, message, Dropdown, Tooltip } from 'antd';
 import { CodeSandboxType } from '../../../types/codesandbox.type';
 import {
   getAccessRequests,
@@ -23,6 +23,7 @@ interface ManageSandboxModalProps {
 const ManageSandboxModal: React.FC<ManageSandboxModalProps> = ({ open, onClose, sandbox, mutate }) => {
   const [form] = Form.useForm();
   const [activeTab, setActiveTab] = useState('1');
+  const [loadingStates, setLoadingStates] = useState<{ [key: string]: boolean }>({});
 
   const { data: accessRequests, mutate: mutateRequests } = useSWR(
     open ? `/api/codesandbox/${sandbox._id}/access-requests` : null,
@@ -61,21 +62,27 @@ const ManageSandboxModal: React.FC<ManageSandboxModalProps> = ({ open, onClose, 
 
   const handleUpdateMemberRole = async (userId: string, role: 'owner' | 'editor' | 'viewer') => {
     try {
+      setLoadingStates((prev) => ({ ...prev, [userId]: true }));
       await updateMemberRole(sandbox._id, userId, role);
       message.success(`Member role updated to ${role}`);
       mutate();
     } catch (error: any) {
       message.error(error.message || 'Failed to update member role');
+    } finally {
+      setLoadingStates((prev) => ({ ...prev, [userId]: false }));
     }
   };
 
   const handleRemoveMember = async (userId: string) => {
     try {
+      setLoadingStates((prev) => ({ ...prev, [userId]: true }));
       await removeMember(sandbox._id, userId);
       message.success('Member removed successfully');
       mutate();
     } catch (error: any) {
       message.error(error.message || 'Failed to remove member');
+    } finally {
+      setLoadingStates((prev) => ({ ...prev, [userId]: false }));
     }
   };
 
@@ -108,33 +115,42 @@ const ManageSandboxModal: React.FC<ManageSandboxModalProps> = ({ open, onClose, 
     {
       title: 'Actions',
       key: 'actions',
-      render: (_: any, record: any) => (
-        <Dropdown
-          menu={{
-            items: [
-              {
-                key: 'editor',
-                label: 'Make Editor',
-                onClick: () => handleUpdateMemberRole(record.user._id, 'editor')
-              },
-              {
-                key: 'viewer',
-                label: 'Make Viewer',
-                onClick: () => handleUpdateMemberRole(record.user._id, 'viewer')
-              },
-              {
-                key: 'remove',
-                label: 'Remove Member',
-                danger: true,
-                onClick: () => handleRemoveMember(record.user._id)
-              }
-            ]
-          }}
-          trigger={['click']}
-        >
-          <Button type="text" icon={<MoreOutlined />} />
-        </Dropdown>
-      )
+      render: (_: any, record: any) =>
+        record.role !== 'owner' && (
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  key: 'editor',
+                  label: 'Make Editor',
+                  onClick: () => handleUpdateMemberRole(record.user._id, 'editor'),
+                  disabled: loadingStates[record.user._id]
+                },
+                {
+                  key: 'viewer',
+                  label: 'Make Viewer',
+                  onClick: () => handleUpdateMemberRole(record.user._id, 'viewer'),
+                  disabled: loadingStates[record.user._id]
+                },
+                {
+                  key: 'remove',
+                  label: 'Remove Member',
+                  danger: true,
+                  onClick: () => handleRemoveMember(record.user._id),
+                  disabled: loadingStates[record.user._id]
+                }
+              ]
+            }}
+            trigger={['click']}
+          >
+            <Button
+              type="text"
+              icon={<MoreOutlined />}
+              loading={loadingStates[record.user._id]}
+              disabled={loadingStates[record.user._id]}
+            />
+          </Dropdown>
+        )
     }
   ];
 

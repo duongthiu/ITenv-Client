@@ -156,6 +156,7 @@ const CodeSandboxPage = () => {
                     isOwnProfile={userSelector?._id === sandbox?.createdBy?._id}
                     sandbox={sandbox}
                     onClick={() => navigate(`/code-sandbox/${sandbox._id}`)}
+                    mutate={mutate}
                   />
                 </Col>
               ))}
