@@ -10,13 +10,15 @@ import { QueryOptions } from '../../../../../types/common';
 import { CodeSandboxLanguage, CodeSandboxType } from '../../../../../types/codesandbox.type';
 import CodeSandboxCard from '../../../../CodeSandbox/components/CodeSandboxCard';
 import CreateSandboxModal from '../../../../CodeSandbox/components/CreateSandboxModal';
+import { UserType } from '../../../../../types/UserType';
 
 interface SandboxProps {
   userId: string;
   isOwnProfile: boolean;
+  userData?: UserType;
 }
 
-const Sandbox: React.FC<SandboxProps> = ({ userId, isOwnProfile }) => {
+const Sandbox: React.FC<SandboxProps> = ({ userId, isOwnProfile, userData }) => {
   const navigate = useNavigate();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
@@ -90,7 +92,7 @@ const Sandbox: React.FC<SandboxProps> = ({ userId, isOwnProfile }) => {
     <Card className="card flex flex-col p-0">
       <div className="mb-6 flex items-center justify-between">
         <h3 className="mb-5 text-base font-semibold">
-          {isOwnProfile ? 'My' : sandboxes[0]?.createdBy?.username + "'s"} Sandboxes
+          {isOwnProfile ? 'My' : sandboxes[0]?.createdBy?.username || userData?.username || 'Unknown' + "'s"} Sandboxes
         </h3>
         {isOwnProfile && (
           <Button type="primary" icon={<PlusOutlined />} onClick={handleCreateClick} className="flex items-center">

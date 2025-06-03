@@ -4,7 +4,7 @@ import { CodeSandboxType, CodeSandboxLanguage } from '../../../types/codesandbox
 import { TeamOutlined, MoreOutlined } from '@ant-design/icons';
 import { Lock, Unlock } from 'lucide-react';
 import { timeAgo } from '../../../utils/helpers/formatDate';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ManageSandboxModal from './ManageSandboxModal';
 
 // Import language icons
@@ -55,22 +55,22 @@ const CodeSandboxCard: React.FC<CodeSandboxCardProps> = ({ sandbox, onClick, isO
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
             <Typography.Title level={5} className="font-bold">
-              {sandbox.name}
+              {sandbox?.name}
             </Typography.Title>
             <div className="flex items-center gap-2">
               <Tooltip
                 title={
-                  <div className="flex flex-col items-center gap-1">
-                    <Avatar src={sandbox.createdBy.avatar} size="default">
-                      {sandbox.createdBy.username.charAt(0).toUpperCase()}
+                  <Link to={`/profile/${sandbox?.createdBy?._id}`} className="flex flex-col items-center gap-1">
+                    <Avatar src={sandbox?.createdBy?.avatar} size="default">
+                      {sandbox?.createdBy?.username?.charAt(0).toUpperCase()}
                     </Avatar>
-                    <Text strong>{sandbox.createdBy.username}</Text>
-                  </div>
+                    <Text strong>{sandbox?.createdBy?.username}</Text>
+                  </Link>
                 }
                 placement="left"
               >
-                <Avatar src={sandbox.createdBy.avatar} size="default">
-                  {sandbox.createdBy.username.charAt(0).toUpperCase()}
+                <Avatar src={sandbox?.createdBy?.avatar} size="default">
+                  {sandbox?.createdBy?.username?.charAt(0).toUpperCase()}
                 </Avatar>
               </Tooltip>
               {isOwnProfile && (
@@ -86,7 +86,7 @@ const CodeSandboxCard: React.FC<CodeSandboxCardProps> = ({ sandbox, onClick, isO
           </div>
 
           <Text className="text-gray-500" type="secondary" ellipsis>
-            {sandbox.description}
+            {sandbox?.description}
           </Text>
 
           <Space wrap>
@@ -128,19 +128,19 @@ const CodeSandboxCard: React.FC<CodeSandboxCardProps> = ({ sandbox, onClick, isO
             <div className="mt-2 flex items-center gap-4 text-gray-500">
               <Space>
                 <TeamOutlined />
-                <Text type="secondary">{sandbox.members.length} contributors</Text>
+                <Text type="secondary">{sandbox?.members?.length} contributors</Text>
               </Space>
             </div>
             <Text type="secondary" className="text-md">
-              {timeAgo(sandbox.createdAt)}
+              {timeAgo(sandbox?.createdAt)}
             </Text>
           </div>
 
           <div className="flex items-center justify-between">
             <Text type="secondary" className="text-md">
-              Last updated: {timeAgo(sandbox.updatedAt)}
+              Last updated: {timeAgo(sandbox?.updatedAt)}
             </Text>
-            {sandbox.isPublic ? (
+            {sandbox?.isPublic ? (
               <Unlock size={20} className="text-success-color" />
             ) : (
               <Lock size={20} className="text-danger-color" />

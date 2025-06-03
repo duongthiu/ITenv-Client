@@ -110,7 +110,7 @@ const ProfilePage = () => {
             <div className="card tab-wraper h-full">
               <Tabs type="card" defaultActiveKey="1" items={TabItems} />
             </div>
-            <Sandbox isOwnProfile={isOwnProfile} userId={userId || ''} />
+            {userData?.data && <Sandbox isOwnProfile={isOwnProfile} userId={userId || ''} userData={userData.data} />}
           </div>
         </div>
       </div>

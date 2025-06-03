@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { CiBookmark, CiWarning } from 'react-icons/ci';
 import { FaArrowLeft, FaCheck } from 'react-icons/fa';
 import { VscShare } from 'react-icons/vsc';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import PreviewTextEditorComponent from '../../../../components/TextEditor/components/PreviewTextEditor.component.tdc';
 import { useSocket } from '../../../../context/SocketContext';
@@ -189,7 +189,9 @@ const DetailDiscussPage = () => {
               {postData?.data?.isAnonymous ? (
                 <Avatar icon={<AnonymousIcon />} />
               ) : (
-                <Avatar size={40} src={postData?.data?.postedBy?.avatar} />
+                <Link to={`/profile/${postData?.data?.postedBy?._id}`}>
+                  <Avatar size={40} src={postData?.data?.postedBy?.avatar} />
+                </Link>
               )}
               <div>
                 <span className="mr-2 text-sm font-semibold">
