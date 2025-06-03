@@ -35,7 +35,7 @@ type CommentCartProps = {
 const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId, mutate, postById }) => {
   const socket = useSocket();
   const { user } = useAppSelector((state) => state.user);
-  const initContent = `<strong style="background-color: #d9e6f4; padding:4px; border-radius: 4px; margin-right:10px">@${comment.commentBy?.username} </strong><p></p>`;
+  const initContent = `<strong style="background-color: #d9e6f4; padding:4px; border-radius: 4px; margin-right:10px">@${comment.commentedBy?.username} </strong><p></p>`;
   const [openDrawer, setOpenDrawer] = useState(false);
   const [newComment, setNewComment] = useState(initContent);
   const [postImages, setPostImages] = useState<ImageType[]>([]);
@@ -188,11 +188,11 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
         <div className="flex gap-5">
           <div className="flex flex-col gap-5 pr-14">
             <div className="flex items-start gap-5">
-              <Avatar className="flex-none" src={commentState?.commentBy?.avatar} size={40} />
+              <Avatar className="flex-none" src={commentState?.commentedBy?.avatar} size={40} />
               <div className="flex flex-col gap-3">
                 <div className="flex flex-col">
                   <p className="text-sm font-semibold group-hover:text-primary-color">
-                    {commentState?.commentBy?.username}
+                    {commentState?.commentedBy?.username}
                   </p>
                   <p className="sub-title text-xs">{new Date(commentState?.createdAt || 0).toLocaleString()}</p>
                 </div>
@@ -231,7 +231,7 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
                     Reply
                   </button>
 
-                  {user?._id === commentState?.commentBy._id && (
+                  {user?._id === commentState?.commentedBy._id && (
                     <div className="flex items-center gap-2">
                       <button className="flex items-center gap-2 duration-200 hover:text-blue-500" onClick={onOpenEdit}>
                         <MdModeEdit />
@@ -285,7 +285,7 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
         </div>
       </div>
       <Drawer
-        title={`Reply to ${comment.commentBy?.username}`}
+        title={`Reply to ${comment.commentedBy?.username}`}
         placement="bottom"
         closable={true}
         onClose={onClose}

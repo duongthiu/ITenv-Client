@@ -20,7 +20,7 @@ export type PostType = {
 
 export type CommentType = {
   _id?: string;
-  commentBy: Pick<UserType, '_id' | 'username' | 'avatar'>;
+  commentedBy: Pick<UserType, '_id' | 'username' | 'avatar'>;
   children?: CommentType[];
   parentComment?: string;
   isAccepted?: boolean;
