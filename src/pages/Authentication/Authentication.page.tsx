@@ -115,7 +115,7 @@ const AuthenticationPage = () => {
   // }, [location.pathname]);
 
   const redirectToGithub = () => {
-    const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${import.meta.env.VITE_APP_GITHUB_OAUTH_CLIENT_ID}&scope=user:email&redirect_uri=http://localhost:5173/login`;
+    const githubAuthUrl = `https://github.com/login/oauth/authorize?client_id=${import.meta.env.VITE_APP_GITHUB_OAUTH_CLIENT_ID}&scope=user:email&redirect_uri=${import.meta.env.VITE_APP_CLIENT_HOST}/login`;
     window.location.href = githubAuthUrl;
   };
 
