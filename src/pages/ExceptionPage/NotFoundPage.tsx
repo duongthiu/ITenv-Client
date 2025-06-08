@@ -1,5 +1,5 @@
 import { Button, Result } from 'antd';
-import React from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import { paths } from '../../routes/paths';
 

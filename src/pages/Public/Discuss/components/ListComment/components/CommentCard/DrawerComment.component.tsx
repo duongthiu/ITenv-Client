@@ -1,5 +1,5 @@
 import { Drawer } from 'antd';
-import React, { useCallback, useState } from 'react';
+import React, {  useState } from 'react';
 import TextEditorComponent from '../../../../../../../components/TextEditor/TextEditor.component';
 import { ImageType } from '../../../../../../../types/common';
 import { CommentType } from '../../../../../../../types/PostType';

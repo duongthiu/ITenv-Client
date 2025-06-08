@@ -34,7 +34,7 @@ const CreatePostPage = ({ mutate, onClose }: CreatePostPageProps) => {
   const [content, setContent] = useState('Write something');
   const [isAnonymous, setIsAnonymous] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleEditorChange = useCallback((content: any, editor: any) => {
+  const handleEditorChange = useCallback((content: any, _: any) => {
     setContent(content);
   }, []);
 

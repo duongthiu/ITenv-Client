@@ -53,7 +53,13 @@ const CommentTree: React.FC<CommentTreeProps> = ({ postById, postId, comments, m
                 transition={{ duration: 0.3, ease: 'easeInOut' }}
               >
                 {comment?.children?.map((child: CommentType) => (
-                  <CommentCardComponent key={child._id} comment={child} postId={postId} mutate={mutate} />
+                  <CommentCardComponent
+                    postById={postById}
+                    key={child._id}
+                    comment={child}
+                    postId={postId}
+                    mutate={mutate}
+                  />
                 ))}
               </motion.div>
             )}

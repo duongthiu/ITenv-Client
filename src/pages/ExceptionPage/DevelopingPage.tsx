@@ -1,4 +1,4 @@
-import React from 'react'
+import { Button, Result } from 'antd';
 
 const DevelopingPage = () => {
   return (
@@ -11,6 +11,6 @@ const DevelopingPage = () => {
       }
     />
   );
-}
+};
 
-export default DevelopingPage
+export default DevelopingPage;

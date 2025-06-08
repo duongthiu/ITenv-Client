@@ -46,7 +46,7 @@ const ProblemSolversChart: React.FC = () => {
             />
             <Legend />
             <Bar dataKey="problems" fill="#8884d8">
-              {formattedData.map((entry, index) => (
+              {formattedData.map((_, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Bar>

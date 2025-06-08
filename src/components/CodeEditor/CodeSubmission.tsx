@@ -1,5 +1,5 @@
 import { Divider, Empty, Progress, Tag, Collapse, Typography, Table, Skeleton, Button } from 'antd';
-import React from 'react';
+
 import { SubmissionDetailType, CodeReviewType } from '../../types/ProblemType';
 import { getSubmissionsByUserAndProblem } from '../../services/problem/problem.service';
 import { useParams } from 'react-router-dom';
@@ -29,7 +29,7 @@ const ReviewSection: React.FC<{ review: CodeReviewType }> = ({ review }) => {
                 steps={{ count: 5, gap: 5 }}
                 strokeWidth={20}
                 percent={review.overallScore * 10}
-                format={(percent) => `${review.overallScore}/10`}
+                format={() => `${review.overallScore}/10`}
                 status={review.overallScore >= 7 ? 'success' : review.overallScore >= 5 ? 'normal' : 'exception'}
                 size={64}
               />

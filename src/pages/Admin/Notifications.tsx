@@ -1,5 +1,5 @@
-import { Button, Form, Input, Select, Spin } from 'antd';
-import React, { useState } from 'react';
+import { Button, Form, Input, Select } from 'antd';
+import { useState } from 'react';
 import useSWR from 'swr';
 import { QueryOptions } from '../../types/common';
 import { getAllUser } from '../../services/user/user.admin.service';
@@ -26,32 +26,15 @@ const Notifications = () => {
     }
   };
 
-  const [queryOptions, setQueryOptions] = useState<QueryOptions>({
+  const [queryOptions] = useState<QueryOptions>({
     page: 1,
     pageSize: 10,
     search: ''
   });
 
-  const {
-    data: userData,
-    isValidating,
-    mutate
-  } = useSWR(`users-notify-${JSON.stringify(queryOptions)}`, () => getAllUser(queryOptions), {
+  const { data: userData } = useSWR(`users-notify-${JSON.stringify(queryOptions)}`, () => getAllUser(queryOptions), {
     revalidateOnFocus: false
   });
-
-  const users = userData?.data || [];
-  const totalUsers = userData?.total || 0;
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQueryOptions({ ...queryOptions, search: e.target.value, page: 1 });
-  };
-
-  const handleLoadMore = () => {
-    if (users.length < totalUsers) {
-      setQueryOptions((prev) => ({ ...prev, page: prev.page! + 1 }));
-    }
-  };
 
   return (
     <div className="basic-info-wrapper flex h-full w-full flex-col items-center justify-center p-4">

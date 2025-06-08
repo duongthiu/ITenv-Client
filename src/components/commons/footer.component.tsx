@@ -1,4 +1,4 @@
-import { FaCode, FaFacebook, FaGithub, FaGoogle, FaQuestionCircle, FaShare } from 'react-icons/fa';
+import { FaFacebook, FaGithub, FaGoogle } from 'react-icons/fa';
 
 const FooterComponent = () => {
   return (

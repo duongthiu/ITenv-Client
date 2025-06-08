@@ -1,10 +1,9 @@
 // src/components/AccountSettings.tsx
 import { DisconnectOutlined, LinkOutlined } from '@ant-design/icons';
 import { Button, Divider, Form, Input, Typography } from 'antd';
-import React from 'react';
+
 import { FaFacebook, FaGithub, FaGoogle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../../../../redux/app/hook';
 import useSWR from 'swr';
 import { getAllAccount } from '../../../../services/authentication.service';
 
@@ -40,12 +39,11 @@ const socialNetwork = [
 ];
 const AccountSettings: React.FC = () => {
   const [form] = Form.useForm();
-  const { user } = useAppSelector((state) => state.user);
   const navigate = useNavigate();
   const onFinish = (values: any) => {
     console.log('Form values:', values);
   };
-  const { data, isLoading } = useSWR('edit-account', getAllAccount);
+  const { data } = useSWR('edit-account', getAllAccount);
   console.log(data?.data?.authenWith?.includes(0));
   return (
     <div className="basic-info-wrapper container mx-auto p-4">

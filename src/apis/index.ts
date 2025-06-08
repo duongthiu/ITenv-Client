@@ -1,4 +1,4 @@
-import { ResponseAxios, ResponsePagination } from '../types/common/response.type';
+import { ResponsePagination } from '../types/common/response.type';
 import { AxiosRequestConfig } from 'axios';
 import { default as axiosInstance } from './axios';
 

@@ -3,23 +3,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsi
 import useSWR from 'swr';
 import { getDailyProblemTrend } from '../../../services/problem/problem.admin.service';
 
-interface DailyProblems {
-  date: string;
-  problems: number;
-}
-
-const dailyProblemsData: DailyProblems[] = [
-  { date: '07/01', problems: 45 },
-  { date: '07/02', problems: 52 },
-  { date: '07/03', problems: 49 },
-  { date: '07/04', problems: 60 },
-  { date: '07/05', problems: 55 },
-  { date: '07/06', problems: 58 },
-  { date: '07/07', problems: 62 }
-];
-
 const DailyOrders: React.FC = () => {
-  const { data, isLoading } = useSWR('dailyProblems', () => getDailyProblemTrend());
+  const { data } = useSWR('dailyProblems', () => getDailyProblemTrend());
   return (
     <motion.div
       className="box rounded-xl p-6 shadow-lg"

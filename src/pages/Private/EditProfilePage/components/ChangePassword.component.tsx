@@ -1,10 +1,9 @@
 import { Button, Form, Input, Spin } from 'antd';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getAllAccount, resetPassword } from '../../../../services/authentication.service';
 import useSWR from 'swr';
 import { GoEye, GoEyeClosed } from 'react-icons/go';
 import { notifyError, notifySuccess } from '../../../../utils/helpers/notify';
-import LoadingPage from '../../../commons/LoadingPage';
 
 const ChangePassword = () => {
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);

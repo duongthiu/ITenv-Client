@@ -9,7 +9,7 @@ import useSWR from 'swr';
 import { getTotalDataPost } from '../../services/post/post.admin.service';
 
 const PostsPage = () => {
-  const { data, isLoading } = useSWR('data-postpage', getTotalDataPost);
+  const { data } = useSWR('data-postpage', getTotalDataPost);
   console.log(data);
   return (
     <div className="relative z-10 flex-1 overflow-auto">

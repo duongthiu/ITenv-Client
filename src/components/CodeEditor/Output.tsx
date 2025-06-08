@@ -5,7 +5,7 @@ import { LangVersionType } from '../../utils/constants/codeLanguage';
 // import { executeCode } from '../../apis/executeCode.api';
 // import axios from 'axios';
 // import { post } from '../../apis';
-import { runCode, SubmissionBody, submitCode } from '../../services/testApi.service';
+import {  SubmissionBody, submitCode } from '../../services/testApi.service';
 
 const { Text } = Typography;
 
@@ -14,7 +14,7 @@ type OutputType = {
   language: LangVersionType;
 };
 
-const Output: React.FC<OutputType> = React.memo(({ editorRef, language }) => {
+const Output: React.FC<OutputType> = React.memo(({ editorRef }) => {
   const [output, setOutput] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);

@@ -1,4 +1,4 @@
-import { Divider, Empty, Input, Pagination, PaginationProps, Select, Skeleton, Typography } from 'antd';
+import { Divider, Empty, Input, Pagination, PaginationProps, Skeleton } from 'antd';
 import { SearchProps } from 'antd/es/input';
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
@@ -15,8 +15,6 @@ import { QueryOptions } from '../../../types/common';
 const ProblemListPage = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
-  const [difficulty, setDifficulty] = useState<string | undefined>();
-  const [status, setStatus] = useState<string | undefined>();
   const [queryOption, setQueryOption] = useState<QueryOptions>({ page: 1, pageSize: 10, search: '', tags: [] });
   const {
     data: problemList,
@@ -34,7 +32,7 @@ const ProblemListPage = () => {
     );
   }
 
-  const onShowSizeChange: PaginationProps['onShowSizeChange'] = (current, pageSize) => {
+  const onShowSizeChange: PaginationProps['onShowSizeChange'] = (_, pageSize) => {
     setQueryOption({ ...queryOption, pageSize });
   };
   const onPaginationChange = (page: number, pageSize: number) => {
@@ -49,24 +47,11 @@ const ProblemListPage = () => {
   //   return matchesTags && matchesSearch;
   // });
 
-  const difficultyOptions = [
-    { label: 'Easy', value: 'easy' },
-    { label: 'Medium', value: 'medium' },
-    { label: 'Hard', value: 'hard' }
-  ];
-
-  const statusOptions = [
-    { label: 'Solved', value: 'solved' },
-    { label: 'Unsolved', value: 'unsolved' },
-    { label: 'Attempted', value: 'attempted' }
-  ];
   const animationVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 }
   };
-  const clearFilters = () => {
-    setSelectedTags([]);
-  };
+
   const onSearch: SearchProps['onSearch'] = (value) => setQueryOption({ ...queryOption, search: value });
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -85,16 +70,16 @@ const ProblemListPage = () => {
           <div className="card flex flex-col gap-4">
             <div className="grid grid-cols-3 gap-2">
               <div className="group relative h-full cursor-pointer">
-                <img src={banner1} className="h-full rounded-xl object-cover" />
+                <img src={banner1} className="h-full rounded-xl object-contain" />
                 <div className="absolute left-0 top-0 rounded-xl bg-black bg-opacity-50 opacity-0 duration-500 group-hover:bottom-0 group-hover:right-0 group-hover:opacity-100"></div>
               </div>
               <div className="group relative h-full cursor-pointer">
-                <img src={banner2} className="h-full rounded-xl object-cover" />
+                <img src={banner2} className="h-full rounded-xl object-contain" />
                 <div className="absolute left-0 top-0 rounded-xl bg-black bg-opacity-50 opacity-0 duration-500 group-hover:bottom-0 group-hover:right-0 group-hover:opacity-100"></div>
               </div>
               <div className="group relative h-full cursor-pointer">
                 <div className="absolute left-0 top-0 rounded-xl bg-black bg-opacity-50 opacity-0 duration-500 group-hover:bottom-0 group-hover:right-0 group-hover:opacity-100"></div>
-                <img src={banner3} className="h-full rounded-xl object-cover" />
+                <img src={banner3} className="h-full rounded-xl object-contain" />
               </div>
             </div>
             <Divider />

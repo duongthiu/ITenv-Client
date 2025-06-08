@@ -15,7 +15,7 @@ const FullCommentView: React.FC<FullCommentViewProps> = memo(({ comment }) => {
         <div className="flex-1">
           <div className="mb-4">
             At {new Date(comment?.createdAt || 0).toLocaleString()}{' '}
-            <strong>{` @<${comment.commentBy?.username}>`}</strong>
+            <strong>{` @<${comment.commentedBy?.username}>`}</strong>
             wrote :
           </div>
           <div className="sub-title ml-3 border-l-[1px] pl-2 font-semibold">

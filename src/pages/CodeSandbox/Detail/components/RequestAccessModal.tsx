@@ -1,7 +1,7 @@
-import React from 'react';
 import { Modal, Form, Input, Select, message } from 'antd';
 import { requestAccess } from '../../../../services/codesanbox/codesandbox.service';
 import './PreviewPanel.style.scss';
+import React from 'react';
 
 const { Option } = Select;
 

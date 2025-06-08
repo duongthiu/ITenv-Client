@@ -1,5 +1,5 @@
 import { Empty, Skeleton } from 'antd';
-import React from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import useSWR from 'swr';
 import { getSubmissionByUserId } from '../../../../../services/problem/problem.service';

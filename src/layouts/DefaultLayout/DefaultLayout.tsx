@@ -1,9 +1,6 @@
 import { Layout } from 'antd';
-import React, { PropsWithChildren, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import FooterComponent from '../../components/commons/footer.component';
+import React, { PropsWithChildren } from 'react';
 import HeaderComponent from '../../components/commons/header/header.component';
-import SidebarComponent from '../../components/commons/sidebar/sidebar.component';
 import { cn } from '../../utils/helpers/cn';
 
 const { Content } = Layout;
@@ -18,16 +15,11 @@ interface DefaultLayoutProps {
 const DefaultLayout: React.FC<PropsWithChildren<DefaultLayoutProps>> = ({
   children,
   useHeader = true,
-  useSidebar = true,
   useFooter = true,
   fullWidth = false
 }) => {
   // const { pathname } = useLocation();
   // console.log(pathname);
-  const [collapsed, setCollapsed] = useState<boolean>(true);
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
 
   return (
     <div className="flex justify-center overflow-x-hidden">

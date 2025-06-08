@@ -28,7 +28,6 @@ const DetailDiscussPage = () => {
   const navigate = useNavigate();
   const { user } = useAppSelector((state) => state.user);
   const { data: postData, isLoading, mutate } = useSWR(`detailpost/${id}`, () => getPostById(id!));
-  const [postState, setPostState] = useState(postData?.data);
   const [messageApi, contextHolder] = message.useMessage();
 
   const [confettiActive, setConfettiActive] = useState(false);

@@ -25,6 +25,10 @@ const FriendPopover = () => {
     if (!friendRequests) return getFriendRequests(queryOptionFriendRequest);
   });
 
+  const handleMutate = useCallback(async () => {
+    await mutateFriendRequest();
+  }, [mutateFriendRequest]);
+
   const loadMoreFriendRequest = useCallback(() => {
     if (isLoadingFriendRequest) return;
     setTimeout(() => {
@@ -43,7 +47,7 @@ const FriendPopover = () => {
       content={
         <FriendsComponent
           friendRequestData={friendRequests!}
-          mutate={mutateFriendRequest}
+          mutate={handleMutate}
           loadMoreFriendRequest={loadMoreFriendRequest}
           total={total}
         />

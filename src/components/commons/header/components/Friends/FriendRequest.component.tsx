@@ -1,10 +1,8 @@
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Button, Typography } from 'antd';
-import React from 'react';
+
 import { GoDotFill } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
-import { useSocket } from '../../../../../context/SocketContext';
-import { useAppSelector } from '../../../../../redux/app/hook';
 import { paths } from '../../../../../routes/paths';
 import { FriendType } from '../../../../../types/FriendType';
 import { cn } from '../../../../../utils/helpers/cn';
@@ -15,8 +13,6 @@ type FriendRequestItemProps = {
   mutate: () => Promise<void>;
 };
 const FriendRequest: React.FC<FriendRequestItemProps> = ({ friendRequest, mutate }) => {
-  const socket = useSocket();
-  const { user } = useAppSelector((state) => state.user);
   const { handleRejectFriendRequest, handleAcceptFriendRequest } = useFriendAction({
     userId: friendRequest?.sentBy?._id,
     relationshipId: friendRequest?._id,

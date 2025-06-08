@@ -1,5 +1,4 @@
 import { Tabs, Typography } from 'antd';
-import React from 'react';
 
 const { Title } = Typography;
 

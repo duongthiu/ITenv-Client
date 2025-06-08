@@ -1,4 +1,3 @@
-import { useDispatch } from 'react-redux';
 import { useSocket } from '../../context/SocketContext';
 import { acceptFriendRequest, createFriendRequest, rejectFriendRequest } from '../../services/friend/friend.service';
 import { NotificationTypeEnum } from '../../types/enum/notification.enum';

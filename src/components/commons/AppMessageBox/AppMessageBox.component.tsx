@@ -1,4 +1,3 @@
-import React from 'react';
 import './AppMessageBox.style.scss';
 type AppMessageBoxProps = {
   content: string;

@@ -3,7 +3,6 @@ import { UserCheck, UserPlus, UsersIcon, UserX } from 'lucide-react';
 import useSWR from 'swr';
 import Header from '../../components/CommonAdmin/Header';
 import StatCard from '../../components/CommonAdmin/StatCard';
-import UserActivityHeatmap from '../../components/chartAdmin/users/UserActivityHeatmap';
 import UserDemographicsChart from '../../components/chartAdmin/users/UserDemographicsChart';
 import UserGrowthChart from '../../components/chartAdmin/users/UserGrowthChart';
 import UsersTable from '../../components/CommonAdmin/users/UsersTable';

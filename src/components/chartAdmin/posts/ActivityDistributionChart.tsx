@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { Select } from 'antd';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import useSWR from 'swr';
 import { QueryOptions } from '../../../types/common';
 import { getPostActivityByMonth } from '../../../services/post/post.admin.service';
@@ -91,7 +91,7 @@ const ActivityDistributionChart: React.FC = () => {
               dataKey="value"
               label={({ name, percent }: { name: string; percent: number }) => `${name} ${(percent * 100).toFixed(0)}%`}
             >
-              {postData.map((entry, index) => (
+              {postData.map((_, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>

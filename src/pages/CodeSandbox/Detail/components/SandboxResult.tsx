@@ -1,4 +1,3 @@
-import React from 'react';
 import { Typography, Card, Space, Alert, Spin, Tabs } from 'antd';
 import { RunCodeResultType } from '../../../../types/ProblemType';
 
