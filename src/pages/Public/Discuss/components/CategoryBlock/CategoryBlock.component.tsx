@@ -1,4 +1,3 @@
-import React from 'react';
 import { CategoryType } from '../../../../../types/CategoryType';
 import './CategoryBlock.style.scss';
 type CategoryBlockProps = {

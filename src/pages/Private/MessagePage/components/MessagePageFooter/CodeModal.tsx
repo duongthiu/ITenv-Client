@@ -21,7 +21,7 @@ const CodeModal: React.FC<CodeModalProps> = ({ isOpen, onClose, onSend, fileCont
     setCode(fileContent);
   }, [fileContent]);
 
-  const handleEditorDidMount = (editor: any, monaco: Monaco) => {
+  const handleEditorDidMount = (_: any, monaco: Monaco) => {
     // Configure the editor
     monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
       noSemanticValidation: false,

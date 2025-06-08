@@ -16,7 +16,7 @@ interface ITenvChatProps {
   sandboxId: string;
 }
 
-const ITenvChat: React.FC<ITenvChatProps> = ({ sandboxId }) => {
+const ITenvChat: React.FC<ITenvChatProps> = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);

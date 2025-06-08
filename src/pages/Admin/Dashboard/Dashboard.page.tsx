@@ -1,4 +1,3 @@
-import React from 'react';
 import Sidebar from '../AdminSidebar.component';
 
 const Dashboard = () => {

@@ -1,4 +1,3 @@
-import React from 'react';
 import ListPostWithCategory from '../components/ListPostWithCategory/ListPostWithCategory';
 import { useParams } from 'react-router-dom';
 

@@ -8,9 +8,6 @@ import { login } from '../../services/authentication.service';
 import { notifyError } from '../../utils/helpers/notify';
 import { useAuth } from '../../utils/hooks/useAuth.hook';
 import { AuthenticationProps } from './Authentication.page';
-import useSelection from 'antd/es/table/hooks/useSelection';
-import { useSelector } from 'react-redux';
-import { useAppSelector } from '../../redux/app/hook';
 
 const LOGIN_TEXT = 'Login';
 
@@ -28,7 +25,6 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const [loginButtonText, setLoginButtonText] = useState<string>(LOGIN_TEXT);
   const [isShowPassword, setIsShowPassword] = useState<boolean>(false);
-  const{user} = useAppSelector(state=> state.user)
   const { onLogin } = useAuth();
   type ParamsLogin = {
     email: string;

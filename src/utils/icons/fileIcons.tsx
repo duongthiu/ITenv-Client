@@ -1,4 +1,4 @@
-import { DiReact, DiPhp } from 'react-icons/di';
+import {  DiPhp } from 'react-icons/di';
 import { SiCsharp, SiRuby, SiSwift, SiKotlin, SiGo } from 'react-icons/si';
 import { VscCode } from 'react-icons/vsc';
 import { ReactElement } from 'react';
@@ -13,6 +13,7 @@ import javaIcon from '../../assets/lang-icons/icons8-java-48.png';
 import cppIcon from '../../assets/lang-icons/icons8-cpp-64.png';
 import cssIcon from '../../assets/lang-icons/icons8-css-48.png';
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const getFileIcon = (fileName: string | undefined): ReactElement => {
   if (!fileName) return <VscCode size={20} />;
 

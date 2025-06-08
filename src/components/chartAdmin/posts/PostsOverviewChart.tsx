@@ -4,7 +4,7 @@ import useSWR from 'swr';
 import { getPostOverViews } from '../../../services/post/post.admin.service';
 
 const PostsOverviewChart: React.FC = () => {
-  const { data, isLoading } = useSWR('postOverviewChart', getPostOverViews);
+  const { data } = useSWR('postOverviewChart', getPostOverViews);
   // Define the state type
 
   return (

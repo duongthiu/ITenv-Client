@@ -4,7 +4,7 @@ import useSWR from 'swr';
 import { getDailyPostTrend } from '../../../services/post/post.admin.service';
 
 const DailyPostsTrend: React.FC = () => {
-  const { data, isLoading } = useSWR('dailyPostsTrend', () => getDailyPostTrend());
+  const { data } = useSWR('dailyPostsTrend', () => getDailyPostTrend());
   console.log(data);
   return (
     <motion.div

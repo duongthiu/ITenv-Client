@@ -56,7 +56,7 @@ const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
     </div>
   );
 
-  const handleEditorDidMount = (editor: any, monaco: Monaco) => {
+  const handleEditorDidMount = (_: any, monaco: Monaco) => {
     // Configure the editor
     monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
       noSemanticValidation: false,

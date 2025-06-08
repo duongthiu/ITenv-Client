@@ -27,7 +27,7 @@ import DrawerEditComment from './DrawerComment.component';
 import FullCommentView from './FullCommentView.component';
 import Confetti from 'react-confetti';
 type CommentCartProps = {
-  postId: string;
+  postId?: string;
   comment: CommentType;
   mutate: KeyedMutator<ResponsePagination<CommentType[]>>;
   postById: string;
@@ -89,7 +89,7 @@ const CommentCardComponent: React.FC<CommentCartProps> = memo(({ comment, postId
         content,
         parentComment: comment?._id
       };
-      const res = await postComment(postId, replyComment);
+      const res = await postComment(postId!, replyComment);
 
       if (res.success) {
         notifySuccess('Comment posted successfully');

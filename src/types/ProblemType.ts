@@ -105,8 +105,10 @@ export type RunCodeResultType = {
   status_memory: string; // Human-readable memory usage (e.g., "16.7 MB")
   memory_percentile: number | null; // Percentile of memory usage (nullable)
   pretty_lang: string;
-  compile_error?: string; // Compilation error message
-  full_compile_error?: string; // Full compilation error details
+  status_msg: string; // Status message (e.g., "Accepted", "Wrong Answer")
+  state: string; // State of the submission (e.g., "SUCCESS")
+  compile_error?: string;
+  full_compile_error?: string;
 };
 
 export type CodeReviewType = {

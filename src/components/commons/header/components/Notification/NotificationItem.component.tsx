@@ -1,6 +1,6 @@
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar } from 'antd';
-import React from 'react';
+
 import { GoDotFill } from 'react-icons/go';
 import { useNavigate } from 'react-router-dom';
 import { paths } from '../../../../../routes/paths';

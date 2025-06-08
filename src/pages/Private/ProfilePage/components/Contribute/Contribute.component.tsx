@@ -1,6 +1,6 @@
 // src/components/ContributionGrid.tsx
-import React from 'react';
-import { Divider, Tooltip } from 'antd';
+
+import { Tooltip } from 'antd';
 
 interface ContributionGridProps {
   contributions: Date[];
@@ -80,7 +80,6 @@ const ContributionGrid: React.FC<ContributionGridProps> = ({ contributions }) =>
 
   const currentYear = new Date().getFullYear();
   const daysInMonth = getDaysInMonth(currentYear);
-  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   return (
     <div className="flex w-full gap-2">
       {/* <div className="mr-8 mt-5 flex flex-none flex-col gap-1">

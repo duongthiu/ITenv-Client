@@ -1,5 +1,5 @@
 import { Avatar, Button, Menu, MenuProps, Modal, Input, Typography, Tooltip, Popconfirm } from 'antd';
-import { Edit, LinkIcon, UserIcon } from 'lucide-react';
+import { Edit, UserIcon } from 'lucide-react';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { BsCheck, BsInfoCircleFill } from 'react-icons/bs';
 import { GoDotFill } from 'react-icons/go';
@@ -28,12 +28,16 @@ type MessageInformationProps = {
   conversation: ConversationType;
 };
 
+type MenuItem = {
+  key: string;
+  label: React.ReactNode;
+  type?: 'group' | 'label';
+  icon?: React.ReactNode;
+  onClick?: () => void;
+  children?: MenuItem[];
+};
+
 const MessageInformation: React.FC<MessageInformationProps> = ({ conversation }) => {
-  type MenuItem = Required<MenuProps>['items'][number] & {
-    icon?: React.ReactNode;
-    onClick?: () => void;
-    label?: React.ReactNode;
-  };
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const socket = useSocket();
@@ -54,8 +58,8 @@ const MessageInformation: React.FC<MessageInformationProps> = ({ conversation })
 
   const { loading } = useAppSelector((state) => state.user);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const items: MenuItem[] = useMemo(() => {
-    const menuItems = [
+  const items = useMemo(() => {
+    const menuItems: MenuItem[] = [
       {
         key: 'chat-info',
         label: 'Chat info',
@@ -125,7 +129,7 @@ const MessageInformation: React.FC<MessageInformationProps> = ({ conversation })
         ]
       });
 
-    return menuItems;
+    return menuItems as MenuProps['items'];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversation?.isGroupChat, conversation?._id]);
 

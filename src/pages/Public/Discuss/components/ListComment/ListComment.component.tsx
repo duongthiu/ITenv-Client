@@ -1,4 +1,4 @@
-import { Button, Form, Skeleton } from 'antd';
+import { Form, Skeleton } from 'antd';
 import { memo, useCallback, useState } from 'react';
 import useSWR from 'swr';
 import TextEditorComponent from '../../../../../components/TextEditor/TextEditor.component';
@@ -7,7 +7,6 @@ import { ImageType } from '../../../../../types/common';
 import { CommentType } from '../../../../../types/PostType';
 import { notifyError, notifySuccess } from '../../../../../utils/helpers/notify';
 
-import CommentCardComponent from './components/CommentCard/CommentCard.component';
 import './ListComment.style.scss';
 import { useSocket } from '../../../../../context/SocketContext';
 import CommentTree from './components/CommentTree/CommentTree';

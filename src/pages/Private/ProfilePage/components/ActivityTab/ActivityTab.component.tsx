@@ -1,4 +1,3 @@
-import React from 'react';
 import ContributionGrid from '../Contribute/Contribute.component';
 import { Tabs } from 'antd';
 import { PostType } from '../../../../../types/PostType';

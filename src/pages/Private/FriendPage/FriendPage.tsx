@@ -1,9 +1,5 @@
-import React from 'react'
-
 const FriendPage = () => {
-  return (
-    <div>FriendPage</div>
-  )
-}
+  return <div>FriendPage</div>;
+};
 
-export default FriendPage
+export default FriendPage;

@@ -1,4 +1,3 @@
-import React from 'react';
 import { RunCodeResultType, SubmissionStatusType, TestCase } from '../../types/ProblemType';
 import { Empty, Tabs } from 'antd';
 

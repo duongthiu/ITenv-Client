@@ -1,5 +1,5 @@
 import { Typography } from 'antd';
-import React from 'react';
+
 import { ProblemType } from '../../types/ProblemType';
 import './CodeEditor.style.scss';
 const { Title } = Typography;

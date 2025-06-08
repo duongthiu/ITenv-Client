@@ -1,6 +1,7 @@
 import { Select } from 'antd';
-import React from 'react';
+
 import { LANG_VERSIONS, LangVersionType } from '../../utils/constants/codeLanguage';
+import React from 'react';
 
 type LanguageSelectorType = {
   language: LangVersionType;

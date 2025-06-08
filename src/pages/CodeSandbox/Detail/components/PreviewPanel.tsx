@@ -1,4 +1,3 @@
-import React from 'react';
 import { Tabs } from 'antd';
 import Preview from './Preview';
 import ITenvChat from './ITenvChat';

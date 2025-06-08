@@ -39,7 +39,7 @@ const Preview: React.FC<PreviewProps> = ({ fileMap, mainHtmlPath }) => {
     // Process JavaScript string literals that might contain image paths
     content = content.replace(
       /(['"])(\.\/[^'"]+\.(png|jpg|jpeg|gif|svg))(['"])/g,
-      (match, quote1, path, ext, quote2) => {
+      (match, quote1, path, _, quote2) => {
         const normalizedPath = path.startsWith('./') ? path : `./${path}`;
         const fileContent = fileMap[normalizedPath];
 
